@@ -1,0 +1,69 @@
+#!/usr/bin/make -f
+# debian/rules that uses debhelper >= 7.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+
+%:
+	dh  $@
+
+install_libcdata:
+	# Set up libcdata package directories and files
+	mkdir -p debian/libcdata/usr/lib
+	install -p -m755 debian/tmp/usr/lib/lib*.so.*.*.* debian/libcdata/usr/lib
+
+install_libcdata_dev:
+	# Set up libcdata-dev package directories and files
+	mkdir -p debian/libcdata-dev/usr/include
+	mkdir -p debian/libcdata-dev/usr/include/libcdata
+	mkdir -p debian/libcdata-dev/usr/lib
+	mkdir -p debian/libcdata-dev/usr/lib/pkgconfig
+	mkdir -p debian/libcdata-dev/usr/share/man/man3
+	install -p -m755 debian/tmp/usr/include/*.h debian/libcdata-dev/usr/include
+	install -p -m755 debian/tmp/usr/include/libcdata/*.h debian/libcdata-dev/usr/include/libcdata
+	install -p -m755 debian/tmp/usr/lib/*.la debian/libcdata-dev/usr/lib
+	install -p -m755 debian/tmp/usr/lib/lib*.a debian/libcdata-dev/usr/lib
+	install -p -m755 debian/tmp/usr/lib/lib*.so debian/libcdata-dev/usr/lib
+	install -p -m755 debian/tmp/usr/lib/pkgconfig/* debian/libcdata-dev/usr/lib/pkgconfig
+	install -p -m755 debian/tmp/usr/share/man/man3/* debian/libcdata-dev/usr/share/man/man3
+
+override_dh_auto_test:
+
+override_dh_installinit: install_libcdata install_libcdata_dev
+
+override_dh_installmenu:
+
+override_dh_installmime:
+
+override_dh_installmodules:
+
+override_dh_installlogcheck:
+
+override_dh_installlogrotate:
+
+override_dh_installpam:
+
+override_dh_installppp:
+
+override_dh_installudev:
+
+override_dh_installwm:
+
+override_dh_installxfonts:
+
+override_dh_gconf:
+
+override_dh_icons:
+
+override_dh_perl:
+
+override_dh_shlibdeps:
+	dh_shlibdeps -Llibcdata -l${PWD}/debian/tmp/usr/lib
+
+override_dh_makeshlibs:
+	dh_makeshlibs -Xlibcdata-dev
+

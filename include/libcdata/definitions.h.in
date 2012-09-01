@@ -1,0 +1,64 @@
+/*
+ * Definitions for libcdata
+ *
+ * Copyright (c) 2006-2012, Joachim Metz <joachim.metz@gmail.com>
+ *
+ * Refer to AUTHORS for acknowledgements.
+ *
+ * This software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#if !defined( _LIBCDATA_DEFINITIONS_H )
+#define _LIBCDATA_DEFINITIONS_H
+
+#include <libcdata/types.h>
+
+#define LIBCDATA_VERSION				@VERSION@
+
+/* The libcdata version string
+ */
+#define LIBCDATA_VERSION_STRING				"@VERSION@"
+
+/* The comparison definitions
+ */
+enum LIBCDATA_COMPARE_DEFINITIONS
+{
+	/* The first value is less than the second value
+	 */
+        LIBCDATA_COMPARE_LESS,
+
+	/* The first and second values are equal
+	 */
+        LIBCDATA_COMPARE_EQUAL,
+
+	/* The first value is greater than the second value
+	 */
+        LIBCDATA_COMPARE_GREATER
+};
+
+/* The insert flag definitions
+ */
+enum LIBCDATA_INSERT_FLAGS
+{
+	/* Allow duplicate entries
+	 */
+	LIBCDATA_INSERT_FLAG_NON_UNIQUE_ENTRIES	= 0x00,
+
+	/* Only allow unique entries, no duplicates
+	 */
+	LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES	= 0x01,
+};
+
+#endif
+

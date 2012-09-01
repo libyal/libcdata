@@ -1,0 +1,14 @@
+TODO
+* update manuals
+* update header
+  - add array - comment
+* update msvscpp files
+* add support for:
+  - array
+  - list
+  - tree
+  - btree
+
+20120901
+* Worked on stand-alone version
+
