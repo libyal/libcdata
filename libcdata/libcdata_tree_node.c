@@ -1617,9 +1617,11 @@ int libcdata_tree_node_replace_node(
 	libcdata_internal_tree_node_t *internal_replacement_node = NULL;
 	libcdata_tree_node_t *first_sub_node                     = NULL;
 	libcdata_tree_node_t *last_sub_node                      = NULL;
+	libcdata_tree_node_t *sub_node                           = NULL;
 	intptr_t *value                                          = NULL;
 	static char *function                                    = "libcdata_tree_node_replace_node";
 	int number_of_sub_nodes                                  = 0;
+	int sub_node_index                                       = 0;
 
 	if( node == NULL )
 	{
@@ -1686,6 +1688,43 @@ int libcdata_tree_node_replace_node(
 	internal_replacement_node->last_sub_node       = last_sub_node;
 	internal_replacement_node->number_of_sub_nodes = number_of_sub_nodes;
 
+	sub_node = internal_node->first_sub_node;
+
+	for( sub_node_index = 0;
+	     sub_node_index < internal_node->number_of_sub_nodes;
+	     sub_node_index++ )
+	{
+		if( libcdata_tree_node_set_parent_node(
+		     sub_node,
+		     node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set parent node value of sub node: %d.",
+			 function,
+			 sub_node_index );
+
+			return( -1 );
+		}
+		if( libcdata_tree_node_get_next_node(
+		     sub_node,
+		     &sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve next node of sub node: %d.",
+			 function,
+			 sub_node_index );
+
+			return( -1 );
+		}
+	}
 	return( 1 );
 }
 
@@ -1790,7 +1829,7 @@ int libcdata_tree_node_remove_node(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set previous node of node.",
+			 "%s: unable to set previous node of next node.",
 			 function );
 
 			return( -1 );
@@ -1807,7 +1846,7 @@ int libcdata_tree_node_remove_node(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set next node of node.",
+			 "%s: unable to set next node of previous node.",
 			 function );
 
 			return( -1 );

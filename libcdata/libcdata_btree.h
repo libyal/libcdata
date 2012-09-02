@@ -119,6 +119,7 @@ int libcdata_btree_node_replace_value(
 int libcdata_btree_node_remove_value(
      libcdata_tree_node_t *node,
      intptr_t *value,
+     intptr_t *replacement_value,
      libcerror_error_t **error );
 
 int libcdata_btree_node_split(

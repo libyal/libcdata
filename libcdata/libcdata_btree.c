@@ -361,27 +361,6 @@ int libcdata_btree_node_get_sub_node_by_value(
 			return( -1 );
 		}
 	}
-	if( number_of_values_list_elements == 0 )
-	{
-		*values_list_element = NULL;
-
-		return( 0 );
-	}
-	if( libcdata_list_get_element_by_index(
-	     values_list,
-	     0,
-	     values_list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve values list element: 0.",
-		 function );
-
-		return( -1 );
-	}
 	if( libcdata_tree_node_get_number_of_sub_nodes(
 	     node,
 	     &number_of_sub_nodes,
@@ -424,6 +403,27 @@ int libcdata_btree_node_get_sub_node_by_value(
 
 			return( -1 );
 		}
+	}
+	if( number_of_values_list_elements == 0 )
+	{
+		*values_list_element = NULL;
+
+		return( 0 );
+	}
+	if( libcdata_list_get_element_by_index(
+	     values_list,
+	     0,
+	     values_list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve values list element: 0.",
+		 function );
+
+		return( -1 );
 	}
 	for( values_list_element_index = 0;
 	     values_list_element_index < number_of_values_list_elements;
@@ -986,18 +986,20 @@ int libcdata_btree_node_replace_value(
 int libcdata_btree_node_remove_value(
      libcdata_tree_node_t *node,
      intptr_t *value,
+     intptr_t *replacement_value,
      libcerror_error_t **error )
 {
 	libcdata_list_t *sub_node_values_list                 = NULL;
 	libcdata_list_t *values_list                          = NULL;
-	libcdata_list_element_t *sub_node_values_list_element = NULL;
+	libcdata_list_element_t *previous_values_list_element = NULL;
 	libcdata_list_element_t *values_list_element          = NULL;
 	libcdata_tree_node_t *parent_node                     = NULL;
 	libcdata_tree_node_t *sub_node                        = NULL;
-	intptr_t *sub_node_value                              = NULL;
 	static char *function                                 = "libcdata_btree_node_remove_value";
 	int number_of_sub_nodes                               = 0;
+	int number_of_values_list_elements                    = 0;
 	int result                                            = 0;
+	int sub_node_number_of_sub_nodes                      = 0;
 	int sub_node_number_of_values_list_elements           = 0;
 
 	if( value == NULL )
@@ -1030,25 +1032,81 @@ int libcdata_btree_node_remove_value(
 
 		return( -1 );
 	}
-	else if( result != 0 )
+	if( libcdata_tree_node_get_value(
+	     node,
+	     (intptr_t **) &values_list,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve values list.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_get_number_of_elements(
+	     values_list,
+	     &number_of_values_list_elements,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve number of values list elements.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_tree_node_get_number_of_sub_nodes(
+	     node,
+	     &number_of_sub_nodes,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve number of sub nodes.",
+		 function );
+
+		return( -1 );
+	}
+	if( sub_node != NULL )
 	{
 		if( libcdata_tree_node_get_value(
-		     node,
-		     (intptr_t **) &values_list,
+		     sub_node,
+		     (intptr_t **) &sub_node_values_list,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve values list.",
+			 "%s: unable to retrieve sub node values list.",
+			 function );
+
+			return( -1 );
+		}
+		if( libcdata_list_get_number_of_elements(
+		     sub_node_values_list,
+		     &sub_node_number_of_values_list_elements,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve sub node number of values list elements.",
 			 function );
 
 			return( -1 );
 		}
 		if( libcdata_tree_node_get_number_of_sub_nodes(
-		     node,
-		     &number_of_sub_nodes,
+		     sub_node,
+		     &sub_node_number_of_sub_nodes,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -1060,121 +1118,89 @@ int libcdata_btree_node_remove_value(
 
 			return( -1 );
 		}
-		/* In a branch node replace the values list element with the last value of the corresponding sub node
+		/* If the sub node is empty remove it
 		 */
-		if( number_of_sub_nodes != 0 )
+		if( ( sub_node_number_of_sub_nodes == 0 )
+		 && ( sub_node_number_of_values_list_elements == 0 ) )
 		{
-			if( libcdata_tree_node_get_value(
+			if( libcdata_tree_node_remove_node(
+			     node,
 			     sub_node,
-			     (intptr_t **) &sub_node_values_list,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
+				 "%s: unable to remove remaining sub node from node.",
+				 function );
+
+				return( -1 );
+			}
+			if( libcdata_tree_node_free(
+			     &sub_node,
+			     (int (*)(intptr_t **, libcerror_error_t **)) &libcdata_btree_free_values_list,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free remaining sub node.",
+				 function );
+
+				return( -1 );
+			}
+			if( libcdata_tree_node_get_number_of_sub_nodes(
+			     node,
+			     &number_of_sub_nodes,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve values list from sub node.",
+				 "%s: unable to retrieve number of sub nodes.",
 				 function );
 
 				return( -1 );
 			}
-			if( libcdata_list_get_number_of_elements(
-			     sub_node_values_list,
-			     &sub_node_number_of_values_list_elements,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve number of values list elements.",
-				 function );
-
-				return( -1 );
-			}
-			/* If the sub node contains values replace the values list element value
-			 * with that of the last values list element value of the sub node
-			 */
-			if( sub_node_number_of_values_list_elements != 0 )
+			if( values_list_element == NULL )
 			{
 				if( libcdata_list_get_element_by_index(
-				     sub_node_values_list,
-				     sub_node_number_of_values_list_elements - 1,
-				     &sub_node_values_list_element,
+				     values_list,
+				     number_of_values_list_elements - 1,
+				     &values_list_element,
 				     error ) != 1 )
 				{
 					libcerror_error_set(
 					 error,
 					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-					 "%s: unable to retrieve sub node values list element: %d.",
+					 "%s: unable to retrieve values list element: %d.",
 					 function,
-					 sub_node_number_of_values_list_elements - 1 );
+					 number_of_values_list_elements - 1 );
 
 					return( -1 );
 				}
 				if( libcdata_list_element_get_value(
-				     sub_node_values_list_element,
-				     &sub_node_value,
+				     values_list_element,
+				     &replacement_value,
 				     error ) != 1 )
 				{
 					libcerror_error_set(
 					 error,
 					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-					 "%s: unable to retrieve value from sub node values list element: %d.",
+					 "%s: unable to retrieve value from values list element: %d.",
 					 function,
-					 sub_node_number_of_values_list_elements - 1 );
-
-					return( -1 );
-				}
-				if( libcdata_list_element_set_value(
-				     values_list_element,
-				     sub_node_value,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-					 "%s: unable to set value in values list element.",
-					 function );
+					 number_of_values_list_elements - 1 );
 
 					return( -1 );
 				}
 			}
-			/* If the sub node is empty remove the sub node
-			 */
-			else
+			if( values_list_element != NULL )
 			{
-				if( libcdata_tree_node_remove_node(
-				     node,
-				     sub_node,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
-					 "%s: unable to remove sub node from node.",
-					 function );
-
-					return( -1 );
-				}
-				if( libcdata_tree_node_free(
-				     &sub_node,
-				     (int (*)(intptr_t **, libcerror_error_t **)) &libcdata_btree_free_values_list,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-					 "%s: unable to free sub node.",
-					 function );
-
-					return( -1 );
-				}
 				if( libcdata_list_remove_element(
 				     values_list,
 				     values_list_element,
@@ -1203,121 +1229,211 @@ int libcdata_btree_node_remove_value(
 
 					return( -1 );
 				}
-				if( libcdata_tree_node_get_number_of_sub_nodes(
-				     node,
-				     &number_of_sub_nodes,
+				if( libcdata_list_get_number_of_elements(
+				     values_list,
+				     &number_of_values_list_elements,
 				     error ) != 1 )
 				{
 					libcerror_error_set(
 					 error,
 					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-					 "%s: unable to retrieve number of sub nodes.",
+					 "%s: unable to retrieve number of values list elements.",
 					 function );
 
 					return( -1 );
 				}
-				/* If one sub node remains flatten the tree
-				 */
-				if( number_of_sub_nodes == 1 )
-				{
-					if( libcdata_tree_node_get_sub_node_by_index(
-					     node,
-					     0,
-					     &sub_node,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-						 "%s: unable to retrieve sub node: 0.",
-						 function );
-
-						return( -1 );
-					}
-					if( libcdata_tree_node_remove_node(
-					     node,
-					     sub_node,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
-						 "%s: unable to remove remaining sub node from node.",
-						 function );
-
-						return( -1 );
-					}
-					if( libcdata_tree_node_replace_node(
-					     node,
-					     sub_node,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-						 "%s: unable to replace node with remaining sub node.",
-						 function );
-
-						libcdata_tree_node_append_node(
-						 node,
-						 sub_node,
-						 NULL );
-
-						return( -1 );
-					}
-					if( libcdata_tree_node_free(
-					     &sub_node,
-					     (int (*)(intptr_t **, libcerror_error_t **)) &libcdata_btree_free_values_list,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-						 "%s: unable to free remaining sub node.",
-						 function );
-
-						return( -1 );
-					}
-				}
 			}
 		}
-		/* In a leaf node remove the values list element from the list
-		 */
-		else
+	}
+	if( number_of_sub_nodes != 0 )
+	{
+		if( ( number_of_values_list_elements + 1 ) != number_of_sub_nodes )
 		{
-			if( libcdata_list_remove_element(
-			     values_list,
-			     values_list_element,
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+			 "%s: invalid number of values list elements value out of bounds.",
+			 function );
+
+			return( -1 );
+		}
+		/* If one sub node remains flatten the tree
+		 */
+		if( number_of_sub_nodes == 1 )
+		{
+			if( libcdata_tree_node_get_sub_node_by_index(
+			     node,
+			     0,
+			     &sub_node,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve remaining sub node.",
+				 function );
+
+				return( -1 );
+			}
+			if( libcdata_tree_node_remove_node(
+			     node,
+			     sub_node,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
-				 "%s: unable to remove values list element from values list.",
+				 "%s: unable to remove remaining sub node from node.",
 				 function );
 
 				return( -1 );
 			}
-			if( libcdata_list_element_free(
-			     &values_list_element,
-			     NULL,
+			if( libcdata_tree_node_replace_node(
+			     node,
+			     sub_node,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to replace node with remaining sub node.",
+				 function );
+
+				libcdata_tree_node_append_node(
+				 node,
+				 sub_node,
+				 NULL );
+
+				return( -1 );
+			}
+			if( libcdata_tree_node_get_value(
+			     node,
+			     (intptr_t **) &values_list,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve values list.",
+				 function );
+
+				return( -1 );
+			}
+			if( libcdata_tree_node_free(
+			     &sub_node,
+			     (int (*)(intptr_t **, libcerror_error_t **)) &libcdata_btree_free_values_list,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free values list element.",
+				 "%s: unable to free remaining sub node.",
 				 function );
 
 				return( -1 );
 			}
+		}
+		/* If the sub node contains more than one values list elements
+		 * use the replacement value determined in the sub node
+		 */
+		else if( values_list_element != NULL )
+		{
+			if( replacement_value == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+				 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+				 "%s: invalid replacement value.",
+				 function );
+
+				return( -1 );
+			}
+			if( libcdata_list_element_set_value(
+			     values_list_element,
+			     replacement_value,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set value in values list element.",
+				 function );
+
+				return( -1 );
+			}
+		}
+	}
+	/* In a leaf node remove the values list element from the list
+	 */
+	else if( values_list_element != NULL )
+	{
+		if( libcdata_list_element_get_previous_element(
+		     values_list_element,
+		     &previous_values_list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve previous element from values list element.",
+			 function );
+
+			return( -1 );
+		}
+		if( previous_values_list_element != NULL )
+		{
+			if( libcdata_list_element_get_value(
+			     previous_values_list_element,
+			     &replacement_value,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve value from previous values list element.",
+				 function );
+
+				return( -1 );
+			}
+		}
+		if( libcdata_list_remove_element(
+		     values_list,
+		     values_list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
+			 "%s: unable to remove values list element from values list.",
+			 function );
+
+			return( -1 );
+		}
+		if( libcdata_list_element_free(
+		     &values_list_element,
+		     NULL,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free values list element.",
+			 function );
+
+			return( -1 );
 		}
 	}
 	if( libcdata_tree_node_get_parent_node(
@@ -1339,6 +1455,7 @@ int libcdata_btree_node_remove_value(
 		if( libcdata_btree_node_remove_value(
 		     parent_node,
 		     value,
+		     replacement_value,
 		     error ) == -1 )
 		{
 			libcerror_error_set(
@@ -1557,6 +1674,8 @@ int libcdata_btree_node_split(
 					goto on_error;
 				}
 			}
+			split_values_list_element_index += number_of_split_values_list_elements;
+
 			if( libcdata_tree_node_append_node(
 			     node,
 			     sub_node,
@@ -1575,8 +1694,6 @@ int libcdata_btree_node_split(
 			sub_node = NULL;
 
 			sub_node_index++;
-
-			split_values_list_element_index += number_of_split_values_list_elements;
 		}
 		if( libcdata_list_element_get_next_element(
 		     values_list_element,
@@ -2331,6 +2448,7 @@ int libcdata_btree_remove_value(
 	if( libcdata_btree_node_remove_value(
 	     upper_node,
 	     value,
+	     NULL,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
