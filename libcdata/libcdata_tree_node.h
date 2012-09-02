@@ -41,11 +41,11 @@ struct libcdata_internal_tree_node
 	 */
 	libcdata_tree_node_t *parent_node;
 
-	/* The previous node list
+	/* The previous node
 	 */
 	libcdata_tree_node_t *previous_node;
 
-	/* The next node list
+	/* The next node
 	 */
 	libcdata_tree_node_t *next_node;
 
@@ -74,6 +74,14 @@ int libcdata_tree_node_initialize(
 LIBCDATA_EXTERN \
 int libcdata_tree_node_free(
      libcdata_tree_node_t **node,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_empty(
+     libcdata_tree_node_t *node,
      int (*value_free_function)(
             intptr_t **value,
             libcerror_error_t **error ),
@@ -188,6 +196,12 @@ int libcdata_tree_node_insert_value(
             intptr_t *second_value,
             libcerror_error_t **error ),
      uint8_t insert_flags,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_replace_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *replacement_node,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

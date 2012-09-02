@@ -105,6 +105,8 @@ Tree node functions
 .Ft int
 .Fn libcdata_tree_node_free "libcdata_tree_node_t **node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
+.Fn libcdata_tree_node_empty "libcdata_tree_node_t *node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
 .Fn libcdata_tree_node_clone "libcdata_tree_node_t **destination_node, libcdata_tree_node_t *source_node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_get_value "libcdata_tree_node_t *node, intptr_t **value, libcdata_error_t **error"
@@ -134,6 +136,8 @@ Tree node functions
 .Fn libcdata_tree_node_insert_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_insert_value "libcdata_tree_node_t *parent_node, intptr_t *value, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_replacement_node "libcdata_tree_node_t *node, libcdata_tree_node_t *replacement_node, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, libcdata_error_t **error"
 .Ft int

@@ -148,8 +148,9 @@ int libcdata_array_initialize(
 		internal_array->number_of_allocated_entries = number_of_entries;
 		internal_array->number_of_entries           = number_of_entries;
 
-		*array = (libcdata_array_t *) internal_array;
 	}
+	*array = (libcdata_array_t *) internal_array;
+
 	return( 1 );
 
 on_error:

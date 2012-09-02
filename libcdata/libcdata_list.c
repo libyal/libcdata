@@ -114,9 +114,8 @@ int libcdata_list_free(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_internal_list_t *internal_list = NULL;
-	static char *function                   = "libcdata_list_free";
-	int result                              = 0;
+	static char *function = "libcdata_list_free";
+	int result            = 0;
 
 	if( list == NULL )
 	{
@@ -131,8 +130,6 @@ int libcdata_list_free(
 	}
 	if( *list != NULL )
 	{
-		internal_list = (libcdata_internal_list_t *) *list;
-
 		result = libcdata_list_empty(
 		          *list,
 		          value_free_function,
@@ -148,7 +145,7 @@ int libcdata_list_free(
 			 function );
 		}
 		memory_free(
-		 internal_list );
+		 *list );
 
 		*list = NULL;
 	}
@@ -1361,7 +1358,7 @@ int libcdata_list_insert_element(
 			}
 			else
 			{
-				if( libcdata_list_element_set_previous_element(
+				if( libcdata_list_element_set_next_element(
 				     previous_element,
 				     element,
 				     error ) != 1 )
@@ -1580,26 +1577,9 @@ int libcdata_list_remove_element(
 	}
 	if( next_element != NULL )
 	{
-		if( libcdata_list_element_set_next_element(
-		     next_element,
-		     previous_element,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set next element of previous element.",
-			 function );
-
-			return( -1 );
-		}
-	}
-	if( previous_element != NULL )
-	{
 		if( libcdata_list_element_set_previous_element(
-		     previous_element,
 		     next_element,
+		     previous_element,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -1607,6 +1587,23 @@ int libcdata_list_remove_element(
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 			 "%s: unable to set previous element of next element.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	if( previous_element != NULL )
+	{
+		if( libcdata_list_element_set_next_element(
+		     previous_element,
+		     next_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set next element of previous element.",
 			 function );
 
 			return( -1 );

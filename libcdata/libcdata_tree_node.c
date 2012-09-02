@@ -65,7 +65,7 @@ int libcdata_tree_node_initialize(
 	internal_node = memory_allocate_structure(
 	                 libcdata_internal_tree_node_t );
 
-	if( *node == NULL )
+	if( internal_node == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -232,6 +232,21 @@ int libcdata_tree_node_free(
 
 				return( -1 );
 			}
+			if( libcdata_tree_node_free(
+			     &sub_node,
+			     value_free_function,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+				 "%s: unable to free sub node: %d.",
+				 function,
+				 sub_node_index );
+
+				result = -1;
+			}
 			sub_node = next_node;
 		}
 		if( internal_node->value != NULL )
@@ -258,6 +273,140 @@ int libcdata_tree_node_free(
 		 internal_node );
 
 		*node = NULL;
+	}
+	return( result );
+}
+
+/* Empties a tree node and frees its sub nodes
+ * Uses the value_free_function to free the value of the sub nodes
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_tree_node_empty(
+     libcdata_tree_node_t *node,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error )
+{
+	libcdata_internal_tree_node_t *internal_node = NULL;
+	libcdata_tree_node_t *next_node              = NULL;
+	libcdata_tree_node_t *parent_node            = NULL;
+	libcdata_tree_node_t *previous_node          = NULL;
+	libcdata_tree_node_t *sub_node               = NULL;
+	static char *function                        = "libcdata_tree_node_empty";
+	int number_of_sub_nodes                      = 0;
+	int result                                   = 1;
+	int sub_node_index                           = 0;
+
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	internal_node = (libcdata_internal_tree_node_t *) node;
+
+	number_of_sub_nodes = internal_node->number_of_sub_nodes;
+
+	sub_node = internal_node->first_sub_node;
+
+	for( sub_node_index = 0;
+	     sub_node_index < number_of_sub_nodes;
+	     sub_node_index++ )
+	{
+		if( libcdata_tree_node_get_nodes(
+		     sub_node,
+		     &parent_node,
+		     &previous_node,
+		     &next_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve nodes of sub node: %d.",
+			 function,
+			 sub_node_index );
+
+			return( -1 );
+		}
+		if( previous_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+			 "%s: invalid sub node: %d - previous node is set.",
+			 function,
+			 sub_node_index );
+
+			return( -1 );
+		}
+		internal_node->first_sub_node = next_node;
+
+		if( internal_node->last_sub_node == sub_node )
+		{
+			internal_node->last_sub_node = next_node;
+		}
+		internal_node->number_of_sub_nodes -= 1;
+
+		if( next_node != NULL )
+		{
+			if( libcdata_tree_node_set_previous_node(
+			     next_node,
+			     NULL,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set previous node of sub node: %d.",
+				 function,
+				 sub_node_index + 1 );
+
+				return( -1 );
+			}
+		}
+		if( libcdata_tree_node_set_nodes(
+		     sub_node,
+		     NULL,
+		     NULL,
+		     NULL,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set nodes of sub node: %d.",
+			 function,
+			 sub_node_index );
+
+			return( -1 );
+		}
+		if( libcdata_tree_node_free(
+		     &sub_node,
+		     value_free_function,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free sub node: %d.",
+			 function,
+			 sub_node_index );
+
+			result = -1;
+		}
+		sub_node = next_node;
 	}
 	return( result );
 }
@@ -1062,7 +1211,7 @@ int libcdata_tree_node_insert_node(
 	libcdata_internal_tree_node_t *internal_parent_node = NULL;
 	libcdata_tree_node_t *previous_node                 = NULL;
 	libcdata_tree_node_t *sub_node                      = NULL;
-	intptr_t *sub_value                                 = NULL;
+	intptr_t *sub_node_value                            = NULL;
 	static char *function                               = "libcdata_tree_node_insert_node";
 	int result                                          = -1;
 	int sub_node_index                                  = 0;
@@ -1188,7 +1337,7 @@ int libcdata_tree_node_insert_node(
 		{
 			if( libcdata_tree_node_get_value(
 			     sub_node,
-			     &sub_value,
+			     &sub_node_value,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
@@ -1203,7 +1352,7 @@ int libcdata_tree_node_insert_node(
 			}
 			result = value_compare_function(
 			          internal_node->value,
-			          sub_value,
+			          sub_node_value,
 			          error );
 
 			if( result == -1 )
@@ -1454,6 +1603,90 @@ on_error:
 		 NULL );
 	}
 	return( -1 );
+}
+
+/* Replaces a tree node with another tree node
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_tree_node_replace_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *replacement_node,
+     libcerror_error_t **error )
+{
+	libcdata_internal_tree_node_t *internal_node             = NULL;
+	libcdata_internal_tree_node_t *internal_replacement_node = NULL;
+	libcdata_tree_node_t *first_sub_node                     = NULL;
+	libcdata_tree_node_t *last_sub_node                      = NULL;
+	intptr_t *value                                          = NULL;
+	static char *function                                    = "libcdata_tree_node_replace_node";
+	int number_of_sub_nodes                                  = 0;
+
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	internal_node = (libcdata_internal_tree_node_t *) node;
+
+	if( replacement_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid replacement node.",
+		 function );
+
+		return( -1 );
+	}
+	internal_replacement_node = (libcdata_internal_tree_node_t *) replacement_node;
+
+	if( replacement_node == node )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: cannot replace node with itself.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( internal_replacement_node->parent_node != NULL )
+	 || ( internal_replacement_node->previous_node != NULL )
+	 || ( internal_replacement_node->next_node != NULL ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid replacement node - node is already part of a tree.",
+		 function );
+
+		return( -1 );
+	}
+	value               = internal_node->value;
+	first_sub_node      = internal_node->first_sub_node;
+	last_sub_node       = internal_node->last_sub_node;
+	number_of_sub_nodes = internal_node->number_of_sub_nodes;
+
+	internal_node->value               = internal_replacement_node->value;
+	internal_node->first_sub_node      = internal_replacement_node->first_sub_node;
+	internal_node->last_sub_node       = internal_replacement_node->last_sub_node;
+	internal_node->number_of_sub_nodes = internal_replacement_node->number_of_sub_nodes;
+
+	internal_replacement_node->value               = value;
+	internal_replacement_node->first_sub_node      = first_sub_node;
+	internal_replacement_node->last_sub_node       = last_sub_node;
+	internal_replacement_node->number_of_sub_nodes = number_of_sub_nodes;
+
+	return( 1 );
 }
 
 /* Removes a tree node from the parent node

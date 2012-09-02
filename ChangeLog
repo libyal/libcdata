@@ -1,17 +1,19 @@
 TODO
 * library add support for:
   - offset list
-  - btree
 * update header
 * update man page: libcdata.3
+  - btree
 * add tests for:
   - array (partial)
   - list
   - list element
   - tree node
+  - btree
 * expose functions in API ?
   - libcdata_array_clear ?
   - libcdata_list_set_first_element and libcdata_list_set_last_element ?
+  - libcdata_btree_node functions ?
 * update msvscpp files
 
 20120902

@@ -219,6 +219,116 @@ int libcdata_array_insert_entry(
      libcdata_error_t **error );
 
 /* -------------------------------------------------------------------------
+ * B-tree functions
+ * ------------------------------------------------------------------------- */
+
+/* Creates a tree
+ * Make sure the value tree is pointing to is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_initialize(
+     libcdata_btree_t **tree,
+     int maximum_number_of_sub_nodes,
+     libcdata_error_t **error );
+
+/* Frees a tree, its sub nodes
+ * Uses the value_free_function to free the value
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_free(
+     libcdata_btree_t **tree,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcdata_error_t **error ),
+     libcdata_error_t **error );
+
+/* Retrieves the number of values in the tree
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_get_number_of_values(
+     libcdata_btree_t *tree,
+     int *number_of_values,
+     libcdata_error_t **error );
+
+/* Retrieves a specific value
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_get_value_by_index(
+     libcdata_btree_t *tree,
+     int value_index,
+     intptr_t **value,
+     libcdata_error_t **error );
+
+/* Retrieve a value from the tree
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
+ * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
+ *
+ * Returns 1 if successful, 0 if no such value or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_get_value_by_value(
+     libcdata_btree_t *tree,
+     intptr_t *value,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcdata_error_t **error ),
+     libcdata_tree_node_t **upper_node,
+     intptr_t **existing_value,
+     libcdata_error_t **error );
+
+/* Inserts a value into a tree
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
+ * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
+ *
+ * Returns 1 if successful, 0 if the value already exists or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_insert_value(
+     libcdata_btree_t *tree,
+     int *value_index,
+     intptr_t *value,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcdata_error_t **error ),
+     libcdata_tree_node_t **upper_node,
+     intptr_t **existing_value,
+     libcdata_error_t **error );
+
+/* Replaces a value in the tree
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_replace_value(
+     libcdata_btree_t *tree,
+     libcdata_tree_node_t *upper_node,
+     int *value_index,
+     intptr_t *value,
+     int *replacement_value_index,
+     intptr_t *replacement_value,
+     libcdata_error_t **error );
+
+/* Removes a value from the tree
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_btree_remove_value(
+     libcdata_btree_t *tree,
+     libcdata_tree_node_t *upper_node,
+     int *value_index,
+     intptr_t *value,
+     libcdata_error_t **error );
+
+/* -------------------------------------------------------------------------
  * List functions
  * ------------------------------------------------------------------------- */
 
@@ -521,6 +631,18 @@ int libcdata_tree_node_free(
             libcdata_error_t **error ),
      libcdata_error_t **error );
 
+/* Empties a tree node and frees its sub nodes
+ * Uses the value_free_function to free the value of the sub nodes
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_tree_node_empty(
+     libcdata_tree_node_t *node,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcdata_error_t **error ),
+     libcdata_error_t **error );
+
 /* Clones the tree node and its sub nodes
  *
  * The values are cloned using the value_clone_function
@@ -698,6 +820,15 @@ int libcdata_tree_node_insert_value(
             intptr_t *second_value,
             libcdata_error_t **error ),
      uint8_t insert_flags,
+     libcdata_error_t **error );
+
+/* Replaces a tree node with another tree node
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_tree_node_replace_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *replacement_node,
      libcdata_error_t **error );
 
 /* Removes a tree node from the parent node
