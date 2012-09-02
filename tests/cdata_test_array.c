@@ -34,12 +34,13 @@
 /* Tests initializing the array
  * Returns 1 if successful, 0 if not or -1 on error
  */
-int cdata_test_array_initialize1(
-     void )
+int cdata_test_array_initialize(
+     libcdata_array_t **array,
+     int number_of_entries,
+     int expected_result )
 {
-	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_array_initialize1";
+	static char *function    = "cdata_test_array_initialize";
 	int result               = 0;
 
 	fprintf(
@@ -47,8 +48,8 @@ int cdata_test_array_initialize1(
 	 "Testing initialize\t" );
 
 	result = libcdata_array_initialize(
-	          &array,
-	          0,
+	          array,
+	          number_of_entries,
 	          &error );
 
 	if( result != 1 )
@@ -60,7 +61,7 @@ int cdata_test_array_initialize1(
 		 "%s: unable to create array.",
 		 function );
 	}
-	if( result != 1 )
+	if( result != expected_result )
 	{
 		fprintf(
 		 stdout,
@@ -76,10 +77,19 @@ int cdata_test_array_initialize1(
 	 stdout,
 	 "\n" );
 
+	if( result == -1 )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stdout );
+
+		libcerror_error_free(
+		 &error );
+	}
 	if( result == 1 )
 	{
 		if( libcdata_array_free(
-		     &array,
+		     array,
 		     NULL,
 		     &error ) != 1 )
 		{
@@ -89,232 +99,13 @@ int cdata_test_array_initialize1(
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to free array.",
 			 function );
+
+			return( -1 );
 		}
 	}
-	if( result == -1 )
+	if( result != expected_result )
 	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
-		libcerror_error_free(
-		 &error );
-	}
-	if( result != 1 )
-	{
-		return( -1 );
-	}
-	return( 1 );
-}
-
-/* Tests initializing the array
- * Returns 1 if successful, 0 if not or -1 on error
- */
-int cdata_test_array_initialize2(
-     void )
-{
-	libcdata_array_t *array  = (libcdata_array_t *) 0x12345678UL;
-	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_array_initialize2";
-	int result               = 0;
-
-	fprintf(
-	 stdout,
-	 "Testing initialize\t" );
-
-	result = libcdata_array_initialize(
-	          &array,
-	          0,
-	          &error );
-
-	if( result != 1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create array.",
-		 function );
-	}
-	if( result == 1 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result == 1 )
-	{
-		if( libcdata_array_free(
-		     &array,
-		     NULL,
-		     &error ) != 1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free array.",
-			 function );
-		}
-	}
-	if( result == -1 )
-	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
-		libcerror_error_free(
-		 &error );
-	}
-	if( result == 1 )
-	{
-		return( -1 );
-	}
-	return( 1 );
-}
-
-/* Tests initializing the array
- * Returns 1 if successful, 0 if not or -1 on error
- */
-int cdata_test_array_initialize3(
-     void )
-{
-	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_array_initialize3";
-	int result               = 0;
-
-	fprintf(
-	 stdout,
-	 "Testing initialize\t" );
-
-	result = libcdata_array_initialize(
-	          NULL,
-	          0,
-	          &error );
-
-	if( result != 1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create array.",
-		 function );
-	}
-	if( result == 1 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result == -1 )
-	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
-		libcerror_error_free(
-		 &error );
-	}
-	if( result == 1 )
-	{
-		return( -1 );
-	}
-	return( 1 );
-}
-
-/* Tests initializing the array
- * Returns 1 if successful, 0 if not or -1 on error
- */
-int cdata_test_array_initialize4(
-     void )
-{
-	libcdata_array_t *array  = NULL;
-	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_array_initialize4";
-	int result               = 0;
-
-	fprintf(
-	 stdout,
-	 "Testing initialize\t" );
-
-	result = libcdata_array_initialize(
-	          &array,
-	          -1,
-	          &error );
-
-	if( result != 1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create array.",
-		 function );
-	}
-	if( result == 1 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result == 1 )
-	{
-		if( libcdata_array_free(
-		     &array,
-		     NULL,
-		     &error ) != 1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free array.",
-			 function );
-		}
-	}
-	if( result == -1 )
-	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
-		libcerror_error_free(
-		 &error );
-	}
-	if( result == 1 )
-	{
-		return( -1 );
+		return( 0 );
 	}
 	return( 1 );
 }
@@ -327,6 +118,8 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
+	libcdata_array_t *array = NULL;
+
 	if( argc != 1 )
 	{
 		fprintf(
@@ -335,7 +128,12 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	if( cdata_test_array_initialize1() != 1 )
+	array = NULL;
+
+	if( cdata_test_array_initialize(
+	     &array,
+	     0,
+	     1 ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -343,7 +141,12 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	if( cdata_test_array_initialize2() != 1 )
+	array = NULL;
+
+	if( cdata_test_array_initialize(
+	     &array,
+	     200,
+	     1 ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -351,7 +154,12 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	if( cdata_test_array_initialize3() != 1 )
+	array = (libcdata_array_t *) 0x12345678UL;
+
+	if( cdata_test_array_initialize(
+	     &array,
+	     0,
+	     -1 ) != 1 )
 	{
 		fprintf(
 		 stderr,
@@ -359,7 +167,23 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	if( cdata_test_array_initialize4() != 1 )
+	if( cdata_test_array_initialize(
+	     NULL,
+	     0,
+	     -1 ) != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to test initialize.\n" );
+
+		return( EXIT_FAILURE );
+	}
+	array = NULL;
+
+	if( cdata_test_array_initialize(
+	     &array,
+	     -1,
+	     -1 ) != 1 )
 	{
 		fprintf(
 		 stderr,

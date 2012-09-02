@@ -828,7 +828,7 @@ int libcdata_list_get_value_by_index(
 	return( 1 );
 }
 
-/* Prepend an element to the list
+/* Prepend a list element to the list
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_prepend_element(
@@ -952,7 +952,7 @@ on_error:
 	return( -1 );
 }
 
-/* Append an element to the list
+/* Append a list element to the list
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_append_element(
@@ -1518,7 +1518,7 @@ on_error:
 	return( -1 );
 }
 
-/* Removes an element from the list
+/* Removes a list element from the list
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_remove_element(

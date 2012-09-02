@@ -1,13 +1,23 @@
 TODO
-* update manuals
-* update header
-  - add array - comment
-* update msvscpp files
-* add support for:
-  - array
-  - list
-  - tree
+* library add support for:
+  - offset list
   - btree
+* update header
+* update man page: libcdata.3
+* add tests for:
+  - array (partial)
+  - list
+  - list element
+  - tree node
+* expose functions in API ?
+  - libcdata_array_clear ?
+  - libcdata_list_set_first_element and libcdata_list_set_last_element ?
+* update msvscpp files
+
+20120902
+* Worked on stand-alone version
+* Worked on tests
+* Worked on man page
 
 20120901
 * Worked on stand-alone version

@@ -1,0 +1,165 @@
+.Dd September 2, 2012
+.Dt libcdata 3
+.Os libcdata
+.Sh NAME
+.Nm libcdata.h
+.Nd Library to support cross-platform C generic data functions
+.Sh LIBRARY
+.Lb libcdata
+.Sh SYNOPSIS
+.In libcdata.h
+.Pp
+Support functions
+.Ft const char *
+.Fn libcdata_get_version "void"
+.Pp
+Stream functions
+.Ft int
+.Fn libcdata_stream_set "FILE *stream, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_stream_open "const char *filename, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_stream_close "libcdata_error_t **error"
+.Pp
+Verbose functions
+.Ft void
+.Fn libcdata_verbose_set "int verbose"
+.Pp
+Array functions
+.Ft int
+.Fn libcdata_array_initialize "libcdata_array_t **array, int number_of_entries, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_free "libcdata_array_t **array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_empty "libcdata_array_t *array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_clone "libcdata_array_t **destination_array, libcdata_array_t *source_array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), int (*entry_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_resize "libcdata_array_t *array, int number_of_entries, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_get_number_of_entries "libcdata_array_t *array, int *number_of_entries, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_get_entry_by_index "libcdata_array_t *array, int entry_index, intptr_t **entry, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_set_entry_by_index "libcdata_array_t *array, int entry_index, intptr_t *entry, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_append_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_insert_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, int (*entry_compare_function)( intptr_t *first_entry, intptr_t *second_entry, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Pp
+List functions
+.Ft int
+.Fn libcdata_list_initialize "libcdata_list_t **list, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_free "libcdata_list_t **list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_empty "libcdata_list_t *list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_clone "libcdata_list_t **destination_list, libcdata_list_t *source_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_get_number_of_elements "libcdata_list_t *list, int *number_of_elements, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_get_element_by_index "libcdata_list_t *list, int element_index, libcdata_list_element_t **element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_get_value_by_index "libcdata_list_t *list, int element_index, intptr_t **value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_prepend_element "libcdata_list_t *list, libcdata_list_element_t *element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_prepend_value "libcdata_list_t *list, intptr_t *value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_append_element "libcdata_list_t *list, libcdata_list_element_t *element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_append_value "libcdata_list_t *list, intptr_t *value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_insert_element "libcdata_list_t *list, libcdata_list_element_t *element, int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_insert_value "libcdata_list_t *list, intptr_t *value, int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_remove_element "libcdata_list_t *list, libcdata_list_element_t *element, libcdata_error_t **error"
+.Pp
+List element functions
+.Ft int
+.Fn libcdata_list_element_initialize "libcdata_list_element_t **element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_free "libcdata_list_element_t **element, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_get_value "libcdata_list_element_t *element, intptr_t **value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_set_value "libcdata_list_element_t *element, intptr_t *value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_get_previous_element "libcdata_list_element_t *element, libcdata_list_element_t **previous_element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_set_previous_element "libcdata_list_element_t *element, libcdata_list_element_t *previous_element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_get_next_element "libcdata_list_element_t *element, libcdata_list_element_t **next_element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_set_next_element "libcdata_list_element_t *element, libcdata_list_element_t *next_element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_get_elements "libcdata_list_element_t *element, libcdata_list_element_t **previous_element, libcdata_list_element_t **next_element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_set_elements "libcdata_list_element_t *element, libcdata_list_element_t *previous_element, libcdata_list_element_t *next_element, libcdata_error_t **error"
+.Pp
+Tree node functions
+.Ft int
+.Fn libcdata_tree_node_initialize "libcdata_tree_node_t **node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_free "libcdata_tree_node_t **node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_clone "libcdata_tree_node_t **destination_node, libcdata_tree_node_t *source_node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_value "libcdata_tree_node_t *node, intptr_t **value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_set_value "libcdata_tree_node_t *node, intptr_t *value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_parent_node "libcdata_tree_node_t *node, libcdata_tree_node_t **parent_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_set_parent_node "libcdata_tree_node_t *node, libcdata_tree_node_t *parent_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_previous_node "libcdata_tree_node_t *node, libcdata_tree_node_t **previous_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_set_previous_node "libcdata_tree_node_t *node, libcdata_tree_node_t *previous_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_next_node "libcdata_tree_node_t *node, libcdata_tree_node_t **next_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_set_next_node "libcdata_tree_node_t *node, libcdata_tree_node_t *next_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_nodes "libcdata_tree_node_t *node, libcdata_tree_node_t **parent_node, libcdata_tree_node_t **previous_node, libcdata_tree_node_t **next_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_set_nodes "libcdata_tree_node_t *node, libcdata_tree_node_t *parent_node, libcdata_tree_node_t *previous_node, libcdata_tree_node_t *next_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_append_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_append_value "libcdata_tree_node_t *parent_node, intptr_t *value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_insert_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_insert_value "libcdata_tree_node_t *parent_node, intptr_t *value, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_number_of_sub_nodes "libcdata_tree_node_t *node, int *number_of_sub_nodes, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_sub_node_by_index "libcdata_tree_node_t *node, int sub_node_index, libcdata_tree_node_t **sub_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_leaf_node_list "libcdata_tree_node_t *node, libcdata_list_t **leaf_node_list, libcdata_error_t **error"
+.Pp
+.Sh DESCRIPTION
+The
+.Fn libcdata_get_version
+function is used to retrieve the library version.
+.Sh RETURN VALUES
+Most of the functions return NULL or -1 on error, dependent on the return type. For the actual return values refer to libcdata.h
+.Sh ENVIRONMENT
+None
+.Sh FILES
+None
+.Sh BUGS
+Please report bugs of any kind to <joachim.metz@gmail.com> or on the project website:
+http://code.google.com/p/libclibs/
+.Sh AUTHOR
+These man pages were written by Joachim Metz.
+.Sh COPYRIGHT
+Copyright 2006-2012 Joachim Metz <joachim.metz@gmail.com>.
+This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+.Sh SEE ALSO
+the libcdata.h include file

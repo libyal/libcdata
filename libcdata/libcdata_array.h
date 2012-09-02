@@ -72,7 +72,6 @@ int libcdata_array_empty(
             libcerror_error_t **error ),
      libcerror_error_t **error );
 
-LIBCDATA_EXTERN \
 int libcdata_array_clear(
      libcdata_array_t *array,
      int (*entry_free_function)(

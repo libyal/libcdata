@@ -105,6 +105,58 @@ int libcdata_tree_node_set_value(
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
+int libcdata_tree_node_get_parent_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **parent_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_set_parent_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *parent_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_previous_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **previous_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_set_previous_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *previous_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_next_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **next_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_set_next_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *next_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_nodes(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **parent_node,
+     libcdata_tree_node_t **previous_node,
+     libcdata_tree_node_t **next_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_set_nodes(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *parent_node,
+     libcdata_tree_node_t *previous_node,
+     libcdata_tree_node_t *next_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
 int libcdata_tree_node_append_node(
      libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
