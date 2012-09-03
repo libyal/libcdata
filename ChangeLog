@@ -16,6 +16,13 @@ TODO
   - libcdata_btree_node functions ?
 * update msvscpp files
 
+Types:
+* tree node
+  - add comment to replace tree node, that it does not switch the node itself
+    or change this behavior !
+* btree
+  - rebalance the tree on insert and remove (add tests first)
+
 20120902
 * Worked on stand-alone version
 * Worked on tests
