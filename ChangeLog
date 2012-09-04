@@ -22,6 +22,14 @@ Types:
     or change this behavior !
 * btree
   - rebalance the tree on insert and remove (add tests first)
+  - add merge functionality
+  - insert function add flags to set replace existing behavior ?
+
+20120904
+* Code clean up
+
+20120903
+* Code clean up
 
 20120902
 * Worked on stand-alone version

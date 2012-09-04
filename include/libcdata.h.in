@@ -414,7 +414,7 @@ int libcdata_list_get_value_by_index(
      intptr_t **value,
      libcdata_error_t **error );
 
-/* Prepend a list element to the list
+/* Prepends a list element to the list
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -423,7 +423,7 @@ int libcdata_list_prepend_element(
      libcdata_list_element_t *element,
      libcdata_error_t **error );
 
-/* Prepend a value to the list
+/* Prepends a value to the list
  * Creates a new list element
  * Returns 1 if successful or -1 on error
  */
@@ -433,7 +433,7 @@ int libcdata_list_prepend_value(
      intptr_t *value,
      libcdata_error_t **error );
 
-/* Append a list element to the list
+/* Appends a list element to the list
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -442,7 +442,7 @@ int libcdata_list_append_element(
      libcdata_list_element_t *element,
      libcdata_error_t **error );
 
-/* Append a value to the list
+/* Appends a value to the list
  * Creates a new list element
  * Returns 1 if successful or -1 on error
  */

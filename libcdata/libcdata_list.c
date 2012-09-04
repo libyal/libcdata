@@ -194,18 +194,6 @@ int libcdata_list_empty(
 		     element_index < number_of_elements;
 		     element_index++ )
 		{
-			if( list_element == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-				 "%s: corruption detected in element: %d.",
-				 function,
-				 element_index );
-
-				return( -1 );
-			}
 			if( libcdata_list_element_get_next_element(
 			     list_element,
 			     &next_element,
@@ -825,7 +813,7 @@ int libcdata_list_get_value_by_index(
 	return( 1 );
 }
 
-/* Prepend a list element to the list
+/* Prepends a list element to the list
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_prepend_element(
@@ -883,7 +871,7 @@ int libcdata_list_prepend_element(
 	return( 1 );
 }
 
-/* Prepend a value to the list
+/* Prepends a value to the list
  * Creates a new list element
  * Returns 1 if successful or -1 on error
  */
@@ -949,7 +937,7 @@ on_error:
 	return( -1 );
 }
 
-/* Append a list element to the list
+/* Appends a list element to the list
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_append_element(
@@ -1007,7 +995,7 @@ int libcdata_list_append_element(
 	return( 1 );
 }
 
-/* Append a value to the list
+/* Appends a value to the list
  * Creates a new list element
  * Returns 1 if successful or -1 on error
  */
