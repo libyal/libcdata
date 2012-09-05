@@ -410,9 +410,8 @@ int libcdata_btree_node_get_sub_node_by_value(
 
 		return( 0 );
 	}
-	if( libcdata_list_get_element_by_index(
+	if( libcdata_list_get_first_element(
 	     values_list,
-	     0,
 	     values_list_element,
 	     error ) != 1 )
 	{
@@ -420,7 +419,7 @@ int libcdata_btree_node_get_sub_node_by_value(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve values list element: 0.",
+		 "%s: unable to retrieve first values list element.",
 		 function );
 
 		return( -1 );
@@ -1167,9 +1166,8 @@ int libcdata_btree_node_remove_value(
 			}
 			if( values_list_element == NULL )
 			{
-				if( libcdata_list_get_element_by_index(
+				if( libcdata_list_get_last_element(
 				     values_list,
-				     number_of_values_list_elements - 1,
 				     &values_list_element,
 				     error ) != 1 )
 				{
@@ -1177,9 +1175,8 @@ int libcdata_btree_node_remove_value(
 					 error,
 					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-					 "%s: unable to retrieve values list element: %d.",
-					 function,
-					 number_of_values_list_elements - 1 );
+					 "%s: unable to retrieve last values list element.",
+					 function );
 
 					return( -1 );
 				}
@@ -1192,9 +1189,8 @@ int libcdata_btree_node_remove_value(
 					 error,
 					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-					 "%s: unable to retrieve value from values list element: %d.",
-					 function,
-					 number_of_values_list_elements - 1 );
+					 "%s: unable to retrieve value from last values list element.",
+					 function );
 
 					return( -1 );
 				}
@@ -1575,9 +1571,8 @@ int libcdata_btree_node_split(
 
 		goto on_error;
 	}
-	if( libcdata_list_get_element_by_index(
+	if( libcdata_list_get_first_element(
 	     values_list,
-	     0,
 	     &values_list_element,
 	     error ) != 1 )
 	{
@@ -1585,7 +1580,7 @@ int libcdata_btree_node_split(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve values list element: 0.",
+		 "%s: unable to retrieve first values list element.",
 		 function );
 
 		goto on_error;

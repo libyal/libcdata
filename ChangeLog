@@ -25,6 +25,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20120905
+* added functions for list to retrieve first and last element
+
 20120904
 * Code clean up
 

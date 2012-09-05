@@ -90,9 +90,21 @@ int libcdata_list_get_number_of_elements(
      int *number_of_elements,
      libcerror_error_t **error );
 
+LIBCDATA_EXTERN \
+int libcdata_list_get_first_element(
+     libcdata_list_t *list,
+     libcdata_list_element_t **element,
+     libcerror_error_t **error );
+
 int libcdata_list_set_first_element(
      libcdata_list_t *list,
      libcdata_list_element_t *element,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_list_get_last_element(
+     libcdata_list_t *list,
+     libcdata_list_element_t **element,
      libcerror_error_t **error );
 
 int libcdata_list_set_last_element(

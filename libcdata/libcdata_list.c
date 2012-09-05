@@ -501,6 +501,46 @@ int libcdata_list_get_number_of_elements(
 	return( 1 );
 }
 
+/* Retrieves the first elements in the list
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_list_get_first_element(
+     libcdata_list_t *list,
+     libcdata_list_element_t **element,
+     libcerror_error_t **error )
+{
+	libcdata_internal_list_t *internal_list = NULL;
+	static char *function                   = "libcdata_list_get_first_element";
+
+	if( list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_list = (libcdata_internal_list_t *) list;
+
+	if( element == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid element.",
+		 function );
+
+		return( -1 );
+	}
+	*element = internal_list->first_element;
+
+	return( 1 );
+}
+
 /* Sets the first element in the list
  * Returns 1 if successful or -1 on error
  */
@@ -560,6 +600,46 @@ int libcdata_list_set_first_element(
 		}
 	}
 	internal_list->first_element = element;
+
+	return( 1 );
+}
+
+/* Retrieves the last elements in the list
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_list_get_last_element(
+     libcdata_list_t *list,
+     libcdata_list_element_t **element,
+     libcerror_error_t **error )
+{
+	libcdata_internal_list_t *internal_list = NULL;
+	static char *function                   = "libcdata_list_get_last_element";
+
+	if( list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_list = (libcdata_internal_list_t *) list;
+
+	if( element == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid element.",
+		 function );
+
+		return( -1 );
+	}
+	*element = internal_list->last_element;
 
 	return( 1 );
 }
