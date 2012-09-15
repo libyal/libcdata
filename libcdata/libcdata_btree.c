@@ -1860,7 +1860,7 @@ int libcdata_btree_get_value_by_index(
 	return( 1 );
 }
 
-/* Retrieve a value from the tree
+/* Retrieves a value from the tree
  *
  * Uses the value_compare_function to determine the order of the entries
  * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,

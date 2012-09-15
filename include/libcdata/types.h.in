@@ -201,6 +201,7 @@ typedef intptr_t libcdata_array_t;
 typedef intptr_t libcdata_btree_t;
 typedef intptr_t libcdata_list_t;
 typedef intptr_t libcdata_list_element_t;
+typedef intptr_t libcdata_range_list_t;
 typedef intptr_t libcdata_tree_t;
 typedef intptr_t libcdata_tree_node_t;
 

@@ -1,4 +1,4 @@
-.Dd September 5, 2012
+.Dd September 15, 2012
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -40,6 +40,8 @@ Array functions
 .Fn libcdata_array_get_number_of_entries "libcdata_array_t *array, int *number_of_entries, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_get_entry_by_index "libcdata_array_t *array, int entry_index, intptr_t **entry, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_get_entry_by_value "libcdata_array_t *array, intptr_t *entry, int (*entry_compare_function)( intptr_t *first_entry, intptr_t *second_entry, libcdata_error_t **error ), intptr_t **existing_entry, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_set_entry_by_index "libcdata_array_t *array, int entry_index, intptr_t *entry, libcdata_error_t **error"
 .Ft int
@@ -102,6 +104,30 @@ List element functions
 .Fn libcdata_list_element_get_elements "libcdata_list_element_t *element, libcdata_list_element_t **previous_element, libcdata_list_element_t **next_element, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_element_set_elements "libcdata_list_element_t *element, libcdata_list_element_t *previous_element, libcdata_list_element_t *next_element, libcdata_error_t **error"
+.Pp
+Range list functions
+.Ft int
+.Fn libcdata_range_list_initialize "libcdata_range_list_t **range_list, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_free "libcdata_range_list_t **range_list, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_empty "libcdata_range_list_t *range_list, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_clone "libcdata_range_list_t **destination_range_list, libcdata_range_list_t *source_range_list, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_get_number_of_elements "libcdata_range_list_t *range_list, int *number_of_elements, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_append_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_append_range_list "libcdata_range_list_t *range_list, libcdata_range_list_t *source_range_list, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_remove_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_get_range "libcdata_range_list_t *range_list, int element_index, uint64_t *range_start, uint64_t *range_size, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_get_range_by_range_value "libcdata_range_list_t *range_list, uint64_t range_value, uint64_t *range_start, uint64_t *range_size, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_range_is_present "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
 .Pp
 Tree node functions
 .Ft int

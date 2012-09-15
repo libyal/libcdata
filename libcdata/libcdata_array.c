@@ -716,6 +716,114 @@ int libcdata_array_get_entry_by_index(
 	return( 1 );
 }
 
+/* Retrieves a specific entry from the array
+ *
+ * Uses the entry_compare_function to determine the order of the entries
+ * The entry_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
+ * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
+ *
+ * Returns 1 if successful, 0 if no such value or -1 on error
+ */
+int libcdata_array_get_entry_by_value(
+     libcdata_array_t *array,
+     intptr_t *entry,
+     int (*entry_compare_function)(
+            intptr_t *first_entry,
+            intptr_t *second_entry,
+            libcerror_error_t **error ),
+     intptr_t **existing_entry,
+     libcerror_error_t **error )
+{
+	libcdata_internal_array_t *internal_array = NULL;
+	static char *function                     = "libcdata_array_get_entry_by_value";
+	int entry_index                           = 0;
+	int result                                = -1;
+
+	if( array == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid array.",
+		 function );
+
+		return( -1 );
+	}
+	internal_array = (libcdata_internal_array_t *) array;
+
+	if( entry_compare_function == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid entry compare function.",
+		 function );
+
+		return( -1 );
+	}
+	if( existing_entry == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid existing entry.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_array->entries != NULL )
+	{
+		for( entry_index = 0;
+		     entry_index < internal_array->number_of_entries;
+		     entry_index++ )
+		{
+			result = entry_compare_function(
+			          entry,
+			          internal_array->entries[ entry_index ],
+			          error );
+
+			if( result == -1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to compare entry: %d.",
+				 function,
+				 entry_index );
+
+				return( -1 );
+			}
+			else if( result == LIBCDATA_COMPARE_EQUAL )
+			{
+				*existing_entry = internal_array->entries[ entry_index ];
+
+				return( 1 );
+			}
+			else if( result == LIBCDATA_COMPARE_LESS )
+			{
+				break;
+			}
+			else if( result != LIBCDATA_COMPARE_GREATER )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+				 "%s: unsupported entry compare function return value: %d.",
+				 function,
+				 result );
+
+				return( -1 );
+			}
+		}
+	}
+	return( 0 );
+}
+
 /* Sets a specific entry in the array
  * Returns 1 if successful or -1 on error
  */

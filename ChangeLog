@@ -1,7 +1,10 @@
 TODO
+* implement range list
+  - add type and internal type
 * library add support for:
   - offset list
 * update header
+  - range list (+/-)
 * update man page: libcdata.3
   - btree
 * add tests for:
@@ -10,6 +13,7 @@ TODO
   - list element
   - tree node
   - btree
+  - range list
 * expose functions in API ?
   - libcdata_array_clear ?
   - libcdata_list_set_first_element and libcdata_list_set_last_element ?
@@ -17,6 +21,9 @@ TODO
 * update msvscpp files
 
 Types:
+* list
+  - add clone function
+  - add current list element tracking like offset list ?
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !
@@ -24,6 +31,10 @@ Types:
   - rebalance the tree on insert and remove (add tests first)
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
+
+20120915
+* added array get value by value function
+* added range list - based on offset list
 
 20120905
 * added functions for list to retrieve first and last element

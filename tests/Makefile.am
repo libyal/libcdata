@@ -2,8 +2,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
 	@LIBCSTRING_CPPFLAGS@ \
-	@LIBCERROR_CPPFLAGS@ \
-	@MEMWATCH_CPPFLAGS@
+	@LIBCERROR_CPPFLAGS@
 
 TESTS = \
 	test_array.sh
@@ -26,8 +25,7 @@ cdata_test_array_SOURCES = \
 cdata_test_array_LDADD = \
 	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la \
-        @MEMWATCH_LIBADD@
+	../libcdata/libcdata.la
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

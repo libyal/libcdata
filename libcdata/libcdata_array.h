@@ -115,6 +115,17 @@ int libcdata_array_get_entry_by_index(
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
+int libcdata_array_get_entry_by_value(
+     libcdata_array_t *array,
+     intptr_t *entry,
+     int (*entry_compare_function)(
+            intptr_t *first_entry,
+            intptr_t *second_entry,
+            libcerror_error_t **error ),
+     intptr_t **existing_entry,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
 int libcdata_array_set_entry_by_index(
      libcdata_array_t *array,
      int entry_index,

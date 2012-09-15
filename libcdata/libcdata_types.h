@@ -38,6 +38,7 @@ typedef struct libcdata_array {}	libcdata_array_t;
 typedef struct libcdata_btree {}	libcdata_btree_t;
 typedef struct libcdata_list {}		libcdata_list_t;
 typedef struct libcdata_list_element {}	libcdata_list_element_t;
+typedef struct libcdata_range_list {}	libcdata_range_list_t;
 typedef struct libcdata_tree {}		libcdata_tree_t;
 typedef struct libcdata_tree_node {}	libcdata_tree_node_t;
 
@@ -46,6 +47,7 @@ typedef intptr_t libcdata_array_t;
 typedef intptr_t libcdata_btree_t;
 typedef intptr_t libcdata_list_t;
 typedef intptr_t libcdata_list_element_t;
+typedef intptr_t libcdata_range_list_t;
 typedef intptr_t libcdata_tree_t;
 typedef intptr_t libcdata_tree_node_t;
 

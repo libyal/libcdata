@@ -174,6 +174,25 @@ int libcdata_array_get_entry_by_index(
      intptr_t **entry,
      libcdata_error_t **error );
 
+/* Retrieves a specific entry from the array
+ *
+ * Uses the entry_compare_function to determine the order of the entries
+ * The entry_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
+ * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
+ *
+ * Returns 1 if successful, 0 if no such value or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_array_get_entry_by_value(
+     libcdata_array_t *array,
+     intptr_t *entry,
+     int (*entry_compare_function)(
+            intptr_t *first_entry,
+            intptr_t *second_entry,
+            libcdata_error_t **error ),
+     intptr_t **existing_entry,
+     libcdata_error_t **error );
+
 /* Sets a specific entry in the array
  * Returns 1 if successful or -1 on error
  */
@@ -263,7 +282,7 @@ int libcdata_btree_get_value_by_index(
      intptr_t **value,
      libcdata_error_t **error );
 
-/* Retrieve a value from the tree
+/* Retrieves a value from the tree
  *
  * Uses the value_compare_function to determine the order of the entries
  * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
@@ -622,6 +641,80 @@ int libcdata_list_element_set_elements(
      libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_list_element_t *next_element,
+     libcdata_error_t **error );
+
+/* -------------------------------------------------------------------------
+ * Range list functions
+ * ------------------------------------------------------------------------- */
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_initialize(
+     libcdata_range_list_t **range_list,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_free(
+     libcdata_range_list_t **range_list,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_empty(
+     libcdata_range_list_t *range_list,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_clone(
+     libcdata_range_list_t **destination_range_list,
+     libcdata_range_list_t *source_range_list,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_number_of_elements(
+     libcdata_range_list_t *range_list,
+     int *number_of_elements,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_append_range(
+     libcdata_range_list_t *range_list,
+     uint64_t range_start,
+     uint64_t range_size,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_append_range_list(
+     libcdata_range_list_t *range_list,
+     libcdata_range_list_t *source_range_list,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_remove_range(
+     libcdata_range_list_t *range_list,
+     uint64_t range_start,
+     uint64_t range_size,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_range(
+     libcdata_range_list_t *range_list,
+     int element_index,
+     uint64_t *range_start,
+     uint64_t *range_size,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_range_by_range_value(
+     libcdata_range_list_t *range_list,
+     uint64_t range_value,
+     uint64_t *range_start,
+     uint64_t *range_size,
+     libcdata_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_range_list_range_is_present(
+     libcdata_range_list_t *range_list,
+     uint64_t range_start,
+     uint64_t range_size,
      libcdata_error_t **error );
 
 /* -------------------------------------------------------------------------

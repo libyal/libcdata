@@ -2,8 +2,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
 	@LIBCSTRING_CPPFLAGS@ \
-	@LIBCERROR_CPPFLAGS@ \
-	@MEMWATCH_CPPFLAGS@
+	@LIBCERROR_CPPFLAGS@
 
 lib_LTLIBRARIES = libcdata.la
 
@@ -17,6 +16,7 @@ libcdata_la_SOURCES = \
 	libcdata_libcstring.h \
 	libcdata_list.c libcdata_list.h \
 	libcdata_list_element.c libcdata_list_element.h \
+	libcdata_range_list.c libcdata_range_list.h \
 	libcdata_support.c libcdata_support.h \
 	libcdata_tree_node.c libcdata_tree_node.h \
 	libcdata_types.h \
