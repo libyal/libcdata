@@ -32,6 +32,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20120919
+* applied updates
+
 20120915
 * added array get value by value function
 * added range list - based on offset list
