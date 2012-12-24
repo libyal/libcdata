@@ -78,6 +78,8 @@ Makefile.in
 /po/remove-potcdate.sed
 /po/remove-potcdate.sin
 # Project specific files
+/libcdata.pc
+/libcdata.spec
 /common/config.h
 /common/stamp-h1
 /common/types.h
@@ -87,8 +89,6 @@ Makefile.in
 /include/libcdata/definitions.h
 /include/libcdata/features.h
 /include/libcdata/types.h
-/libcdata.pc
-/libcdata.spec
 /libcdata/libcdata.rc
 /libcdata/libcdata_definitions.h
 # Local library dependencies specific files
