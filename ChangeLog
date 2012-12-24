@@ -18,7 +18,6 @@ TODO
   - libcdata_array_clear ?
   - libcdata_list_set_first_element and libcdata_list_set_last_element ?
   - libcdata_btree_node functions ?
-* update msvscpp files
 
 Types:
 * list
@@ -31,6 +30,14 @@ Types:
   - rebalance the tree on insert and remove (add tests first)
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
+
+20121224
+* changes to .gitignore
+* updated msvscpp files
+
+20121222
+* added .gitignore
+* changes for new project site
 
 20120919
 * applied updates
