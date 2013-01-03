@@ -85,19 +85,19 @@ Makefile.in
 /po/remove-potcdate.sin
 
 # Project specific files
-/libcerror.pc
-/libcerror.spec
+/libcdata.pc
+/libcdata.spec
 /common/config.h
 /common/stamp-h1
 /common/types.h
 /dpkg/changelog
 /dpkg/copyright
-/include/libcerror.h
-/include/libcerror/definitions.h
-/include/libcerror/features.h
-/include/libcerror/types.h
-/libcerror/libcerror.rc
-/libcerror/libcerror_definitions.h
+/include/libcdata.h
+/include/libcdata/definitions.h
+/include/libcdata/features.h
+/include/libcdata/types.h
+/libcdata/libcdata.rc
+/libcdata/libcdata_definitions.h
 
 # Local library dependencies specific files
 /libcerror
