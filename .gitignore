@@ -98,6 +98,7 @@ Makefile.in
 /include/libcdata/types.h
 /libcdata/libcdata.rc
 /libcdata/libcdata_definitions.h
+/tests/cdata_test_array
 
 # Local library dependencies specific files
 /libcerror
