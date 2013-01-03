@@ -31,6 +31,10 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130103
+* changes to .gitignore
+* 2013 update
+
 20121224
 * changes to .gitignore
 * updated msvscpp files

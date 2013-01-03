@@ -1,3 +1,7 @@
+# Files to ignore by git
+#
+# Version: 20130103
+
 # Generic auto-generated build files
 *~
 *.a
@@ -10,10 +14,12 @@
 *.so
 *.so.[0-9][0-9]*
 *.so.[0-9][0-9]*.[0-9][0-9]*.[0-9][0-9]*
-.debs
+*.Tpo
+.deps
 .libs
 Makefile
 Makefile.in
+
 # Specific auto-generated build files
 /ABOUT-NLS
 /aclocal.m4
@@ -77,19 +83,21 @@ Makefile.in
 /po/quot.sed
 /po/remove-potcdate.sed
 /po/remove-potcdate.sin
+
 # Project specific files
-/libcdata.pc
-/libcdata.spec
+/libcerror.pc
+/libcerror.spec
 /common/config.h
 /common/stamp-h1
 /common/types.h
 /dpkg/changelog
 /dpkg/copyright
-/include/libcdata.h
-/include/libcdata/definitions.h
-/include/libcdata/features.h
-/include/libcdata/types.h
-/libcdata/libcdata.rc
-/libcdata/libcdata_definitions.h
+/include/libcerror.h
+/include/libcerror/definitions.h
+/include/libcerror/features.h
+/include/libcerror/types.h
+/libcerror/libcerror.rc
+/libcerror/libcerror_definitions.h
+
 # Local library dependencies specific files
 /libcerror
