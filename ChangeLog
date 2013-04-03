@@ -16,6 +16,8 @@ TODO
   - libcdata_btree_node functions ?
 
 Types:
+* array
+  - add remove entry function ?
 * list
   - add clone function
   - add current list element tracking like offset list ?
@@ -29,7 +31,7 @@ Types:
 
 20130403
 * updated dependencies
-* added array prepend
+* added array prepend entry
 * added array reverse
 
 20130113
