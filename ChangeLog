@@ -1,8 +1,4 @@
 TODO
-* implement range list
-  - add type and internal type
-* library add support for:
-  - offset list
 * update header
   - range list (+/-)
 * update man page: libcdata.3
@@ -31,6 +27,10 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130403
+* updated dependencies
+* added array prepend
+
 20130113
 * updated msvscpp files
 
@@ -47,7 +47,7 @@ Types:
 * changes for new project site
 
 20120919
-* applied updates
+* updated dependencies
 
 20120915
 * added array get value by value function

@@ -1,4 +1,4 @@
-/* 
+/*
  * Array functions
  *
  * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -873,6 +873,68 @@ int libcdata_array_set_entry_by_index(
 		return( -1 );
 	}
 	internal_array->entries[ entry_index ] = entry;
+
+	return( 1 );
+}
+
+/* Prepends an entry
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_array_prepend_entry(
+     libcdata_array_t *array,
+     intptr_t *entry,
+     libcerror_error_t **error )
+{
+	libcdata_internal_array_t *internal_array = NULL;
+	static char *function                     = "libcdata_array_prepend_entry";
+	int entry_iterator                        = 0;
+
+	if( array == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid array.",
+		 function );
+
+		return( -1 );
+	}
+	internal_array = (libcdata_internal_array_t *) array;
+
+	if( libcdata_array_resize(
+	     array,
+	     internal_array->number_of_entries + 1,
+	     NULL,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
+		 "%s: unable to resize array.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_array->entries == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid array - missing entries.",
+		 function );
+
+		return( -1 );
+	}
+	for( entry_iterator = internal_array->number_of_entries - 2;
+	     entry_iterator >= 0;
+	     entry_iterator-- )
+	{
+		internal_array->entries[ entry_iterator + 1 ] = internal_array->entries[ entry_iterator ];
+	}
+	internal_array->entries[ 0 ] = entry;
 
 	return( 1 );
 }

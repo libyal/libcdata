@@ -9,12 +9,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * This software is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -966,7 +966,7 @@ int libcdata_range_list_append_range(
 
 	if( internal_range_list->number_of_elements > 0 )
 	{
-		/* Check the last element first, most often the list will be filled linear 
+		/* Check the last element first, most often the list will be filled linear
 		 */
 		list_element  = internal_range_list->last_element;
 		element_index = internal_range_list->number_of_elements - 1;
