@@ -30,6 +30,7 @@ Types:
 20130403
 * updated dependencies
 * added array prepend
+* added array reverse
 
 20130113
 * updated msvscpp files

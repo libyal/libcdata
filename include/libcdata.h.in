@@ -155,6 +155,14 @@ int libcdata_array_resize(
             libcdata_error_t **error ),
      libcdata_error_t **error );
 
+/* Reverses the order of the entries in the array
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_array_reverse(
+     libcdata_array_t *array,
+     libcdata_error_t **error );
+
 /* Retrieves the number of entries in the array
  * Returns 1 if successful or -1 on error
  */
@@ -200,6 +208,15 @@ LIBCDATA_EXTERN \
 int libcdata_array_set_entry_by_index(
      libcdata_array_t *array,
      int entry_index,
+     intptr_t *entry,
+     libcdata_error_t **error );
+
+/* Prepends an entry
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_array_prepend_entry(
+     libcdata_array_t *array,
      intptr_t *entry,
      libcdata_error_t **error );
 

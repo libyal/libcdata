@@ -612,6 +612,60 @@ int libcdata_array_resize(
 	return( result );
 }
 
+/* Reverses the order of the entries in the array
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_array_reverse(
+     libcdata_array_t *array,
+     libcerror_error_t **error )
+{
+	libcdata_internal_array_t *internal_array = NULL;
+	intptr_t *entry                           = NULL;
+	static char *function                     = "libcdata_array_reverse";
+	int entry_iterator                        = 0;
+	int reverse_entry_iterator                = 0;
+
+	if( array == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid array.",
+		 function );
+
+		return( -1 );
+	}
+	internal_array = (libcdata_internal_array_t *) array;
+
+	if( internal_array->entries == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid array - missing entries.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_array->number_of_entries > 1 )
+	{
+		reverse_entry_iterator = internal_array->number_of_entries - 1;
+
+		while( entry_iterator < reverse_entry_iterator )
+		{
+			entry = internal_array->entries[ reverse_entry_iterator ];
+			internal_array->entries[ reverse_entry_iterator ] = internal_array->entries[ entry_iterator ];
+			internal_array->entries[ entry_iterator ] = entry;
+
+			entry_iterator++;
+			reverse_entry_iterator--;
+		}
+	}
+	return( 1 );
+}
+
 /* Retrieves the number of entries in the array
  * Returns 1 if successful or -1 on error
  */
@@ -928,11 +982,14 @@ int libcdata_array_prepend_entry(
 
 		return( -1 );
 	}
-	for( entry_iterator = internal_array->number_of_entries - 2;
-	     entry_iterator >= 0;
-	     entry_iterator-- )
+	if( internal_array->number_of_entries > 1 )
 	{
-		internal_array->entries[ entry_iterator + 1 ] = internal_array->entries[ entry_iterator ];
+		for( entry_iterator = internal_array->number_of_entries - 2;
+		     entry_iterator >= 0;
+		     entry_iterator-- )
+		{
+			internal_array->entries[ entry_iterator + 1 ] = internal_array->entries[ entry_iterator ];
+		}
 	}
 	internal_array->entries[ 0 ] = entry;
 

@@ -102,6 +102,11 @@ int libcdata_array_resize(
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
+int libcdata_array_reverse(
+     libcdata_array_t *array,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
 int libcdata_array_get_number_of_entries(
      libcdata_array_t *array,
      int *number_of_entries,

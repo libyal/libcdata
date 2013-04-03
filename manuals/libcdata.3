@@ -1,4 +1,4 @@
-.Dd January 3, 2013
+.Dd April 3, 2013
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -37,6 +37,8 @@ Array functions
 .Ft int
 .Fn libcdata_array_resize "libcdata_array_t *array, int number_of_entries, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
+.Fn libcdata_array_reverse "libcdata_array_t *array, libcdata_error_t **error"
+.Ft int
 .Fn libcdata_array_get_number_of_entries "libcdata_array_t *array, int *number_of_entries, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_get_entry_by_index "libcdata_array_t *array, int entry_index, intptr_t **entry, libcdata_error_t **error"
@@ -44,6 +46,8 @@ Array functions
 .Fn libcdata_array_get_entry_by_value "libcdata_array_t *array, intptr_t *entry, int (*entry_compare_function)( intptr_t *first_entry, intptr_t *second_entry, libcdata_error_t **error ), intptr_t **existing_entry, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_set_entry_by_index "libcdata_array_t *array, int entry_index, intptr_t *entry, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_prepend_entry "libcdata_array_t *array, intptr_t *entry, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_append_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, libcdata_error_t **error"
 .Ft int
