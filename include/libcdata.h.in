@@ -90,7 +90,7 @@ void libcdata_verbose_set(
  * ------------------------------------------------------------------------- */
 
 /* Creates an array
- * Make sure the value array is pointing to is set to NULL
+ * Make sure the value array is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -259,7 +259,7 @@ int libcdata_array_insert_entry(
  * ------------------------------------------------------------------------- */
 
 /* Creates a tree
- * Make sure the value tree is pointing to is set to NULL
+ * Make sure the value tree is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -369,7 +369,7 @@ int libcdata_btree_remove_value(
  * ------------------------------------------------------------------------- */
 
 /* Creates a list
- * Make sure the value list is pointing to is set to NULL
+ * Make sure the value list is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -566,7 +566,7 @@ int libcdata_list_remove_element(
  * ------------------------------------------------------------------------- */
 
 /* Creates a list element
- * Make sure the value element is pointing to is set to NULL
+ * Make sure the value element is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -664,33 +664,52 @@ int libcdata_list_element_set_elements(
  * Range list functions
  * ------------------------------------------------------------------------- */
 
+/* Creates a range list
+ * Make sure the value range_list is referencing, is set to NULL
+ * Returns 1 if successful or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_initialize(
      libcdata_range_list_t **range_list,
      libcdata_error_t **error );
 
+/* Frees a range list including the elements
+ * Returns 1 if successful or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_free(
      libcdata_range_list_t **range_list,
      libcdata_error_t **error );
 
+/* Empties a range list and frees the elements
+ * Returns 1 if successful or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_empty(
      libcdata_range_list_t *range_list,
      libcdata_error_t **error );
 
+/* Clones the range list
+ * Returns 1 if successful or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_clone(
      libcdata_range_list_t **destination_range_list,
      libcdata_range_list_t *source_range_list,
      libcdata_error_t **error );
 
+/* Retrieves the number of elements in the range list
+ * Returns 1 if successful or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_get_number_of_elements(
      libcdata_range_list_t *range_list,
      int *number_of_elements,
      libcdata_error_t **error );
 
+/* Appends a range
+ * Returns 1 if successful, or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_append_range(
      libcdata_range_list_t *range_list,
@@ -698,12 +717,18 @@ int libcdata_range_list_append_range(
      uint64_t range_size,
      libcdata_error_t **error );
 
+/* Appends a range list
+ * Returns 1 if successful, or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_append_range_list(
      libcdata_range_list_t *range_list,
      libcdata_range_list_t *source_range_list,
      libcdata_error_t **error );
 
+/* Removes a range
+ * Returns 1 if successful, or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_remove_range(
      libcdata_range_list_t *range_list,
@@ -711,6 +736,9 @@ int libcdata_range_list_remove_range(
      uint64_t range_size,
      libcdata_error_t **error );
 
+/* Retrieves a specific range
+ * Returns 1 if successful or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_get_range(
      libcdata_range_list_t *range_list,
@@ -719,6 +747,9 @@ int libcdata_range_list_get_range(
      uint64_t *range_size,
      libcdata_error_t **error );
 
+/* Retrieves a range for a specific range value
+ * Returns 1 if successful, 0 if no range was found or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_get_range_by_range_value(
      libcdata_range_list_t *range_list,
@@ -727,6 +758,9 @@ int libcdata_range_list_get_range_by_range_value(
      uint64_t *range_size,
      libcdata_error_t **error );
 
+/* Determines if a certain range is present
+ * Returns 1 if present, 0 if not present or -1 on error
+ */
 LIBCDATA_EXTERN \
 int libcdata_range_list_range_is_present(
      libcdata_range_list_t *range_list,
@@ -739,7 +773,7 @@ int libcdata_range_list_range_is_present(
  * ------------------------------------------------------------------------- */
 
 /* Creates a tree node
- * Make sure the value node is pointing to is set to NULL
+ * Make sure the value node is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \

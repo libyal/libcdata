@@ -30,7 +30,7 @@
 #include "libcdata_types.h"
 
 /* Creates a list
- * Make sure the value list is pointing to is set to NULL
+ * 'Make sure the value list is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_initialize(

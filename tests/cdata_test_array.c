@@ -32,6 +32,7 @@
 #include "cdata_test_libcstring.h"
 
 /* Tests initializing the array
+ * Make sure the value array is referencing, is set to NULL
  * Returns 1 if successful, 0 if not or -1 on error
  */
 int cdata_test_array_initialize(

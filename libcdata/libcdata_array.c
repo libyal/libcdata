@@ -29,7 +29,7 @@
 #include "libcdata_types.h"
 
 /* Creates an array
- * Make sure the value array is pointing to is set to NULL
+ * 'Make sure the value array is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_array_initialize(

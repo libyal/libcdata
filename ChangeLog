@@ -1,6 +1,4 @@
 TODO
-* update header
-  - range list (+/-)
 * update man page: libcdata.3
   - btree
 * add tests for:
@@ -28,6 +26,10 @@ Types:
   - rebalance the tree on insert and remove (add tests first)
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
+
+20130404
+* textual updates
+* updated include header
 
 20130403
 * updated dependencies

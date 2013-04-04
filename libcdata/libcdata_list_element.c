@@ -28,7 +28,7 @@
 #include "libcdata_types.h"
 
 /* Creates a list element
- * Make sure the value element is pointing to is set to NULL
+ * 'Make sure the value element is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_list_element_initialize(

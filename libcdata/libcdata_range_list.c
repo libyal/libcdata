@@ -29,7 +29,8 @@
 #include "libcdata_range_list.h"
 #include "libcdata_types.h"
 
-/* Creates an range list value
+/* Creates a range list value
+ * Make sure the value range_list_value is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_range_list_value_initialize(
@@ -101,7 +102,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees an range list value
+/* Frees a range list value
  */
 int libcdata_range_list_value_free(
      libcdata_range_list_value_t **range_list_value,
@@ -209,7 +210,8 @@ on_error:
 	return( -1 );
 }
 
-/* Creates an range list
+/* Creates a range list
+ * Make sure the value range_list is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_range_list_initialize(
@@ -282,7 +284,7 @@ on_error:
 	return( -1 );
 }
 
-/* Frees an range list including the elements
+/* Frees a range list including the elements
  * Returns 1 if successful or -1 on error
  */
 int libcdata_range_list_free(
@@ -326,7 +328,7 @@ int libcdata_range_list_free(
 	return( result );
 }
 
-/* Empties an range list and frees the elements
+/* Empties a range list and frees the elements
  * Returns 1 if successful or -1 on error
  */
 int libcdata_range_list_empty(
@@ -1521,7 +1523,7 @@ on_error:
 	return( -1 );
 }
 
-/* Appends an range list
+/* Appends a range list
  * Returns 1 if successful, or -1 on error
  */
 int libcdata_range_list_append_range_list(
