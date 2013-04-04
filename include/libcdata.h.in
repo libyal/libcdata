@@ -43,47 +43,50 @@ const char *libcdata_get_version(
              void );
 
 /* -------------------------------------------------------------------------
- * Stream functions
+ * Error functions
  * ------------------------------------------------------------------------- */
 
-/* Set the stream
- * Returns 1 if successful or -1 on error
+/* Frees an error
  */
 LIBCDATA_EXTERN \
-int libcdata_stream_set(
-     FILE *stream,
-     libcdata_error_t **error );
+void libcdata_error_free(
+      libcdata_error_t **error );
 
-/* Opens the notification stream using a filename
- * The stream is opened in append mode
- * Returns 1 if successful or -1 on error
+/* Prints a descriptive string of the error to the stream
+ * Returns the amount of printed characters if successful or -1 on error
  */
 LIBCDATA_EXTERN \
-int libcdata_stream_open(
-     const char *filename,
-     libcdata_error_t **error );
+int libcdata_error_fprint(
+     libcdata_error_t *error,
+     FILE *stream );
 
-/* Closes the notification stream if opened using a filename
- * Returns 0 if successful or -1 on error
+/* Prints a descriptive string of the error to the string
+ * The end-of-string character is not included in the return value
+ * Returns the amount of printed characters if successful or -1 on error
  */
 LIBCDATA_EXTERN \
-int libcdata_stream_close(
-     libcdata_error_t **error );
+int libcdata_error_sprint(
+     libcdata_error_t *error,
+     char *string,
+     size_t size );
 
-/* -------------------------------------------------------------------------
- * Verbose functions
- * ------------------------------------------------------------------------- */
-
-/* Value to indicate if the verbose notification is active
+/* Prints a backtrace of the error to the stream
+ * Returns the amount of printed characters if successful or -1 on error
  */
 LIBCDATA_EXTERN \
-int libcdata_verbose;
+int libcdata_error_backtrace_fprint(
+     libcdata_error_t *error,
+     FILE *stream );
 
-/* Sets the verbose notification
+/* Prints a backtrace of the error to the string
+ * The end-of-string character is not included in the return value
+ * Returns the amount of printed characters if successful or -1 on error
  */
 LIBCDATA_EXTERN \
-void libcdata_verbose_set(
-      int verbose );
+int libcdata_error_backtrace_sprint(
+     libcdata_error_t *error,
+     char *string,
+     size_t size );
 
 /* -------------------------------------------------------------------------
  * Array functions

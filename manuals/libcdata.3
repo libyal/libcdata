@@ -13,17 +13,17 @@ Support functions
 .Ft const char *
 .Fn libcdata_get_version "void"
 .Pp
-Stream functions
-.Ft int
-.Fn libcdata_stream_set "FILE *stream, libcdata_error_t **error"
-.Ft int
-.Fn libcdata_stream_open "const char *filename, libcdata_error_t **error"
-.Ft int
-.Fn libcdata_stream_close "libcdata_error_t **error"
-.Pp
-Verbose functions
+Error functions
 .Ft void
-.Fn libcdata_verbose_set "int verbose"
+.Fn libcdata_error_free "libcdata_error_t **error"
+.Ft int
+.Fn libcdata_error_fprint "libcdata_error_t *error, FILE *stream"
+.Ft int
+.Fn libcdata_error_sprint "libcdata_error_t *error, char *string, size_t size"
+.Ft int
+.Fn libcdata_error_backtrace_fprint "libcdata_error_t *error, FILE *stream"
+.Ft int
+.Fn libcdata_error_backtrace_sprint "libcdata_error_t *error, char *string, size_t size"
 .Pp
 Array functions
 .Ft int
