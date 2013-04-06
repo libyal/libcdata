@@ -27,6 +27,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130406
+* moved range list value to separate source files
+
 20130404
 * textual updates
 * updated include header

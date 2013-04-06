@@ -18,6 +18,7 @@ libcdata_la_SOURCES = \
 	libcdata_list.c libcdata_list.h \
 	libcdata_list_element.c libcdata_list_element.h \
 	libcdata_range_list.c libcdata_range_list.h \
+	libcdata_range_list_value.c libcdata_range_list_value.h \
 	libcdata_support.c libcdata_support.h \
 	libcdata_tree_node.c libcdata_tree_node.h \
 	libcdata_types.h \

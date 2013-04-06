@@ -27,28 +27,12 @@
 
 #include "libcdata_extern.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_range_list_value.h"
 #include "libcdata_types.h"
 
 #if defined( __cplusplus )
 extern "C" {
 #endif
-
-typedef struct libcdata_range_list_value libcdata_range_list_value_t;
-
-struct libcdata_range_list_value
-{
-	/* The (range) start value
-	 */
-	uint64_t start;
-
-	/* The (range) end
-	 */
-	uint64_t end;
-
-	/* The (range) size
-	 */
-	uint64_t size;
-};
 
 typedef struct libcdata_internal_range_list libcdata_internal_range_list_t;
 
@@ -74,19 +58,6 @@ struct libcdata_internal_range_list
 	 */
 	int current_element_index;
 };
-
-int libcdata_range_list_value_initialize(
-     libcdata_range_list_value_t **range_list_value,
-     libcerror_error_t **error );
-
-int libcdata_range_list_value_free(
-     libcdata_range_list_value_t **range_list_value,
-     libcerror_error_t **error );
-
-int libcdata_range_list_value_clone(
-     libcdata_range_list_value_t **destination_range_list_value,
-     libcdata_range_list_value_t *source_range_list_value,
-     libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
 int libcdata_range_list_initialize(
