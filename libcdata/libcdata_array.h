@@ -87,8 +87,8 @@ int libcdata_array_clone(
             intptr_t **entry,
             libcerror_error_t **error ),
      int (*entry_clone_function)(
-            intptr_t **destination,
-            intptr_t *source,
+            intptr_t **destination_entry,
+            intptr_t *source_entry,
             libcerror_error_t **error ),
      libcerror_error_t **error );
 

@@ -48,6 +48,10 @@ struct libcdata_range_list_value
 	/* The (range) size
 	 */
 	uint64_t size;
+
+	/* The value
+	 */
+	intptr_t *value;
 };
 
 int libcdata_range_list_value_initialize(
@@ -56,11 +60,30 @@ int libcdata_range_list_value_initialize(
 
 int libcdata_range_list_value_free(
      libcdata_range_list_value_t **range_list_value,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
      libcerror_error_t **error );
 
 int libcdata_range_list_value_clone(
      libcdata_range_list_value_t **destination_range_list_value,
      libcdata_range_list_value_t *source_range_list_value,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     int (*value_clone_function)(
+            intptr_t **destination_value,
+            intptr_t *source_value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
+
+int libcdata_range_list_value_merge(
+     libcdata_range_list_value_t *destination_range_list_value,
+     libcdata_range_list_value_t *source_range_list_value,
+     int (*value_merge_function)(
+            intptr_t *destination_value,
+            intptr_t *source_value,
+            libcerror_error_t **error ),
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

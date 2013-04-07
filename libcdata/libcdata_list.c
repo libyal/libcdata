@@ -259,7 +259,7 @@ int libcdata_list_empty(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free element: %d.",
+				 "%s: unable to free list element: %d.",
 				 function,
 				 element_index );
 
@@ -285,8 +285,8 @@ int libcdata_list_clone(
             intptr_t **value,
             libcerror_error_t **error ),
      int (*value_clone_function)(
-            intptr_t **destination,
-            intptr_t *source,
+            intptr_t **destination_value,
+            intptr_t *source_value,
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
@@ -403,7 +403,7 @@ int libcdata_list_clone(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to clone value of source list element: %d.",
+			 "%s: unable to create destination value: %d.",
 			 function,
 			 element_index );
 
@@ -418,9 +418,8 @@ int libcdata_list_clone(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to append value of list element: %d.",
-			 function,
-			 element_index );
+			 "%s: unable to append destination value to destination list.",
+			 function );
 
 			goto on_error;
 		}

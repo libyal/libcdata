@@ -1,4 +1,4 @@
-.Dd April 3, 2013
+.Dd April 7, 2013
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -33,7 +33,7 @@ Array functions
 .Ft int
 .Fn libcdata_array_empty "libcdata_array_t *array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_array_clone "libcdata_array_t **destination_array, libcdata_array_t *source_array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), int (*entry_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
+.Fn libcdata_array_clone "libcdata_array_t **destination_array, libcdata_array_t *source_array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), int (*entry_clone_function)( intptr_t **destination_entry, intptr_t *source_entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_resize "libcdata_array_t *array, int number_of_entries, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
@@ -61,7 +61,7 @@ List functions
 .Ft int
 .Fn libcdata_list_empty "libcdata_list_t *list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_list_clone "libcdata_list_t **destination_list, libcdata_list_t *source_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
+.Fn libcdata_list_clone "libcdata_list_t **destination_list, libcdata_list_t *source_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_get_number_of_elements "libcdata_list_t *list, int *number_of_elements, libcdata_error_t **error"
 .Ft int
@@ -113,23 +113,23 @@ Range list functions
 .Ft int
 .Fn libcdata_range_list_initialize "libcdata_range_list_t **range_list, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_free "libcdata_range_list_t **range_list, libcdata_error_t **error"
+.Fn libcdata_range_list_free "libcdata_range_list_t **range_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_empty "libcdata_range_list_t *range_list, libcdata_error_t **error"
+.Fn libcdata_range_list_empty "libcdata_range_list_t *range_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_clone "libcdata_range_list_t **destination_range_list, libcdata_range_list_t *source_range_list, libcdata_error_t **error"
+.Fn libcdata_range_list_clone "libcdata_range_list_t **destination_range_list, libcdata_range_list_t *source_range_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_range_list_get_number_of_elements "libcdata_range_list_t *range_list, int *number_of_elements, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_append_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
+.Fn libcdata_range_list_insert_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, intptr_t *value, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_merge_function)( intptr_t *destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_append_range_list "libcdata_range_list_t *range_list, libcdata_range_list_t *source_range_list, libcdata_error_t **error"
+.Fn libcdata_range_list_insert_range_list "libcdata_range_list_t *range_list, libcdata_range_list_t *source_range_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_merge_function)( intptr_t *destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_remove_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
+.Fn libcdata_range_list_remove_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_split_function)( intptr_t **destination_value, intptr_t *source_value, uint64_t split_range_offset, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_get_range "libcdata_range_list_t *range_list, int element_index, uint64_t *range_start, uint64_t *range_size, libcdata_error_t **error"
+.Fn libcdata_range_list_get_range_by_index "libcdata_range_list_t *range_list, int element_index, uint64_t *range_start, uint64_t *range_size, intptr_t **value, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_range_list_get_range_by_range_value "libcdata_range_list_t *range_list, uint64_t range_value, uint64_t *range_start, uint64_t *range_size, libcdata_error_t **error"
+.Fn libcdata_range_list_get_range_at_offset "libcdata_range_list_t *range_list, uint64_t range_offset, uint64_t *range_start, uint64_t *range_size, intptr_t **value, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_range_list_range_is_present "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
 .Pp
@@ -141,7 +141,7 @@ Tree node functions
 .Ft int
 .Fn libcdata_tree_node_empty "libcdata_tree_node_t *node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
-.Fn libcdata_tree_node_clone "libcdata_tree_node_t **destination_node, libcdata_tree_node_t *source_node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination, intptr_t *source, libcdata_error_t **error ), libcdata_error_t **error"
+.Fn libcdata_tree_node_clone "libcdata_tree_node_t **destination_node, libcdata_tree_node_t *source_node, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_get_value "libcdata_tree_node_t *node, intptr_t **value, libcdata_error_t **error"
 .Ft int
@@ -171,7 +171,7 @@ Tree node functions
 .Ft int
 .Fn libcdata_tree_node_insert_value "libcdata_tree_node_t *parent_node, intptr_t *value, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_tree_node_replacement_node "libcdata_tree_node_t *node, libcdata_tree_node_t *replacement_node, libcdata_error_t **error"
+.Fn libcdata_tree_node_replace_node "libcdata_tree_node_t *node, libcdata_tree_node_t *replacement_node, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, libcdata_error_t **error"
 .Ft int
@@ -197,7 +197,7 @@ http://code.google.com/p/libcdata/
 .Sh AUTHOR
 These man pages were written by Joachim Metz.
 .Sh COPYRIGHT
-Copyright 2006-2013 Joachim Metz <joachim.metz@gmail.com>.
+Copyright 2006-2013, Joachim Metz <joachim.metz@gmail.com>.
 This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .Sh SEE ALSO
 the libcdata.h include file

@@ -79,8 +79,8 @@ int libcdata_list_clone(
             intptr_t **value,
             libcerror_error_t **error ),
      int (*value_clone_function)(
-            intptr_t **destination,
-            intptr_t *source,
+            intptr_t **destination_value,
+            intptr_t *source_value,
             libcerror_error_t **error ),
      libcerror_error_t **error );
 

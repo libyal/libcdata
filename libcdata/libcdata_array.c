@@ -345,8 +345,8 @@ int libcdata_array_clone(
             intptr_t **entry,
             libcerror_error_t **error ),
      int (*entry_clone_function)(
-            intptr_t **destination,
-            intptr_t *source,
+            intptr_t **destination_entry,
+            intptr_t *source_entry,
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
@@ -451,7 +451,7 @@ int libcdata_array_clone(
 					 error,
 					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 					 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-					 "%s: unable to clone array entry: %d.",
+					 "%s: unable to create destination array entry: %d.",
 					 function,
 					 entry_iterator );
 

@@ -17,8 +17,9 @@ Types:
 * array
   - add remove entry function ?
 * list
-  - add clone function
   - add current list element tracking like offset list ?
+* range list
+  - add get/set range list value functions ?
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !
@@ -27,8 +28,14 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130407
+* small changes to range list
+
 20130406
 * moved range list value to separate source files
+* added value support to range list
+* improved range list remove function to multiple ranges
+* code clean up
 
 20130404
 * textual updates

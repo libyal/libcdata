@@ -425,8 +425,8 @@ int libcdata_tree_node_clone(
             intptr_t **value,
             libcerror_error_t **error ),
      int (*value_clone_function)(
-            intptr_t **destination,
-            intptr_t *source,
+            intptr_t **destination_value,
+            intptr_t *source_value,
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
@@ -524,7 +524,7 @@ int libcdata_tree_node_clone(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to clone tree node value.",
+		 "%s: unable to create destination tree node value.",
 		 function );
 
 		goto on_error;
@@ -560,7 +560,7 @@ int libcdata_tree_node_clone(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_COPY_FAILED,
-			 "%s: unable to clone sub node: %d.",
+			 "%s: unable to create destination sub node: %d.",
 			 function,
 			 sub_node_index );
 
