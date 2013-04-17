@@ -2741,11 +2741,12 @@ int libcdata_range_list_get_element_at_offset(
 
 			return( -1 );
 		}
-		if( range_offset >= range_list_value->end )
+		if( range_offset < range_list_value->start )
 		{
 			break;
 		}
-		if( range_offset >= range_list_value->start )
+		if( ( range_offset >= range_list_value->start )
+		 && ( range_offset < range_list_value->end ) )
 		{
 			return( 1 );
 		}
@@ -3167,7 +3168,7 @@ int libcdata_range_list_range_is_present(
 
 			return( -1 );
 		}
-		if( range_start >= range_list_value->end )
+		if( range_end < range_list_value->start )
 		{
 			break;
 		}
