@@ -2,7 +2,7 @@ TODO
 * update man page: libcdata.3
   - btree
 * add tests for:
-  - array (partial)
+  - array
   - list
   - list element
   - tree node
@@ -27,6 +27,9 @@ Types:
   - rebalance the tree on insert and remove (add tests first)
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
+
+20130425
+* worked on tests
 
 20130417
 * bug fix in range list

@@ -1,5 +1,5 @@
 /*
- * Library array type testing program
+ * Library balanced tree type testing program
  *
  * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -31,26 +31,25 @@
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
 
-/* Tests initializing the array
- * Make sure the value array is referencing, is set to NULL
+/* Tests initializing the tree
+ * Make sure the value tree is referencing, is set to NULL
  * Returns 1 if successful, 0 if not or -1 on error
  */
-int cdata_test_array_initialize(
-     libcdata_array_t **array,
-     int number_of_entries,
+int cdata_test_btree_initialize(
+     libcdata_btree_t **tree,
      int expected_result )
 {
 	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_array_initialize";
+	static char *function    = "cdata_test_btree_initialize";
 	int result               = 0;
 
 	fprintf(
 	 stdout,
 	 "Testing initialize\t" );
 
-	result = libcdata_array_initialize(
-	          array,
-	          number_of_entries,
+	result = libcdata_btree_initialize(
+	          tree,
+	          253,
 	          &error );
 
 	if( result != 1 )
@@ -59,7 +58,7 @@ int cdata_test_array_initialize(
 		 &error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create array.",
+		 "%s: unable to create tree.",
 		 function );
 	}
 	if( result != expected_result )
@@ -89,8 +88,8 @@ int cdata_test_array_initialize(
 	}
 	if( result == 1 )
 	{
-		if( libcdata_array_free(
-		     array,
+		if( libcdata_btree_free(
+		     tree,
 		     NULL,
 		     &error ) != 1 )
 		{
@@ -98,7 +97,7 @@ int cdata_test_array_initialize(
 			 &error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free array.",
+			 "%s: unable to free tree.",
 			 function );
 
 			return( -1 );
@@ -119,7 +118,7 @@ int wmain( int argc, wchar_t * const argv[] )
 int main( int argc, char * const argv[] )
 #endif
 {
-	libcdata_array_t *array = NULL;
+	libcdata_btree_t *tree = NULL;
 
 	if( argc != 1 )
 	{
@@ -129,11 +128,10 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	array = NULL;
+	tree = NULL;
 
-	if( cdata_test_array_initialize(
-	     &array,
-	     0,
+	if( cdata_test_btree_initialize(
+	     &tree,
 	     1 ) != 1 )
 	{
 		fprintf(
@@ -142,24 +140,10 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	array = NULL;
+	tree = (libcdata_btree_t *) 0x12345678UL;
 
-	if( cdata_test_array_initialize(
-	     &array,
-	     200,
-	     1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	array = (libcdata_array_t *) 0x12345678UL;
-
-	if( cdata_test_array_initialize(
-	     &array,
-	     0,
+	if( cdata_test_btree_initialize(
+	     &tree,
 	     -1 ) != 1 )
 	{
 		fprintf(
@@ -168,22 +152,8 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	if( cdata_test_array_initialize(
+	if( cdata_test_btree_initialize(
 	     NULL,
-	     0,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	array = NULL;
-
-	if( cdata_test_array_initialize(
-	     &array,
-	     -1,
 	     -1 ) != 1 )
 	{
 		fprintf(

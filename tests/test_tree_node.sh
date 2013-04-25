@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Library array type testing script
+# Library tree node type testing script
 #
 # Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
 #
@@ -24,11 +24,11 @@ EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-test_array()
+test_tree_node()
 { 
 	echo "Testing read offset of input:" $*;
 
-	./${CDATA_TEST_ARRAY} $*;
+	./${CDATA_TEST_TREE_NODE} $*;
 
 	RESULT=$?;
 
@@ -37,21 +37,21 @@ test_array()
 	return ${RESULT};
 }
 
-CDATA_TEST_ARRAY="cdata_test_array";
+CDATA_TEST_TREE_NODE="cdata_test_tree_node";
 
-if ! test -x ${CDATA_TEST_ARRAY};
+if ! test -x ${CDATA_TEST_TREE_NODE};
 then
-	CDATA_TEST_ARRAY="cdata_test_array.exe";
+	CDATA_TEST_TREE_NODE="cdata_test_tree_node.exe";
 fi
 
-if ! test -x ${CDATA_TEST_ARRAY};
+if ! test -x ${CDATA_TEST_TREE_NODE};
 then
-	echo "Missing executable: ${CDATA_TEST_ARRAY}";
+	echo "Missing executable: ${CDATA_TEST_TREE_NODE}";
 
 	exit ${EXIT_FAILURE};
 fi
 
-if ! test_array ${FILENAME};
+if ! test_tree_node ${FILENAME};
 then
 	exit ${EXIT_FAILURE};
 fi

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Library array type testing script
+# Library range list type testing script
 #
 # Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
 #
@@ -24,11 +24,11 @@ EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-test_array()
+test_range_list()
 { 
 	echo "Testing read offset of input:" $*;
 
-	./${CDATA_TEST_ARRAY} $*;
+	./${CDATA_TEST_RANGE_LIST} $*;
 
 	RESULT=$?;
 
@@ -37,21 +37,21 @@ test_array()
 	return ${RESULT};
 }
 
-CDATA_TEST_ARRAY="cdata_test_array";
+CDATA_TEST_RANGE_LIST="cdata_test_range_list";
 
-if ! test -x ${CDATA_TEST_ARRAY};
+if ! test -x ${CDATA_TEST_RANGE_LIST};
 then
-	CDATA_TEST_ARRAY="cdata_test_array.exe";
+	CDATA_TEST_RANGE_LIST="cdata_test_range_list.exe";
 fi
 
-if ! test -x ${CDATA_TEST_ARRAY};
+if ! test -x ${CDATA_TEST_RANGE_LIST};
 then
-	echo "Missing executable: ${CDATA_TEST_ARRAY}";
+	echo "Missing executable: ${CDATA_TEST_RANGE_LIST}";
 
 	exit ${EXIT_FAILURE};
 fi
 
-if ! test_array ${FILENAME};
+if ! test_range_list ${FILENAME};
 then
 	exit ${EXIT_FAILURE};
 fi

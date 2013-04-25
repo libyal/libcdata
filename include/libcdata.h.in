@@ -258,7 +258,7 @@ int libcdata_array_insert_entry(
      libcdata_error_t **error );
 
 /* -------------------------------------------------------------------------
- * B-tree functions
+ * Balanced tree functions
  * ------------------------------------------------------------------------- */
 
 /* Creates a tree

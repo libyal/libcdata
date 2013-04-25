@@ -1,5 +1,5 @@
 /*
- * B-tree type functions
+ * Balanced tree type functions
  *
  * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -33,7 +33,7 @@
 #include "libcdata_types.h"
 
 /* Creates a tree
- * 'Make sure the value tree is referencing, is set to NULL
+ * Make sure the value tree is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_btree_initialize(
