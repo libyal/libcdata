@@ -53,7 +53,7 @@ int cdata_test_array_initialize(
 	          number_of_entries,
 	          &error );
 
-	if( result != 1 )
+	if( result == -1 )
 	{
 		libcerror_error_set(
 		 &error,
@@ -92,7 +92,7 @@ int cdata_test_array_initialize(
 		if( libcdata_array_free(
 		     array,
 		     NULL,
-		     &error ) != 1 )
+		     &error ) == -1 )
 		{
 			libcerror_error_set(
 			 &error,
@@ -109,6 +109,731 @@ int cdata_test_array_initialize(
 		return( 0 );
 	}
 	return( 1 );
+}
+
+/* Test entry compare function
+ * Returns return LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ */
+int cdata_test_array_entry_compare_function(
+     intptr_t *first_entry,
+     intptr_t *second_entry,
+     libcdata_error_t **error )
+{
+	static char *function = "cdata_test_array_entry_compare_function";
+
+	if( first_entry == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid first entry.",
+		 function );
+
+		return( -1 );
+	}
+	if( second_entry == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid second entry.",
+		 function );
+
+		return( -1 );
+	}
+	if( *first_entry > *second_entry )
+	{
+		return( LIBCDATA_COMPARE_LESS );
+	}
+	else if( *first_entry < *second_entry )
+	{
+		return( LIBCDATA_COMPARE_GREATER );
+	}
+	return( LIBCDATA_COMPARE_EQUAL );
+}
+
+/* Tests get, set, append and prepend of entries
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int cdata_test_array_entries(
+     void )
+{
+	libcdata_array_t *array  = NULL;
+	libcerror_error_t *error = NULL;
+	int *entry_value_test    = 0;
+	static char *function    = "cdata_test_array_entries";
+	int entry_index          = 0;
+	int entry_value1         = 1;
+	int entry_value2         = 2;
+	int entry_value3         = 3;
+	int entry_value4         = 4;
+	int entry_value5         = 5;
+	int entry_value6         = 6;
+	int number_of_entries    = 0;
+	int result               = 0;
+
+	array = NULL;
+
+	if( libcdata_array_initialize(
+	     &array,
+	     3,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create array.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          2,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set entry: 2.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          0,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set entry: 0.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          1,
+	          (intptr_t *) &entry_value3,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set entry: 1.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing set_entry_by_index\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 3 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     2,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 2.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value6,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append entry.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing append_entry\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	result = libcdata_array_prepend_entry(
+	          array,
+	          (intptr_t *) &entry_value1,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to prepend entry.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing prepend_entry\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 5 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     1,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 1.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value2 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	/* Test if insert of new entry succeeds
+	 */
+	result = libcdata_array_insert_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value5,
+	          &cdata_test_array_entry_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert entry.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_entry\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	/* Test if insert of duplicate entry fails
+	 */
+	result = libcdata_array_insert_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value4,
+	          &cdata_test_array_entry_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert entry.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_entry\t" );
+
+	if( result != 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+
+		result = 0;
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+
+		result = 1;
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 6 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	result = libcdata_array_reverse(
+	          array,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to reverse array.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing reverse\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     1,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 1.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value5 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_value(
+		     array,
+		     (intptr_t *) &entry_value4,
+		     &cdata_test_array_entry_compare_function,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry by value.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_value\t" );
+
+		result = ( entry_value_test == &entry_value4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	result = libcdata_array_empty(
+	          array,
+	          NULL,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to empty array.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing empty\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 0 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( libcdata_array_free(
+	     &array,
+	     NULL,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free array.",
+		 function );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stdout );
+
+		libcerror_error_free(
+		 &error );
+	}
+	if( array != NULL )
+	{
+		libcdata_array_free(
+		 &array,
+		 NULL,
+		 NULL );
+	}
+	return( -1 );
 }
 
 /* The main program
@@ -129,6 +854,8 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
+	/* Initialization tests
+	 */
 	array = NULL;
 
 	if( cdata_test_array_initialize(
@@ -192,6 +919,18 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
+	/* Test: get, set, prepend and append entries
+	 */
+	if( cdata_test_array_entries() != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to test entries.\n" );
+
+		return( EXIT_FAILURE );
+	}
+	/* TODO: test libcdata_array_clone, libcdata_array_resize
+	 */
 	return( EXIT_SUCCESS );
 }
 
