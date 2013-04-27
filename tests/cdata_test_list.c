@@ -109,6 +109,409 @@ int cdata_test_list_initialize(
 	return( 1 );
 }
 
+/* Tests get, set, append and prepend of elements
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int cdata_test_list_elements(
+     void )
+{
+	libcdata_list_t *list    = NULL;
+	libcerror_error_t *error = NULL;
+	int *element_value_test  = 0;
+	static char *function    = "cdata_test_list_elements";
+	int element_index        = 0;
+	int element_value1       = 1;
+	int element_value2       = 2;
+	int element_value3       = 3;
+	int element_value4       = 4;
+	int element_value5       = 5;
+	int element_value6       = 6;
+	int number_of_elements   = 0;
+	int result               = 0;
+
+	list = NULL;
+
+	if( libcdata_list_initialize(
+	     &list,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create list.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_list_append_value(
+	          list,
+	          (intptr_t *) &element_value3,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append element.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_list_append_value(
+	          list,
+	          (intptr_t *) &element_value4,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append element.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing append_value\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_list_get_number_of_elements(
+		     list,
+		     &number_of_elements,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_elements\t" );
+
+		result = ( number_of_elements == 2 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_list_get_value_by_index(
+		     list,
+		     1,
+		     (intptr_t **) &element_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value: 1.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_value_by_index\t" );
+
+		result = ( element_value_test == &element_value4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	result = libcdata_list_prepend_value(
+	          list,
+	          (intptr_t *) &element_value2,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to prepend value.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_list_prepend_value(
+	          list,
+	          (intptr_t *) &element_value1,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to prepend value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing prepend_value\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_list_get_number_of_elements(
+		     list,
+		     &number_of_elements,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_elements\t" );
+
+		result = ( number_of_elements == 4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_list_get_value_by_index(
+		     list,
+		     1,
+		     (intptr_t **) &element_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value: 1.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_value_by_index\t" );
+
+		result = ( element_value_test == &element_value2 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	result = libcdata_list_empty(
+	          list,
+	          NULL,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to empty list.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing empty\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_list_get_number_of_elements(
+		     list,
+		     &number_of_elements,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_elements\t" );
+
+		result = ( number_of_elements == 0 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( libcdata_list_free(
+	     &list,
+	     NULL,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free list.",
+		 function );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stdout );
+
+		libcerror_error_free(
+		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( -1 );
+}
+
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
@@ -161,6 +564,18 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
+	/* Test: get, set, prepend and append elements
+	 */
+	if( cdata_test_list_elements() != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to test elements.\n" );
+
+		return( EXIT_FAILURE );
+	}
+	/* TODO: test libcdata_list_clone
+	 */
 	return( EXIT_SUCCESS );
 }
 

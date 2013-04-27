@@ -178,7 +178,7 @@ int cdata_test_array_entries(
 
 	if( libcdata_array_initialize(
 	     &array,
-	     3,
+	     2,
 	     &error ) == -1 )
 	{
 		libcerror_error_set(
@@ -192,8 +192,8 @@ int cdata_test_array_entries(
 	}
 	result = libcdata_array_set_entry_by_index(
 	          array,
-	          2,
-	          (intptr_t *) &entry_value4,
+	          1,
+	          (intptr_t *) &entry_value3,
 	          &error );
 
 	if( result == -1 )
@@ -202,7 +202,7 @@ int cdata_test_array_entries(
 		 &error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set entry: 2.",
+		 "%s: unable to set entry: 1.",
 		 function );
 
 		goto on_error;
@@ -224,10 +224,32 @@ int cdata_test_array_entries(
 
 		goto on_error;
 	}
+	fprintf(
+	 stdout,
+	 "Testing set_entry_by_index\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	/* Test to set an entry that is out of bounds
+	 */
 	result = libcdata_array_set_entry_by_index(
 	          array,
-	          1,
-	          (intptr_t *) &entry_value3,
+	          2,
+	          (intptr_t *) &entry_value4,
 	          &error );
 
 	if( result == -1 )
@@ -236,7 +258,86 @@ int cdata_test_array_entries(
 		 &error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set entry: 1.",
+		 "%s: unable to set entry: 2.",
+		 function );
+
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stdout );
+
+		libcerror_error_free(
+		 &error );
+	}
+	fprintf(
+	 stdout,
+	 "Testing set_entry_by_index\t" );
+
+	if( result != -1 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	result = libcdata_array_resize(
+	          array,
+	          3,
+	          NULL,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
+		 "%s: unable to resize array.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing resize\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          2,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set entry: 2.",
 		 function );
 
 		goto on_error;
@@ -621,7 +722,7 @@ int cdata_test_array_entries(
 		libcerror_error_set(
 		 &error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to reverse array.",
 		 function );
 
@@ -736,7 +837,7 @@ int cdata_test_array_entries(
 		libcerror_error_set(
 		 &error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 		 "%s: unable to empty array.",
 		 function );
 
@@ -929,7 +1030,7 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	/* TODO: test libcdata_array_clone, libcdata_array_resize
+	/* TODO: test libcdata_array_clone
 	 */
 	return( EXIT_SUCCESS );
 }
