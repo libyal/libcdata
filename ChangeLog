@@ -31,7 +31,8 @@ Types:
 
 20130503
 * worked on tests
-* added libcthreads support
+* added libcthreads
+* worked on multi-threading support
 
 20130427
 * worked on tests

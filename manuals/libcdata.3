@@ -1,4 +1,4 @@
-.Dd April 7, 2013
+.Dd May 3, 2013
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -32,6 +32,8 @@ Array functions
 .Fn libcdata_array_free "libcdata_array_t **array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_empty "libcdata_array_t *array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_clear "libcdata_array_t *array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_clone "libcdata_array_t **destination_array, libcdata_array_t *source_array, int (*entry_free_function)( intptr_t **entry, libcdata_error_t **error ), int (*entry_clone_function)( intptr_t **destination_entry, intptr_t *source_entry, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int

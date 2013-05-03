@@ -1336,7 +1336,7 @@ int libcdata_array_set_entry_by_index(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		result = -1;
+		return( -1 );
 	}
 #endif
 	return( 1 );
@@ -1557,7 +1557,7 @@ int libcdata_array_insert_entry(
 	static char *function                     = "libcdata_tree_node_insert_node";
 	int compare_result                        = 0;
 	int entry_iterator                        = 0;
-	int result                                = -1;
+	int result                                = 0;
 
 	if( array == NULL )
 	{
@@ -1667,7 +1667,7 @@ int libcdata_array_insert_entry(
 				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
 				 "%s: unsupported entry compare function return value: %d.",
 				 function,
-				 result );
+				 compare_result );
 
 				goto on_error;
 			}

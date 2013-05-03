@@ -126,6 +126,18 @@ int libcdata_array_empty(
             libcdata_error_t **error ),
      libcdata_error_t **error );
 
+/* Clears an array and frees its entries
+ * The entries are freed using the entry_free_function
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_array_clear(
+     libcdata_array_t *array,
+     int (*entry_free_function)(
+            intptr_t **entry,
+            libcdata_error_t **error ),
+     libcdata_error_t **error );
+
 /* Clones the array and its entries
  *
  * The entries are cloned using the entry_clone_function
@@ -136,7 +148,7 @@ int libcdata_array_empty(
 LIBCDATA_EXTERN \
 int libcdata_array_clone(
      libcdata_array_t **destination_array,
-     libcdata_array_t *source_array,
+     const libcdata_array_t *source_array,
      int (*entry_free_function)(
             intptr_t **entry,
             libcdata_error_t **error ),
@@ -171,7 +183,7 @@ int libcdata_array_reverse(
  */
 LIBCDATA_EXTERN \
 int libcdata_array_get_number_of_entries(
-     libcdata_array_t *array,
+     const libcdata_array_t *array,
      int *number_of_entries,
      libcdata_error_t **error );
 
@@ -180,7 +192,7 @@ int libcdata_array_get_number_of_entries(
  */
 LIBCDATA_EXTERN \
 int libcdata_array_get_entry_by_index(
-     libcdata_array_t *array,
+     const libcdata_array_t *array,
      int entry_index,
      intptr_t **entry,
      libcdata_error_t **error );
@@ -195,7 +207,7 @@ int libcdata_array_get_entry_by_index(
  */
 LIBCDATA_EXTERN \
 int libcdata_array_get_entry_by_value(
-     libcdata_array_t *array,
+     const libcdata_array_t *array,
      intptr_t *entry,
      int (*entry_compare_function)(
             intptr_t *first_entry,
@@ -414,7 +426,7 @@ int libcdata_list_empty(
 LIBCDATA_EXTERN \
 int libcdata_list_clone(
      libcdata_list_t **destination_list,
-     libcdata_list_t *source_list,
+     const libcdata_list_t *source_list,
      int (*value_free_function)(
             intptr_t **value,
             libcdata_error_t **error ),
@@ -429,7 +441,7 @@ int libcdata_list_clone(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_number_of_elements(
-     libcdata_list_t *list,
+     const libcdata_list_t *list,
      int *number_of_elements,
      libcdata_error_t **error );
 
@@ -438,7 +450,7 @@ int libcdata_list_get_number_of_elements(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_first_element(
-     libcdata_list_t *list,
+     const libcdata_list_t *list,
      libcdata_list_element_t **element,
      libcdata_error_t **error );
 
@@ -447,7 +459,7 @@ int libcdata_list_get_first_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_last_element(
-     libcdata_list_t *list,
+     const libcdata_list_t *list,
      libcdata_list_element_t **element,
      libcdata_error_t **error );
 
@@ -456,7 +468,7 @@ int libcdata_list_get_last_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_element_by_index(
-     libcdata_list_t *list,
+     const libcdata_list_t *list,
      int element_index,
      libcdata_list_element_t **element,
      libcdata_error_t **error );
@@ -466,7 +478,7 @@ int libcdata_list_get_element_by_index(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_value_by_index(
-     libcdata_list_t *list,
+     const libcdata_list_t *list,
      int element_index,
      intptr_t **value,
      libcdata_error_t **error );
@@ -594,7 +606,7 @@ int libcdata_list_element_free(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_value(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      intptr_t **value,
      libcdata_error_t **error );
 
@@ -603,7 +615,7 @@ int libcdata_list_element_get_value(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_value(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      intptr_t *value,
      libcdata_error_t **error );
 
@@ -612,7 +624,7 @@ int libcdata_list_element_set_value(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_previous_element(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      libcdata_list_element_t **previous_element,
      libcdata_error_t **error );
 
@@ -621,7 +633,7 @@ int libcdata_list_element_get_previous_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_previous_element(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_error_t **error );
 
@@ -630,7 +642,7 @@ int libcdata_list_element_set_previous_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_next_element(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      libcdata_list_element_t **next_element,
      libcdata_error_t **error );
 
@@ -639,7 +651,7 @@ int libcdata_list_element_get_next_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_next_element(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      libcdata_list_element_t *next_element,
      libcdata_error_t **error );
 
@@ -648,7 +660,7 @@ int libcdata_list_element_set_next_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_elements(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      libcdata_list_element_t **previous_element,
      libcdata_list_element_t **next_element,
      libcdata_error_t **error );
@@ -658,7 +670,7 @@ int libcdata_list_element_get_elements(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_elements(
-     libcdata_list_element_t *element,
+     const libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_list_element_t *next_element,
      libcdata_error_t **error );

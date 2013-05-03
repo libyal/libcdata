@@ -27,6 +27,7 @@
 
 #include "libcdata_extern.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_types.h"
 
 #if defined( __cplusplus )
@@ -48,6 +49,12 @@ struct libcdata_internal_list_element
 	/* The value
 	 */
 	intptr_t *value;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT )
+	/* The read/write lock
+	 */
+	libcthreads_read_write_lock_t *read_write_lock;
+#endif
 };
 
 LIBCDATA_EXTERN \

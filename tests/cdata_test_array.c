@@ -1037,7 +1037,7 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	/* TODO: test libcdata_array_clone
+	/* TODO: test libcdata_array_clone, libcdata_array_clean
 	 */
 	return( EXIT_SUCCESS );
 }

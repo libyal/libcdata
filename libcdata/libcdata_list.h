@@ -27,6 +27,7 @@
 
 #include "libcdata_extern.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_types.h"
 
 #if defined( __cplusplus )
@@ -48,6 +49,12 @@ struct libcdata_internal_list
 	/* The last element
 	 */
 	libcdata_list_element_t *last_element;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT )
+	/* The read/write lock
+	 */
+	libcthreads_read_write_lock_t *read_write_lock;
+#endif
 };
 
 LIBCDATA_EXTERN \
@@ -58,6 +65,13 @@ int libcdata_list_initialize(
 LIBCDATA_EXTERN \
 int libcdata_list_free(
      libcdata_list_t **list,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
+
+int libcdata_internal_list_empty(
+     libcdata_internal_list_t *internal_list,
      int (*value_free_function)(
             intptr_t **value,
             libcerror_error_t **error ),
@@ -96,6 +110,11 @@ int libcdata_list_get_first_element(
      libcdata_list_element_t **element,
      libcerror_error_t **error );
 
+int libcdata_internal_list_set_first_element(
+     libcdata_internal_list_t *internal_list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error );
+
 int libcdata_list_set_first_element(
      libcdata_list_t *list,
      libcdata_list_element_t *element,
@@ -105,6 +124,11 @@ LIBCDATA_EXTERN \
 int libcdata_list_get_last_element(
      libcdata_list_t *list,
      libcdata_list_element_t **element,
+     libcerror_error_t **error );
+
+int libcdata_internal_list_set_last_element(
+     libcdata_internal_list_t *internal_list,
+     libcdata_list_element_t *element,
      libcerror_error_t **error );
 
 int libcdata_list_set_last_element(
