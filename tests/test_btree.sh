@@ -26,9 +26,9 @@ EXIT_IGNORE=77;
 
 test_btree()
 { 
-	echo "Testing read offset of input:" $*;
+	echo "Testing balanced tree type"
 
-	./${CDATA_TEST_BTREE} $*;
+	./${CDATA_TEST_BTREE};
 
 	RESULT=$?;
 

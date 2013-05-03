@@ -26,9 +26,9 @@ EXIT_IGNORE=77;
 
 test_list()
 { 
-	echo "Testing read offset of input:" $*;
+	echo "Testing list type";
 
-	./${CDATA_TEST_LIST} $*;
+	./${CDATA_TEST_LIST};
 
 	RESULT=$?;
 

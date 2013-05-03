@@ -26,9 +26,9 @@ EXIT_IGNORE=77;
 
 test_tree_node()
 { 
-	echo "Testing read offset of input:" $*;
+	echo "Testing tree node type";
 
-	./${CDATA_TEST_TREE_NODE} $*;
+	./${CDATA_TEST_TREE_NODE};
 
 	RESULT=$?;
 

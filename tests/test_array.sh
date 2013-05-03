@@ -26,9 +26,9 @@ EXIT_IGNORE=77;
 
 test_array()
 { 
-	echo "Testing read offset of input:" $*;
+	echo "Testing array type";
 
-	./${CDATA_TEST_ARRAY} $*;
+	./${CDATA_TEST_ARRAY};
 
 	RESULT=$?;
 
