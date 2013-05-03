@@ -68,7 +68,7 @@ cdata_test_list_element_SOURCES = \
 	cdata_test_libcerror.h \
 	cdata_test_libcdata.h \
 	cdata_test_libcstring.h \
-	cdata_test_list.c
+	cdata_test_list_element.c
 
 cdata_test_list_element_LDADD = \
 	@LIBCSTRING_LIBADD@ \

@@ -2,7 +2,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
 	@LIBCSTRING_CPPFLAGS@ \
-	@LIBCERROR_CPPFLAGS@
+	@LIBCERROR_CPPFLAGS@ \
+	@LIBCTHREADS_CPPFLAGS@
 
 lib_LTLIBRARIES = libcdata.la
 
@@ -15,6 +16,7 @@ libcdata_la_SOURCES = \
 	libcdata_extern.h \
 	libcdata_libcerror.h \
 	libcdata_libcstring.h \
+	libcdata_libcthreads.h \
 	libcdata_list.c libcdata_list.h \
 	libcdata_list_element.c libcdata_list_element.h \
 	libcdata_range_list.c libcdata_range_list.h \
@@ -26,7 +28,8 @@ libcdata_la_SOURCES = \
 
 libcdata_la_LIBADD  = \
 	@LIBCSTRING_LIBADD@ \
-	@LIBCERROR_LIBADD@
+	@LIBCERROR_LIBADD@ \
+	@LIBCTHREADS_LIBADD@
 
 libcdata_la_LDFLAGS = -no-undefined -version-info 1:0:0
 

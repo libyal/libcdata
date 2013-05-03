@@ -4,7 +4,7 @@
 # Version: 20130330
 
 GIT_URL_PREFIX="https://code.google.com/p"
-LOCAL_LIBS="libcerror";
+LOCAL_LIBS="libcerror libcthreads";
 
 OLDIFS=$IFS;
 IFS=" ";

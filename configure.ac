@@ -61,12 +61,15 @@ AX_LIBCSTRING_CHECK_ENABLE
 dnl Check for enabling libcerror for cross-platform C error functions
 AX_LIBCERROR_CHECK_ENABLE
 
+dnl Check for enabling libcthreads for cross-platform C threads functions
+AX_LIBCTHREADS_CHECK_ENABLE
+
 dnl Set additional compiler flags
 CFLAGS="$CFLAGS -Wall";
 
 dnl Check if requires and build requires should be set in spec file
 AS_IF(
- [test "x$ac_cv_libcstring" = xyes || test "x$ac_cv_libcerror" = xyes],
+ [test "x$ac_cv_libcstring" = xyes || test "x$ac_cv_libcerror" = xyes || test "x$ac_cv_libcthreads" = xyes],
  [AC_SUBST(
   [libcdata_spec_requires],
   [Requires:])
@@ -96,6 +99,7 @@ AC_CONFIG_FILES([include/Makefile])
 AC_CONFIG_FILES([common/Makefile])
 AC_CONFIG_FILES([libcstring/Makefile])
 AC_CONFIG_FILES([libcerror/Makefile])
+AC_CONFIG_FILES([libcthreads/Makefile])
 AC_CONFIG_FILES([libcdata/Makefile])
 AC_CONFIG_FILES([po/Makefile.in])
 AC_CONFIG_FILES([po/Makevars])
@@ -125,6 +129,8 @@ AC_MSG_NOTICE([
 Building:
    libcstring support:          $ac_cv_libcstring
    libcerror support:           $ac_cv_libcerror
+   libcthreads support:         $ac_cv_libcthreads
+   Thread locking support:      $ac_cv_libcthreads_locking
 
 Features:
    Wide character type support: $ac_cv_enable_wide_character_type
