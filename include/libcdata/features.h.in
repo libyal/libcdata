@@ -28,6 +28,10 @@
 #define LIBCDATA_HAVE_WIDE_CHARACTER_TYPE	1
 #endif
 
+#if defined( WINAPI ) || @HAVE_MULTI_THREAD_SUPPORT@
+#define LIBCDATA_HAVE_MULTI_THREAD_SUPPORT	1
+#endif
+
 #if !defined( LIBCDATA_DEPRECATED )
 #if defined( __GNUC__ ) && __GNUC__ >= 3
 #define LIBCDATA_DEPRECATED	__attribute__ ((__deprecated__))

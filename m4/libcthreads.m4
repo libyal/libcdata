@@ -129,8 +129,8 @@ AC_DEFUN([AX_LIBCTHREADS_CHECK_LIB],
 
  AS_IF(
   [test "x$ac_cv_libcthreads" = xyes],
-  [ac_cv_libcthreads_locking=libcthreads],
-  [ac_cv_libcthreads_locking=no])
+  [ac_cv_libcthreads_multi_threading=libcthreads],
+  [ac_cv_libcthreads_multi_threading=no])
 
  AS_IF(
   [test "x$ac_cv_libcthreads" = xyes],
@@ -149,13 +149,16 @@ AC_DEFUN([AX_LIBCTHREADS_CHECK_LOCAL],
   [test "x$ac_cv_enable_winapi" = xno],
   [dnl Check for enabling pthread support
   AX_PTHREAD_CHECK_ENABLE
-   ac_cv_libcthreads_locking=$ac_cv_pthread],
-  [ac_cv_libcthreads_locking="winapi"])
+   ac_cv_libcthreads_multi_threading=$ac_cv_pthread],
+  [ac_cv_libcthreads_multi_threading="winapi"])
 
- ac_cv_libcthreads_CPPFLAGS="-I../libcthreads";
- ac_cv_libcthreads_LIBADD="../libcthreads/libcthreads.la";
+ AS_IF(
+  [test "x$ac_cv_libcthreads_multi_threading" != xno],
+  [ac_cv_libcthreads_CPPFLAGS="-I../libcthreads";
+  ac_cv_libcthreads_LIBADD="../libcthreads/libcthreads.la";
 
- ac_cv_libcthreads=local
+  ac_cv_libcthreads=local],
+  [ac_cv_libcthreads=no])
  ])
 
 dnl Function to detect how to enable libcthreads
@@ -198,6 +201,16 @@ AC_DEFUN([AX_LIBCTHREADS_CHECK_ENABLE],
   [AC_SUBST(
    [LIBCTHREADS_LIBADD],
    [$ac_cv_libcthreads_LIBADD])
+  ])
+
+ AS_IF(
+  [test "x$ac_cv_libcthreads" != xno],
+  [AC_SUBST(
+   [HAVE_MULTI_THREAD_SUPPORT],
+   [1]) ],
+  [AC_SUBST(
+   [HAVE_MULTI_THREAD_SUPPORT],
+   [0])
   ])
 
  AS_IF(

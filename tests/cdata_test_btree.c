@@ -100,6 +100,13 @@ int cdata_test_btree_initialize(
 			 "%s: unable to free tree.",
 			 function );
 
+			libcerror_error_backtrace_fprint(
+			 error,
+			 stdout );
+
+			libcerror_error_free(
+			 &error );
+
 			return( -1 );
 		}
 	}

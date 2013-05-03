@@ -16,6 +16,7 @@ TODO
 Types:
 * array
   - add remove entry function ?
+  - allocate in larger blocks
 * list
   - add current list element tracking like offset list ?
 * range list

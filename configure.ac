@@ -130,9 +130,9 @@ Building:
    libcstring support:          $ac_cv_libcstring
    libcerror support:           $ac_cv_libcerror
    libcthreads support:         $ac_cv_libcthreads
-   Thread locking support:      $ac_cv_libcthreads_locking
 
 Features:
+   Multi-threading support:     $ac_cv_libcthreads_multi_threading
    Wide character type support: $ac_cv_enable_wide_character_type
 ]);
 

@@ -3,7 +3,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/common \
 	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
-	@LIBCTHREADS_CPPFLAGS@
+	@LIBCTHREADS_CPPFLAGS@ \
+	@PTHREAD_CPPFLAGS@
 
 lib_LTLIBRARIES = libcdata.la
 
@@ -29,7 +30,8 @@ libcdata_la_SOURCES = \
 libcdata_la_LIBADD  = \
 	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
-	@LIBCTHREADS_LIBADD@
+	@LIBCTHREADS_LIBADD@ \
+	@PTHREAD_LIBADD@
 
 libcdata_la_LDFLAGS = -no-undefined -version-info 1:0:0
 

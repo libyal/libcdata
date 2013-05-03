@@ -101,6 +101,13 @@ int cdata_test_array_initialize(
 			 "%s: unable to free array.",
 			 function );
 
+			libcerror_error_backtrace_fprint(
+			 error,
+			 stdout );
+
+			libcerror_error_free(
+			 &error );
+
 			return( -1 );
 		}
 	}
