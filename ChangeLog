@@ -33,6 +33,7 @@ Types:
 * worked on tests
 * added libcthreads
 * worked on multi-threading support
+* updated msvscpp files
 
 20130427
 * worked on tests
