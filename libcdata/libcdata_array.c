@@ -338,6 +338,7 @@ int libcdata_array_empty(
 
 /* Clears an array and frees its entries
  * The entries are freed using the entry_free_function
+ * This function is not multi-thread safe acquire write lock before call
  * Returns 1 if successful or -1 on error
  */
 int libcdata_internal_array_clear(
@@ -649,6 +650,7 @@ on_error:
 }
 
 /* Resizes an array
+ * This function is not multi-thread safe acquire write lock before call
  * Returns 1 if successful or -1 on error
  */
 int libcdata_internal_array_resize(

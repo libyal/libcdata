@@ -51,7 +51,7 @@ then
 	exit ${EXIT_FAILURE};
 fi
 
-if ! test_array ${FILENAME};
+if ! test_array;
 then
 	exit ${EXIT_FAILURE};
 fi

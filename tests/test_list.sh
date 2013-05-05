@@ -51,7 +51,7 @@ then
 	exit ${EXIT_FAILURE};
 fi
 
-if ! test_list ${FILENAME};
+if ! test_list;
 then
 	exit ${EXIT_FAILURE};
 fi

@@ -51,7 +51,7 @@ then
 	exit ${EXIT_FAILURE};
 fi
 
-if ! test_tree_node ${FILENAME};
+if ! test_tree_node;
 then
 	exit ${EXIT_FAILURE};
 fi

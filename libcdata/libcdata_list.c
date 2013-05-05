@@ -190,6 +190,7 @@ int libcdata_list_free(
 
 /* Empties a list and frees the elements
  * Uses the value_free_function to free the element value
+ * This function is not multi-thread safe acquire write lock before call
  * Returns 1 if successful or -1 on error
  */
 int libcdata_internal_list_empty(
@@ -752,6 +753,7 @@ int libcdata_list_get_first_element(
 }
 
 /* Sets the first element in the list
+ * This function is not multi-thread safe acquire write lock before call
  * Returns 1 if successful or -1 on error
  */
 int libcdata_internal_list_set_first_element(
@@ -954,6 +956,7 @@ int libcdata_list_get_last_element(
 }
 
 /* Sets the last element in the list
+ * This function is not multi-thread safe acquire write lock before call
  * Returns 1 if successful or -1 on error
  */
 int libcdata_internal_list_set_last_element(

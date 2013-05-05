@@ -51,7 +51,7 @@ then
 	exit ${EXIT_FAILURE};
 fi
 
-if ! test_btree ${FILENAME};
+if ! test_btree;
 then
 	exit ${EXIT_FAILURE};
 fi
