@@ -1037,6 +1037,10 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
+	/* TODO: test multiple insert scenarios
+	 * empty array
+	 * at start, at end, in-between, with and with unique flag
+	 */
 	/* TODO: test libcdata_array_clone, libcdata_array_clean
 	 */
 	return( EXIT_SUCCESS );

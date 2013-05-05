@@ -26,6 +26,7 @@
 #include "libcdata_array.h"
 #include "libcdata_definitions.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_types.h"
 
 /* Creates an array
@@ -1557,7 +1558,7 @@ int libcdata_array_insert_entry(
 	static char *function                     = "libcdata_tree_node_insert_node";
 	int compare_result                        = 0;
 	int entry_iterator                        = 0;
-	int result                                = 0;
+	int result                                = 1;
 
 	if( array == NULL )
 	{

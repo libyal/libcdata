@@ -24,6 +24,7 @@
 #include <types.h>
 
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_list_element.h"
 #include "libcdata_types.h"
 
