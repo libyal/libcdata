@@ -30,7 +30,7 @@
 #include "libcdata_types.h"
 
 /* Creates a tree node
- * 'Make sure the value node is referencing, is set to NULL
+ * Make sure the value node is referencing, is set to NULL
  * Returns 1 if successful or -1 on error
  */
 int libcdata_tree_node_initialize(
