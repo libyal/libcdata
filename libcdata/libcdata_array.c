@@ -70,8 +70,8 @@ int libcdata_array_initialize(
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid number of entries.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_LESS_THAN_ZERO,
+		 "%s: invalid number of entries value less than zero.",
 		 function );
 
 		return( -1 );
@@ -111,6 +111,21 @@ int libcdata_array_initialize(
 	 */
 	number_of_allocated_entries = ( number_of_entries & ~( 15 ) ) + 16;
 
+#if SIZEOF_INT <= SIZEOF_SIZE_T
+	if( (size_t) number_of_allocated_entries > (size_t) ( SSIZE_MAX / sizeof( intptr_t * ) ) )
+#else
+	if( number_of_allocated_entries > (int) ( SSIZE_MAX / sizeof( intptr_t * ) ) )
+#endif
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid number of allocated entries value exceeds maximum.",
+		 function );
+
+		goto on_error;
+	}
 	entries_size = sizeof( intptr_t * ) * number_of_allocated_entries;
 
 	if( entries_size > (size_t) SSIZE_MAX )
@@ -684,8 +699,8 @@ int libcdata_internal_array_resize(
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid number of entries.",
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_LESS_THAN_ZERO,
+		 "%s: invalid number of entries value less than zero.",
 		 function );
 
 		return( -1 );
@@ -696,6 +711,21 @@ int libcdata_internal_array_resize(
 		 */
 		number_of_allocated_entries = ( number_of_entries & ~( 15 ) ) + 16;
 
+#if SIZEOF_INT <= SIZEOF_SIZE_T
+		if( (size_t) number_of_allocated_entries > (size_t) ( SSIZE_MAX / sizeof( intptr_t * ) ) )
+#else
+		if( number_of_allocated_entries > (int) ( SSIZE_MAX / sizeof( intptr_t * ) ) )
+#endif
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_EXCEEDS_MAXIMUM,
+			 "%s: invalid number of allocated entries value exceeds maximum.",
+			 function );
+
+			return( -1 );
+		}
 		entries_size = sizeof( intptr_t * ) * number_of_allocated_entries;
 
 		if( entries_size > (size_t) SSIZE_MAX )
