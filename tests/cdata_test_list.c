@@ -116,23 +116,65 @@ int cdata_test_list_initialize(
 	return( 1 );
 }
 
-/* Tests get, set, append and prepend of elements
+/* Test element compare function
+ * Returns return LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ */
+int cdata_test_list_element_compare_function(
+     intptr_t *first_value,
+     intptr_t *second_value,
+     libcdata_error_t **error )
+{
+	static char *function = "cdata_test_list_element_compare_function";
+
+	if( first_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid first value.",
+		 function );
+
+		return( -1 );
+	}
+	if( second_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid second value.",
+		 function );
+
+		return( -1 );
+	}
+	if( *first_value > *second_value )
+	{
+		return( LIBCDATA_COMPARE_LESS );
+	}
+	else if( *first_value < *second_value )
+	{
+		return( LIBCDATA_COMPARE_GREATER );
+	}
+	return( LIBCDATA_COMPARE_EQUAL );
+}
+
+/* Tests get, set, append, prepend and insert of values
  * Returns 1 if successful, 0 if not or -1 on error
  */
-int cdata_test_list_elements(
+int cdata_test_list_values(
      void )
 {
 	libcdata_list_t *list    = NULL;
 	libcerror_error_t *error = NULL;
 	int *element_value_test  = 0;
-	static char *function    = "cdata_test_list_elements";
+	static char *function    = "cdata_test_list_values";
 	int element_index        = 0;
 	int element_value1       = 1;
 	int element_value2       = 2;
 	int element_value3       = 3;
 	int element_value4       = 4;
 	int element_value5       = 5;
-	int element_value6       = 6;
 	int number_of_elements   = 0;
 	int result               = 0;
 
@@ -169,7 +211,7 @@ int cdata_test_list_elements(
 	}
 	result = libcdata_list_append_value(
 	          list,
-	          (intptr_t *) &element_value4,
+	          (intptr_t *) &element_value5,
 	          &error );
 
 	if( result == -1 )
@@ -262,7 +304,7 @@ int cdata_test_list_elements(
 		 stdout,
 		 "Testing get_value_by_index\t" );
 
-		result = ( element_value_test == &element_value4 );
+		result = ( element_value_test == &element_value5 );
 
 		if( result == 0 )
 		{
@@ -409,6 +451,84 @@ int cdata_test_list_elements(
 		 stdout,
 		 "\n" );
 	}
+	/* Test if insert of new value succeeds
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value4,
+	          &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_value\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_list_get_number_of_elements(
+		     list,
+		     &number_of_elements,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_elements\t" );
+
+		result = ( number_of_elements == 5 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
 	result = libcdata_list_empty(
 	          list,
 	          NULL,
@@ -519,6 +639,394 @@ on_error:
 	return( -1 );
 }
 
+/* Tests insert of values
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int cdata_test_list_insert(
+     void )
+{
+	libcdata_list_t *list    = NULL;
+	libcerror_error_t *error = NULL;
+	int *element_value_test  = 0;
+	static char *function    = "cdata_test_list_insert";
+	int element_value1       = 1;
+	int element_value2       = 2;
+	int element_value3       = 3;
+	int element_value4       = 4;
+	int number_of_elements   = 0;
+	int result               = 0;
+
+	list = NULL;
+
+	if( libcdata_list_initialize(
+	     &list,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create list.",
+		 function );
+
+		goto on_error;
+	}
+	/* Test if insert of new value on an empty list succeeds
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value3,
+	          &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert element.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_vlaue on empty list\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	/* Test if insert of new value before the first element succeeds
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value1,
+	          &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_value before first value\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	/* Test if insert of new value after the first element succeeds
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value2,
+	          &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_value after first value\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	/* Test if insert of duplicate value fails
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value2,
+	          &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_value of duplicate\t" );
+
+	if( result != 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+
+		result = 0;
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+
+		result = 1;
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	/* Test if insert of new value after the last element succeeds
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value4,
+	          &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_value after last value\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_list_get_number_of_elements(
+		     list,
+		     &number_of_elements,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_elements\t" );
+
+		result = ( number_of_elements == 4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	/* Test if insert of duplicate value succeeds
+	 */
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) &element_value2,
+	          &cdata_test_list_element_compare_function,
+	          0,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing insert_value of duplicate\t" );
+
+	if( result != 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_list_get_number_of_elements(
+		     list,
+		     &number_of_elements,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of elements.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_elements\t" );
+
+		result = ( number_of_elements == 5 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( libcdata_list_free(
+	     &list,
+	     NULL,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free list.",
+		 function );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stdout );
+
+		libcerror_error_free(
+		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( -1 );
+}
+
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
@@ -571,13 +1079,23 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	/* Test: get, set, prepend and append elements
+	/* Test: get, set, prepend, append and insert values
 	 */
-	if( cdata_test_list_elements() != 1 )
+	if( cdata_test_list_values() != 1 )
 	{
 		fprintf(
 		 stderr,
-		 "Unable to test elements.\n" );
+		 "Unable to test values.\n" );
+
+		return( EXIT_FAILURE );
+	}
+	/* Test: insert values
+	 */
+	if( cdata_test_list_insert() != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to test insert.\n" );
 
 		return( EXIT_FAILURE );
 	}

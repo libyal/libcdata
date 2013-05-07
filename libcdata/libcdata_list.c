@@ -1666,7 +1666,7 @@ int libcdata_list_insert_element(
 	static char *function                     = "libcdata_list_insert_element";
 	int compare_result                        = 0;
 	int element_index                         = 0;
-	int result                                = 0;
+	int result                                = 1;
 
 	if( list == NULL )
 	{
@@ -1871,7 +1871,7 @@ int libcdata_list_insert_element(
 					break;
 				}
 			}
-			else if( result == LIBCDATA_COMPARE_LESS )
+			else if( compare_result == LIBCDATA_COMPARE_LESS )
 			{
 				result = 1;
 

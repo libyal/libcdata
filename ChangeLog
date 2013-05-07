@@ -29,6 +29,10 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130507
+* worked on tests
+* bug fixes for recent changes
+
 20130505
 * worked on multi-threading support
 
