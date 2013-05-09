@@ -32,10 +32,11 @@ check_PROGRAMS = \
 	cdata_test_tree_node
 
 cdata_test_array_SOURCES = \
+	cdata_test_array.c \
 	cdata_test_libcerror.h \
 	cdata_test_libcdata.h \
 	cdata_test_libcstring.h \
-	cdata_test_array.c
+	cdata_test_unused.h
 
 cdata_test_array_LDADD = \
 	@LIBCSTRING_LIBADD@ \

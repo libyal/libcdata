@@ -30,6 +30,7 @@
 #include "cdata_test_libcdata.h"
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
+#include "cdata_test_unused.h"
 
 /* Tests initializing the array
  * Make sure the value array is referencing, is set to NULL
@@ -1298,12 +1299,14 @@ on_error:
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-int wmain( int argc, wchar_t * const argv[] )
+int wmain( int argc, wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #else
-int main( int argc, char * const argv[] )
+int main( int argc, char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #endif
 {
 	libcdata_array_t *array = NULL;
+
+	CDATA_TEST_UNREFERENCED_PARAMETER( argv )
 
 	if( argc != 1 )
 	{
