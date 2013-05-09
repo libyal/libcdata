@@ -50,7 +50,7 @@ struct libcdata_internal_array
 	 */
 	intptr_t **entries;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	/* The read/write lock
 	 */
 	libcthreads_read_write_lock_t *read_write_lock;

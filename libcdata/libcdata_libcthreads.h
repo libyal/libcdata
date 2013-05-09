@@ -24,7 +24,7 @@
 
 #include <common.h>
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 
 /* Define HAVE_LOCAL_LIBCTHREADS for local use of libcthreads
  */
@@ -54,7 +54,7 @@
 
 #endif
 
-#endif /* defined( HAVE_MULTI_THREAD_SUPPORT ) */
+#endif /* defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA ) */
 
 #endif
 

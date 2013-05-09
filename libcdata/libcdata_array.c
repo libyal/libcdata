@@ -170,7 +170,7 @@ int libcdata_array_initialize(
 	internal_array->number_of_allocated_entries = number_of_allocated_entries;
 	internal_array->number_of_entries           = number_of_entries;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_initialize(
 	     &( internal_array->read_write_lock ),
 	     error ) != 1 )
@@ -234,7 +234,7 @@ int libcdata_array_free(
 		internal_array = (libcdata_internal_array_t *) *array;
 		*array         = NULL;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 		if( libcthreads_read_write_lock_free(
 		     &( internal_array->read_write_lock ),
 		     error ) != 1 )
@@ -302,7 +302,7 @@ int libcdata_array_empty(
 	}
 	internal_array = (libcdata_internal_array_t *) array;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -333,7 +333,7 @@ int libcdata_array_empty(
 	}
 	internal_array->number_of_entries = 0;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -438,7 +438,7 @@ int libcdata_array_clear(
 	}
 	internal_array = (libcdata_internal_array_t *) array;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -467,7 +467,7 @@ int libcdata_array_clear(
 
 		result = -1;
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -589,7 +589,7 @@ int libcdata_array_clone(
 	}
 	internal_destination_array = (libcdata_internal_array_t *) destination_array;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_source_array->read_write_lock,
 	     error ) != 1 )
@@ -632,7 +632,7 @@ int libcdata_array_clone(
 			}
 		}
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_source_array->read_write_lock,
 	     error ) != 1 )
@@ -849,7 +849,7 @@ int libcdata_array_resize(
 	}
 	internal_array = (libcdata_internal_array_t *) array;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -879,7 +879,7 @@ int libcdata_array_resize(
 
 		result = -1;
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -934,7 +934,7 @@ int libcdata_array_reverse(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -963,7 +963,7 @@ int libcdata_array_reverse(
 			reverse_entry_iterator--;
 		}
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1016,7 +1016,7 @@ int libcdata_array_get_number_of_entries(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1033,7 +1033,7 @@ int libcdata_array_get_number_of_entries(
 #endif
 	*number_of_entries = internal_array->number_of_entries;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1110,7 +1110,7 @@ int libcdata_array_get_entry_by_index(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1127,7 +1127,7 @@ int libcdata_array_get_entry_by_index(
 #endif
 	*entry = internal_array->entries[ entry_index ];
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1204,7 +1204,7 @@ int libcdata_array_get_entry_by_value(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1274,7 +1274,7 @@ int libcdata_array_get_entry_by_value(
 			}
 		}
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1340,7 +1340,7 @@ int libcdata_array_set_entry_by_index(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1357,7 +1357,7 @@ int libcdata_array_set_entry_by_index(
 #endif
 	internal_array->entries[ entry_index ] = entry;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1400,7 +1400,7 @@ int libcdata_array_prepend_entry(
 	}
 	internal_array = (libcdata_internal_array_t *) array;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1441,7 +1441,7 @@ int libcdata_array_prepend_entry(
 	}
 	internal_array->entries[ 0 ] = entry;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1459,7 +1459,7 @@ int libcdata_array_prepend_entry(
 	return( 1 );
 
 on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	libcthreads_read_write_lock_release_for_write(
 	 internal_array->read_write_lock,
 	 NULL );
@@ -1504,7 +1504,7 @@ int libcdata_array_append_entry(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1538,7 +1538,7 @@ int libcdata_array_append_entry(
 	}
 	internal_array->entries[ *entry_index ] = entry;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1556,7 +1556,7 @@ int libcdata_array_append_entry(
 	return( 1 );
 
 on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	libcthreads_read_write_lock_release_for_write(
 	 internal_array->read_write_lock,
 	 NULL );
@@ -1639,7 +1639,7 @@ int libcdata_array_insert_entry(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1758,7 +1758,7 @@ int libcdata_array_insert_entry(
 			internal_array->entries[ *entry_index ] = entry;
 		}
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_array->read_write_lock,
 	     error ) != 1 )
@@ -1776,7 +1776,7 @@ int libcdata_array_insert_entry(
 	return( result );
 
 on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	libcthreads_read_write_lock_release_for_write(
 	 internal_array->read_write_lock,
 	 NULL );

@@ -92,7 +92,7 @@ int libcdata_list_element_initialize(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_initialize(
 	     &( internal_element->read_write_lock ),
 	     error ) != 1 )
@@ -164,7 +164,7 @@ int libcdata_list_element_free(
 		}
 		*element = NULL;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 		if( libcthreads_read_write_lock_free(
 		     &( internal_element->read_write_lock ),
 		     error ) != 1 )
@@ -236,7 +236,7 @@ int libcdata_list_element_get_value(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -253,7 +253,7 @@ int libcdata_list_element_get_value(
 #endif
 	*value = internal_element->value;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -295,7 +295,7 @@ int libcdata_list_element_set_value(
 	}
 	internal_element = (libcdata_internal_list_element_t *) element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -312,7 +312,7 @@ int libcdata_list_element_set_value(
 #endif
 	internal_element->value = value;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -365,7 +365,7 @@ int libcdata_list_element_get_previous_element(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -382,7 +382,7 @@ int libcdata_list_element_get_previous_element(
 #endif
 	*previous_element = internal_element->previous_element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -424,7 +424,7 @@ int libcdata_list_element_set_previous_element(
 	}
 	internal_element = (libcdata_internal_list_element_t *) element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -441,7 +441,7 @@ int libcdata_list_element_set_previous_element(
 #endif
 	internal_element->previous_element = previous_element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -494,7 +494,7 @@ int libcdata_list_element_get_next_element(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -511,7 +511,7 @@ int libcdata_list_element_get_next_element(
 #endif
 	*next_element = internal_element->next_element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -553,7 +553,7 @@ int libcdata_list_element_set_next_element(
 	}
 	internal_element = (libcdata_internal_list_element_t *) element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -570,7 +570,7 @@ int libcdata_list_element_set_next_element(
 #endif
 	internal_element->next_element = next_element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -635,7 +635,7 @@ int libcdata_list_element_get_elements(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -653,7 +653,7 @@ int libcdata_list_element_get_elements(
 	*previous_element = internal_element->previous_element;
 	*next_element     = internal_element->next_element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -696,7 +696,7 @@ int libcdata_list_element_set_elements(
 	}
 	internal_element = (libcdata_internal_list_element_t *) element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
@@ -714,7 +714,7 @@ int libcdata_list_element_set_elements(
 	internal_element->previous_element = previous_element;
 	internal_element->next_element     = next_element;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_element->read_write_lock,
 	     error ) != 1 )
