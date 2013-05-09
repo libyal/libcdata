@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBCDATA_TYPES_H )
-#define _LIBCDATA_TYPES_H
+#if !defined( _LIBCDATA_INTERNAL_TYPES_H )
+#define _LIBCDATA_INTERNAL_TYPES_H
 
 #include <common.h>
 #include <types.h>

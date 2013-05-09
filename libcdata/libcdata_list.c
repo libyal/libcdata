@@ -101,7 +101,7 @@ int libcdata_list_initialize(
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
 		 "%s: unable to intialize read/write lock.",
 		 function );
@@ -160,7 +160,7 @@ int libcdata_list_free(
 		{
 			libcerror_error_set(
 			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to free read/write lock.",
 			 function );
@@ -335,12 +335,12 @@ int libcdata_list_empty(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for writing.",
 		 function );
@@ -364,12 +364,12 @@ int libcdata_list_empty(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for writing.",
 		 function );
@@ -485,12 +485,12 @@ int libcdata_list_clone(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_read(
-	     &( internal_source_list->read_write_lock ),
+	     internal_source_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for reading.",
 		 function );
@@ -576,12 +576,12 @@ int libcdata_list_clone(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_read(
-	     &( internal_source_list->read_write_lock ),
+	     internal_source_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for reading.",
 		 function );
@@ -649,12 +649,12 @@ int libcdata_list_get_number_of_elements(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for reading.",
 		 function );
@@ -666,12 +666,12 @@ int libcdata_list_get_number_of_elements(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for reading.",
 		 function );
@@ -719,12 +719,12 @@ int libcdata_list_get_first_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for reading.",
 		 function );
@@ -736,12 +736,12 @@ int libcdata_list_get_first_element(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for reading.",
 		 function );
@@ -840,12 +840,12 @@ int libcdata_list_set_first_element(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for writing.",
 		 function );
@@ -869,12 +869,12 @@ int libcdata_list_set_first_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for writing.",
 		 function );
@@ -922,12 +922,12 @@ int libcdata_list_get_last_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for reading.",
 		 function );
@@ -939,12 +939,12 @@ int libcdata_list_get_last_element(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for reading.",
 		 function );
@@ -1043,12 +1043,12 @@ int libcdata_list_set_last_element(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for writing.",
 		 function );
@@ -1072,12 +1072,12 @@ int libcdata_list_set_last_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for writing.",
 		 function );
@@ -1140,12 +1140,12 @@ int libcdata_list_get_element_by_index(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for reading.",
 		 function );
@@ -1242,12 +1242,12 @@ int libcdata_list_get_element_by_index(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_read(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for reading.",
 		 function );
@@ -1260,7 +1260,7 @@ int libcdata_list_get_element_by_index(
 on_error:
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	libcthreads_read_write_lock_release_for_read(
-	 &( internal_list->read_write_lock ),
+	 internal_list->read_write_lock,
 	 NULL );
 #endif
 	return( -1 );
@@ -1349,12 +1349,12 @@ int libcdata_list_prepend_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for writing.",
 		 function );
@@ -1384,12 +1384,12 @@ int libcdata_list_prepend_element(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for writing.",
 		 function );
@@ -1402,7 +1402,7 @@ int libcdata_list_prepend_element(
 on_error:
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	libcthreads_read_write_lock_release_for_write(
-	 &( internal_list->read_write_lock ),
+	 internal_list->read_write_lock,
 	 NULL );
 #endif
 	return( -1 );
@@ -1511,12 +1511,12 @@ int libcdata_list_append_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for writing.",
 		 function );
@@ -1546,12 +1546,12 @@ int libcdata_list_append_element(
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for writing.",
 		 function );
@@ -1564,7 +1564,7 @@ int libcdata_list_append_element(
 on_error:
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	libcthreads_read_write_lock_release_for_write(
-	 &( internal_list->read_write_lock ),
+	 internal_list->read_write_lock,
 	 NULL );
 #endif
 	return( -1 );
@@ -1758,12 +1758,12 @@ int libcdata_list_insert_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_grab_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to grab read/write lock for writing.",
 		 function );
@@ -1999,12 +1999,12 @@ int libcdata_list_insert_element(
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	if( libcthreads_read_write_lock_release_for_write(
-	     &( internal_list->read_write_lock ),
+	     internal_list->read_write_lock,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 		 "%s: unable to release read/write lock for writing.",
 		 function );
@@ -2017,7 +2017,7 @@ int libcdata_list_insert_element(
 on_error:
 #if defined( HAVE_MULTI_THREAD_SUPPORT )
 	libcthreads_read_write_lock_release_for_write(
-	 &( internal_list->read_write_lock ),
+	 internal_list->read_write_lock,
 	 NULL );
 #endif
 	return( -1 );

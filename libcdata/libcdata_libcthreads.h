@@ -30,11 +30,15 @@
  */
 #if defined( HAVE_LOCAL_LIBCTHREADS )
 
+#include <libcthreads_condition.h>
 #include <libcthreads_definitions.h>
 #include <libcthreads_lock.h>
+#include <libcthreads_mutex.h>
 #include <libcthreads_read_write_lock.h>
+#include <libcthreads_queue.h>
 #include <libcthreads_thread.h>
 #include <libcthreads_thread_attributes.h>
+#include <libcthreads_thread_pool.h>
 #include <libcthreads_types.h>
 
 #else
