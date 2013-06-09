@@ -32,7 +32,7 @@ typedef intptr_t libcdata_error_t;
  */
 enum LIBCDATA_ERROR_DOMAINS
 {
-	LIBCDATA_ERROR_DOMAIN_ARGUMENTS		= (int) 'a',
+	LIBCDATA_ERROR_DOMAIN_ARGUMENTS			= (int) 'a',
 	LIBCDATA_ERROR_DOMAIN_CONVERSION		= (int) 'c',
 	LIBCDATA_ERROR_DOMAIN_COMPRESSION		= (int) 'C',
 	LIBCDATA_ERROR_DOMAIN_IO			= (int) 'I',
@@ -47,7 +47,7 @@ enum LIBCDATA_ERROR_DOMAINS
  */
 enum LIBCDATA_ARGUMENT_ERROR
 {
-	LIBCDATA_ARGUMENT_ERROR_GENERIC		= 0,
+	LIBCDATA_ARGUMENT_ERROR_GENERIC			= 0,
 
 	/* The argument contains an invalid value
 	 */
@@ -68,11 +68,11 @@ enum LIBCDATA_ARGUMENT_ERROR
 
 	/* The argument contains a value that is too small
 	 */
-	LIBCDATA_ARGUMENT_ERROR_VALUE_TOO_SMALL	= 5,
+	LIBCDATA_ARGUMENT_ERROR_VALUE_TOO_SMALL		= 5,
 
 	/* The argument contains a value that is too large
 	 */
-	LIBCDATA_ARGUMENT_ERROR_VALUE_TOO_LARGE	= 6,
+	LIBCDATA_ARGUMENT_ERROR_VALUE_TOO_LARGE		= 6,
 
 	/* The argument contains a value that is out of bounds
 	 */
@@ -96,11 +96,11 @@ enum LIBCDATA_CONVERSION_ERROR
 
 	/* The conversion failed on the input
 	 */
-	LIBCDATA_CONVERSION_ERROR_INPUT_FAILED	= 1,
+	LIBCDATA_CONVERSION_ERROR_INPUT_FAILED		= 1,
 
 	/* The conversion failed on the output
 	 */
-	LIBCDATA_CONVERSION_ERROR_OUTPUT_FAILED	= 2
+	LIBCDATA_CONVERSION_ERROR_OUTPUT_FAILED		= 2
 };
 
 /* The compression error codes
@@ -132,7 +132,7 @@ enum LIBCDATA_IO_ERROR
 
 	/* The close failed
 	 */
-	LIBCDATA_IO_ERROR_CLOSE_FAILED		= 2,
+	LIBCDATA_IO_ERROR_CLOSE_FAILED			= 2,
 
 	/* The seek failed
 	 */
@@ -144,11 +144,11 @@ enum LIBCDATA_IO_ERROR
 
 	/* The write failed
 	 */
-	LIBCDATA_IO_ERROR_WRITE_FAILED		= 5,
+	LIBCDATA_IO_ERROR_WRITE_FAILED			= 5,
 
 	/* Access denied
 	 */
-	LIBCDATA_IO_ERROR_ACCESS_DENIED		= 6,
+	LIBCDATA_IO_ERROR_ACCESS_DENIED			= 6,
 
 	/* The resource is invalid i.e. a missing file
 	 */
@@ -156,11 +156,11 @@ enum LIBCDATA_IO_ERROR
 
 	/* The ioctl failed
 	 */
-	LIBCDATA_IO_ERROR_IOCTL_FAILED		= 8,
+	LIBCDATA_IO_ERROR_IOCTL_FAILED			= 8,
 
 	/* The unlink failed
 	 */
-	LIBCDATA_IO_ERROR_UNLINK_FAILED		= 9
+	LIBCDATA_IO_ERROR_UNLINK_FAILED			= 9
 };
 
 /* The input error codes
@@ -176,11 +176,11 @@ enum LIBCDATA_INPUT_ERROR
 
 	/* The input contains an unsupported signature
 	 */
-	LIBCDATA_INPUT_ERROR_SIGNATURE_MISMATCH	= 2,
+	LIBCDATA_INPUT_ERROR_SIGNATURE_MISMATCH		= 2,
 
 	/* A checksum in the input did not match
 	 */
-	LIBCDATA_INPUT_ERROR_CHECKSUM_MISMATCH	= 3,
+	LIBCDATA_INPUT_ERROR_CHECKSUM_MISMATCH		= 3,
 
 	/* A value in the input did not match a previously
 	 * read value or calculated value
@@ -213,7 +213,7 @@ enum LIBCDATA_MEMORY_ERROR
  */
 enum LIBCDATA_RUNTIME_ERROR
 {
-	LIBCDATA_RUNTIME_ERROR_GENERIC		= 0,
+	LIBCDATA_RUNTIME_ERROR_GENERIC			= 0,
 
 	/* The value is missing
 	 */
@@ -233,7 +233,7 @@ enum LIBCDATA_RUNTIME_ERROR
 
 	/* The free and/or finalization of an internal structure failed
 	 */
-	LIBCDATA_RUNTIME_ERROR_FINALIZE_FAILED	= 5,
+	LIBCDATA_RUNTIME_ERROR_FINALIZE_FAILED		= 5,
 
 	/* The value could not be determined
 	 */
@@ -273,7 +273,7 @@ enum LIBCDATA_RUNTIME_ERROR
 
 	/* An abort was requested
 	 */
-	LIBCDATA_RUNTIME_ERROR_ABORT_REQUESTED	= 15
+	LIBCDATA_RUNTIME_ERROR_ABORT_REQUESTED		= 15
 };
 
 /* The output error codes
