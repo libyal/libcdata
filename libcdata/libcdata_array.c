@@ -587,7 +587,7 @@ int libcdata_array_clone(
 
 		goto on_error;
 	}
-	internal_destination_array = (libcdata_internal_array_t *) destination_array;
+	internal_destination_array = (libcdata_internal_array_t *) *destination_array;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(

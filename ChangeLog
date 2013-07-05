@@ -29,6 +29,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130705
+* bug fix in array clone function
+
 20130609
 * fix in .pc.in file
 
