@@ -1755,6 +1755,17 @@ int libcdata_array_insert_entry(
 
 				goto on_error;
 			}
+			if( internal_array->entries == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+				 "%s: invalid array - missing entries.",
+				 function );
+
+				goto on_error;
+			}
 			internal_array->entries[ *entry_index ] = entry;
 		}
 	}
