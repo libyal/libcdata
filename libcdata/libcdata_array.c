@@ -759,7 +759,7 @@ int libcdata_internal_array_resize(
 		if( memory_set(
 		     &( internal_array->entries[ internal_array->number_of_allocated_entries ] ),
 		     0,
-		     sizeof( intptr_t * ) * ( number_of_entries - internal_array->number_of_allocated_entries ) ) == NULL )
+		     sizeof( intptr_t * ) * ( number_of_allocated_entries - internal_array->number_of_allocated_entries ) ) == NULL )
 		{
 			libcerror_error_set(
 			 error,
