@@ -29,6 +29,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20130909
+* bug fix
+
 20130904
 * added fail safe check in array
 
