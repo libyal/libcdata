@@ -1,7 +1,7 @@
 /*
  * Array functions
  *
- * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2006-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -1147,7 +1147,7 @@ int libcdata_array_get_entry_by_index(
 
 /* Retrieves a specific entry from the array
  *
- * Uses the entry_compare_function to determine the order of the entries
+ * Uses the entry_compare_function to determine the similarity of the entries
  * The entry_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
  * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
  *
@@ -1226,9 +1226,9 @@ int libcdata_array_get_entry_by_value(
 		     entry_index++ )
 		{
 			compare_result = entry_compare_function(
-			                 entry,
-			                 internal_array->entries[ entry_index ],
-			                 error );
+			                  entry,
+			                  internal_array->entries[ entry_index ],
+			                  error );
 
 			if( compare_result == -1 )
 			{
@@ -1249,26 +1249,6 @@ int libcdata_array_get_entry_by_value(
 				*existing_entry = internal_array->entries[ entry_index ];
 
 				result = 1;
-
-				break;
-			}
-			else if( compare_result == LIBCDATA_COMPARE_LESS )
-			{
-				result = 0;
-
-				break;
-			}
-			else if( compare_result != LIBCDATA_COMPARE_GREATER )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-				 "%s: unsupported entry compare function return value: %d.",
-				 function,
-				 compare_result );
-
-				result = -1;
 
 				break;
 			}

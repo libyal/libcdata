@@ -39,9 +39,9 @@ cdata_test_array_SOURCES = \
 	cdata_test_unused.h
 
 cdata_test_array_LDADD = \
-	@LIBCSTRING_LIBADD@ \
+	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la
+	@LIBCSTRING_LIBADD@
 
 cdata_test_btree_SOURCES = \
 	cdata_test_libcerror.h \
@@ -50,9 +50,9 @@ cdata_test_btree_SOURCES = \
 	cdata_test_btree.c
 
 cdata_test_btree_LDADD = \
-	@LIBCSTRING_LIBADD@ \
+	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la
+	@LIBCSTRING_LIBADD@
 
 cdata_test_list_SOURCES = \
 	cdata_test_libcerror.h \
@@ -61,9 +61,9 @@ cdata_test_list_SOURCES = \
 	cdata_test_list.c
 
 cdata_test_list_LDADD = \
-	@LIBCSTRING_LIBADD@ \
+	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la
+	@LIBCSTRING_LIBADD@
 
 cdata_test_list_element_SOURCES = \
 	cdata_test_libcerror.h \
@@ -72,9 +72,9 @@ cdata_test_list_element_SOURCES = \
 	cdata_test_list_element.c
 
 cdata_test_list_element_LDADD = \
-	@LIBCSTRING_LIBADD@ \
+	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la
+	@LIBCSTRING_LIBADD@
 
 cdata_test_range_list_SOURCES = \
 	cdata_test_libcerror.h \
@@ -83,9 +83,9 @@ cdata_test_range_list_SOURCES = \
 	cdata_test_range_list.c
 
 cdata_test_range_list_LDADD = \
-	@LIBCSTRING_LIBADD@ \
+	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la
+	@LIBCSTRING_LIBADD@
 
 cdata_test_tree_node_SOURCES = \
 	cdata_test_libcerror.h \
@@ -94,9 +94,9 @@ cdata_test_tree_node_SOURCES = \
 	cdata_test_tree_node.c
 
 cdata_test_tree_node_LDADD = \
-	@LIBCSTRING_LIBADD@ \
+	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
-	../libcdata/libcdata.la
+	@LIBCSTRING_LIBADD@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

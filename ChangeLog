@@ -29,6 +29,12 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20140105
+* updated dependencies
+* 2014 update
+* bug fix in array test
+* bug fix in list multi threading support
+
 20130909
 * bug fix
 

@@ -1,7 +1,7 @@
 /*
  * Library list type testing program
  *
- * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2006-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -693,7 +693,7 @@ int cdata_test_list_insert(
 	}
 	fprintf(
 	 stdout,
-	 "Testing insert_vlaue on empty list\t" );
+	 "Testing insert_value on empty list\t" );
 
 	if( result == 0 )
 	{

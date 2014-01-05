@@ -1,7 +1,7 @@
 /*
  * List functions
  *
- * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2006-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -1979,8 +1979,8 @@ int libcdata_list_insert_element(
 			}
 			else
 			{
-				if( libcdata_list_set_last_element(
-				     list,
+				if( libcdata_internal_list_set_last_element(
+				     internal_list,
 				     element,
 				     error ) != 1 )
 				{

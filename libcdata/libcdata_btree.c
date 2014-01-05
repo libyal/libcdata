@@ -1,7 +1,7 @@
 /*
  * Balanced tree type functions
  *
- * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2006-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -264,7 +264,7 @@ int libcdata_btree_free_values_list(
 
 /* Retrieves the sub node for the specific value
  *
- * Uses the value_compare_function to determine the order of the entries
+ * Uses the value_compare_function to determine the similarity of the entries
  * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
  * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
  *
@@ -542,7 +542,7 @@ int libcdata_btree_node_get_sub_node_by_value(
 
 /* Retrieves the upper node for the specific value
  *
- * Uses the value_compare_function to determine the order of the entries
+ * Uses the value_compare_function to determine the similarity of the entries
  * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
  * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
  *
@@ -1862,7 +1862,7 @@ int libcdata_btree_get_value_by_index(
 
 /* Retrieves a value from the tree
  *
- * Uses the value_compare_function to determine the order of the entries
+ * Uses the value_compare_function to determine the similarity of the entries
  * The value_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
  * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
  *

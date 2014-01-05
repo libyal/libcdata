@@ -1,7 +1,7 @@
 /*
  * Library array type testing program
  *
- * Copyright (c) 2006-2013, Joachim Metz <joachim.metz@gmail.com>
+ * Copyright (c) 2006-2014, Joachim Metz <joachim.metz@gmail.com>
  *
  * Refer to AUTHORS for acknowledgements.
  *
@@ -128,6 +128,8 @@ int cdata_test_array_entry_compare_function(
      libcdata_error_t **error )
 {
 	static char *function = "cdata_test_array_entry_compare_function";
+	int first_value       = 0;
+	int second_value      = 0;
 
 	if( first_entry == NULL )
 	{
@@ -151,11 +153,17 @@ int cdata_test_array_entry_compare_function(
 
 		return( -1 );
 	}
-	if( *first_entry > *second_entry )
+	/* This is necessary otherwise the comparision messes up
+	 * as in e.g. 5 > 6 is true.
+         */
+	first_value  = (int) *first_entry;
+	second_value = (int) *second_entry;
+
+	if( first_value < second_value )
 	{
 		return( LIBCDATA_COMPARE_LESS );
 	}
-	else if( *first_entry < *second_entry )
+	else if( first_value > second_value )
 	{
 		return( LIBCDATA_COMPARE_GREATER );
 	}
@@ -484,6 +492,83 @@ int cdata_test_array_entries(
 	 stdout,
 	 "\n" );
 
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     3,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 3.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value6 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
 	result = libcdata_array_prepend_entry(
 	          array,
 	          (intptr_t *) &entry_value1,
@@ -541,6 +626,45 @@ int cdata_test_array_entries(
 		 "Testing get_number_of_entries\t" );
 
 		result = ( number_of_entries == 5 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     0,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 0.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value1 );
 
 		if( result == 0 )
 		{
@@ -659,6 +783,45 @@ int cdata_test_array_entries(
 		 "Testing get_number_of_entries\t" );
 
 		result = ( number_of_entries == 6 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     4,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 4.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value5 );
 
 		if( result == 0 )
 		{
