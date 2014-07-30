@@ -10,8 +10,16 @@ Package: libcdata
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: libcdata-dbg
 Description: Library to support cross-platform C generic data functions
  libcdata is a library to support cross-platform C generic data functions.
+
+Package: libcdata-dbg
+Architecture: any
+Section: debug
+Depends: libcdata (= ${Source-Version}), ${misc:Depends}
+Description: Debugging symbols for libcdata
+ Debugging symbols for libcdata.
 
 Package: libcdata-dev
 Section: libdevel
