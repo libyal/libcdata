@@ -1148,8 +1148,8 @@ int libcdata_array_get_entry_by_index(
 /* Retrieves a specific entry from the array
  *
  * Uses the entry_compare_function to determine the similarity of the entries
- * The entry_compare_function should return LIBCDATA_BTREE_COMPARE_LESS,
- * LIBCDATA_BTREE_COMPARE_EQUAL, LIBCDATA_BTREE_COMPARE_GREATER if successful or -1 on error
+ * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  *
  * Returns 1 if successful, 0 if no such value or -1 on error
  */

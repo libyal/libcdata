@@ -29,6 +29,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20140914
+* textual fixes
+
 20140730
 * updated dpkg files
 
