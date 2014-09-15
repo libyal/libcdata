@@ -1,4 +1,6 @@
-See:
-* http://code.google.com/p/libcdata/wiki/Building
-* README.macosx
+libcdata is a for cross-platform C generic data functions.
+
+For more information see:
+* Project documentation: https://github.com/libyal/libcdata/wiki/Home
+* How to build from source: https://github.com/libyal/libcdata/wiki/Building
 
