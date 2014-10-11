@@ -1,5 +1,9 @@
 libcdata is a for cross-platform C generic data functions.
 
+Project information:
+* Status: alpha
+* Licence: LGPLv3+
+
 For more information see:
 * Project documentation: https://github.com/libyal/libcdata/wiki/Home
 * How to build from source: https://github.com/libyal/libcdata/wiki/Building
