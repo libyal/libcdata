@@ -87,6 +87,11 @@ AS_IF(
   AC_SUBST(
    [HAVE_DLLMAIN],
    [1])
+
+  dnl Used in tests
+  AC_SUBST(
+   [LIBCDATA_DLL_IMPORT],
+   ["-DLIBCDATA_DLL_IMPORT"])
   ])
  ])
 
