@@ -405,7 +405,7 @@ int libcdata_list_clone(
 	intptr_t *source_value                         = NULL;
 	static char *function                          = "libcdata_list_clone";
 	int element_index                              = 0;
-	int result                                     = 0;
+	int result                                     = 1;
 
 	if( destination_list == NULL )
 	{

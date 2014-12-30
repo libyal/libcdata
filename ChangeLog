@@ -4,6 +4,7 @@ TODO
 * add tests for:
   - array
   - list
+    - clone + clone of empty list
   - list element
   - tree node
   - btree
@@ -28,6 +29,9 @@ Types:
   - rebalance the tree on insert and remove (add tests first)
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
+
+20141230
+* bug fix for cloning empty list
 
 20141229
 * updated dpkg files
