@@ -30,6 +30,9 @@ Types:
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
 
+20150101
+* 2015 update
+
 20141230
 * bug fix for cloning empty list
 
