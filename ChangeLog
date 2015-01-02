@@ -1,14 +1,6 @@
 TODO
 * update man page: libcdata.3
   - btree
-* add tests for:
-  - array
-  - list
-    - clone + clone of empty list
-  - list element
-  - tree node
-  - btree
-  - range list
 * expose functions in API ?
   - libcdata_array_clear ?
   - libcdata_list_set_first_element and libcdata_list_set_last_element ?
@@ -29,6 +21,19 @@ Types:
   - rebalance the tree on insert and remove (add tests first)
   - add merge functionality
   - insert function add flags to set replace existing behavior ?
+
+Tests:
+* array
+* list
+  - clone + clone of empty list
+* list element
+* tree node
+* btree
+* range list
+  - libcdata_range_list_get_spanning_range
+
+20150102
+* added libcdata_range_list_get_spanning_range
 
 20150101
 * 2015 update

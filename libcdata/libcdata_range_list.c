@@ -3196,3 +3196,122 @@ int libcdata_range_list_range_is_present(
 	return( 0 );
 }
 
+/* Retrieves the range spanning the ranges in the range list
+ * Returns 1 if present, 0 if not present or -1 on error
+ */
+int libcdata_range_list_get_spanning_range(
+     libcdata_range_list_t *range_list,
+     uint64_t *range_start,
+     uint64_t *range_size,
+     libcerror_error_t **error )
+{
+	libcdata_range_list_value_t *range_list_value       = NULL;
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	static char *function                               = "libcdata_range_list_get_spanning_range";
+	int element_index                                   = 0;
+
+	if( range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_range_list = (libcdata_internal_range_list_t *) range_list;
+
+	if( range_start == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range start.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_size == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range size.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_range_list->number_of_elements == 0 )
+	{
+		return( 0 );
+	}
+	if( libcdata_range_list_get_value_by_index(
+	     range_list,
+	     0,
+	     &range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve range list value: 0.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_list_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: missing range list value: 0.",
+		 function );
+
+		return( -1 );
+	}
+	*range_start = range_list_value->start;
+
+	if( internal_range_list->number_of_elements > 1 )
+	{
+		element_index = internal_range_list->number_of_elements - 1;
+
+		if( libcdata_range_list_get_value_by_index(
+		     range_list,
+		     element_index,
+		     &range_list_value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve range list value: %d.",
+			 function,
+			 element_index );
+
+			return( -1 );
+		}
+		if( range_list_value == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: missing range list value: %d.",
+			 function,
+			 element_index );
+
+			return( -1 );
+		}
+	}
+	*range_size = range_list_value->end - *range_start;
+
+	return( 1 );
+}
+

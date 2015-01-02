@@ -228,6 +228,13 @@ int libcdata_range_list_range_is_present(
      uint64_t range_size,
      libcerror_error_t **error );
 
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_spanning_range(
+     libcdata_range_list_t *range_list,
+     uint64_t *range_start,
+     uint64_t *range_size,
+     libcerror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

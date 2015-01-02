@@ -852,6 +852,16 @@ int libcdata_range_list_range_is_present(
      uint64_t range_size,
      libcdata_error_t **error );
 
+/* Retrieves the range spanning the ranges in the range list
+ * Returns 1 if present, 0 if not present or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_spanning_range(
+     libcdata_range_list_t *range_list,
+     uint64_t *range_start,
+     uint64_t *range_size,
+     libcdata_error_t **error );
+
 /* -------------------------------------------------------------------------
  * Tree node functions
  * ------------------------------------------------------------------------- */
