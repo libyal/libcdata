@@ -1,6 +1,4 @@
 TODO
-* update man page: libcdata.3
-  - btree
 * expose functions in API ?
   - libcdata_array_clear ?
   - libcdata_list_set_first_element and libcdata_list_set_last_element ?
@@ -31,6 +29,10 @@ Tests:
 * btree
 * range list
   - libcdata_range_list_get_spanning_range
+
+20150104
+* corrections in include header
+* update man page: libcdata.3
 
 20150102
 * added libcdata_range_list_get_spanning_range

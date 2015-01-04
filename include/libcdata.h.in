@@ -1,5 +1,5 @@
 /*
- * Library to support cross-platform C error functions
+ * Library to support cross-platform C generic data functions
  *
  * Copyright (C) 2006-2015, Joachim Metz <joachim.metz@gmail.com>
  *
@@ -148,7 +148,7 @@ int libcdata_array_clear(
 LIBCDATA_EXTERN \
 int libcdata_array_clone(
      libcdata_array_t **destination_array,
-     const libcdata_array_t *source_array,
+     libcdata_array_t *source_array,
      int (*entry_free_function)(
             intptr_t **entry,
             libcdata_error_t **error ),
@@ -183,7 +183,7 @@ int libcdata_array_reverse(
  */
 LIBCDATA_EXTERN \
 int libcdata_array_get_number_of_entries(
-     const libcdata_array_t *array,
+     libcdata_array_t *array,
      int *number_of_entries,
      libcdata_error_t **error );
 
@@ -192,7 +192,7 @@ int libcdata_array_get_number_of_entries(
  */
 LIBCDATA_EXTERN \
 int libcdata_array_get_entry_by_index(
-     const libcdata_array_t *array,
+     libcdata_array_t *array,
      int entry_index,
      intptr_t **entry,
      libcdata_error_t **error );
@@ -207,7 +207,7 @@ int libcdata_array_get_entry_by_index(
  */
 LIBCDATA_EXTERN \
 int libcdata_array_get_entry_by_value(
-     const libcdata_array_t *array,
+     libcdata_array_t *array,
      intptr_t *entry,
      int (*entry_compare_function)(
             intptr_t *first_entry,
@@ -426,7 +426,7 @@ int libcdata_list_empty(
 LIBCDATA_EXTERN \
 int libcdata_list_clone(
      libcdata_list_t **destination_list,
-     const libcdata_list_t *source_list,
+     libcdata_list_t *source_list,
      int (*value_free_function)(
             intptr_t **value,
             libcdata_error_t **error ),
@@ -441,7 +441,7 @@ int libcdata_list_clone(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_number_of_elements(
-     const libcdata_list_t *list,
+     libcdata_list_t *list,
      int *number_of_elements,
      libcdata_error_t **error );
 
@@ -450,7 +450,7 @@ int libcdata_list_get_number_of_elements(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_first_element(
-     const libcdata_list_t *list,
+     libcdata_list_t *list,
      libcdata_list_element_t **element,
      libcdata_error_t **error );
 
@@ -459,7 +459,7 @@ int libcdata_list_get_first_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_last_element(
-     const libcdata_list_t *list,
+     libcdata_list_t *list,
      libcdata_list_element_t **element,
      libcdata_error_t **error );
 
@@ -468,7 +468,7 @@ int libcdata_list_get_last_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_element_by_index(
-     const libcdata_list_t *list,
+     libcdata_list_t *list,
      int element_index,
      libcdata_list_element_t **element,
      libcdata_error_t **error );
@@ -478,7 +478,7 @@ int libcdata_list_get_element_by_index(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_get_value_by_index(
-     const libcdata_list_t *list,
+     libcdata_list_t *list,
      int element_index,
      intptr_t **value,
      libcdata_error_t **error );
@@ -606,7 +606,7 @@ int libcdata_list_element_free(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_value(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      intptr_t **value,
      libcdata_error_t **error );
 
@@ -615,7 +615,7 @@ int libcdata_list_element_get_value(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_value(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      intptr_t *value,
      libcdata_error_t **error );
 
@@ -624,7 +624,7 @@ int libcdata_list_element_set_value(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_previous_element(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      libcdata_list_element_t **previous_element,
      libcdata_error_t **error );
 
@@ -633,7 +633,7 @@ int libcdata_list_element_get_previous_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_previous_element(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_error_t **error );
 
@@ -642,7 +642,7 @@ int libcdata_list_element_set_previous_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_next_element(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      libcdata_list_element_t **next_element,
      libcdata_error_t **error );
 
@@ -651,7 +651,7 @@ int libcdata_list_element_get_next_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_next_element(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      libcdata_list_element_t *next_element,
      libcdata_error_t **error );
 
@@ -660,7 +660,7 @@ int libcdata_list_element_set_next_element(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_get_elements(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      libcdata_list_element_t **previous_element,
      libcdata_list_element_t **next_element,
      libcdata_error_t **error );
@@ -670,7 +670,7 @@ int libcdata_list_element_get_elements(
  */
 LIBCDATA_EXTERN \
 int libcdata_list_element_set_elements(
-     const libcdata_list_element_t *element,
+     libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_list_element_t *next_element,
      libcdata_error_t **error );

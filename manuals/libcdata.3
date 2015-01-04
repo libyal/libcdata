@@ -1,4 +1,4 @@
-.Dd January 5, 2014
+.Dd January  4, 2015
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -54,6 +54,24 @@ Array functions
 .Fn libcdata_array_append_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_insert_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, int (*entry_compare_function)( intptr_t *first_entry, intptr_t *second_entry, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Pp
+Balanced tree functions
+.Ft int
+.Fn libcdata_btree_initialize "libcdata_btree_t **tree, int maximum_number_of_sub_nodes, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_free "libcdata_btree_t **tree, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_get_number_of_values "libcdata_btree_t *tree, int *number_of_values, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_get_value_by_index "libcdata_btree_t *tree, int value_index, intptr_t **value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_get_value_by_value "libcdata_btree_t *tree, intptr_t *value, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), libcdata_tree_node_t **upper_node, intptr_t **existing_value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_insert_value "libcdata_btree_t *tree, int *value_index, intptr_t *value, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), libcdata_tree_node_t **upper_node, intptr_t **existing_value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_replace_value "libcdata_btree_t *tree, libcdata_tree_node_t *upper_node, int *value_index, intptr_t *value, int *replacement_value_index, intptr_t *replacement_value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_btree_remove_value "libcdata_btree_t *tree, libcdata_tree_node_t *upper_node, int *value_index, intptr_t *value, libcdata_error_t **error"
 .Pp
 List functions
 .Ft int
@@ -134,6 +152,8 @@ Range list functions
 .Fn libcdata_range_list_get_range_at_offset "libcdata_range_list_t *range_list, uint64_t range_offset, uint64_t *range_start, uint64_t *range_size, intptr_t **value, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_range_list_range_is_present "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_get_spanning_range "libcdata_range_list_t *range_list, uint64_t *range_start, uint64_t *range_size, libcdata_error_t **error"
 .Pp
 Tree node functions
 .Ft int
@@ -182,24 +202,25 @@ Tree node functions
 .Fn libcdata_tree_node_get_sub_node_by_index "libcdata_tree_node_t *node, int sub_node_index, libcdata_tree_node_t **sub_node, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_get_leaf_node_list "libcdata_tree_node_t *node, libcdata_list_t **leaf_node_list, libcdata_error_t **error"
-.Pp
 .Sh DESCRIPTION
 The
 .Fn libcdata_get_version
 function is used to retrieve the library version.
 .Sh RETURN VALUES
-Most of the functions return NULL or -1 on error, dependent on the return type. For the actual return values refer to libcdata.h
+Most of the functions return NULL or -1 on error, dependent on the return type.
+For the actual return values see "libcdata.h".
 .Sh ENVIRONMENT
 None
 .Sh FILES
 None
 .Sh BUGS
-Please report bugs of any kind to <joachim.metz@gmail.com> or on the project website:
-https://github.com/libyal/libcdata/
+Please report bugs of any kind on the project issue tracker: https://github.com/libyal/libcdata/issues
 .Sh AUTHOR
-These man pages were written by Joachim Metz.
+These man pages are generated from "libcdata.h".
 .Sh COPYRIGHT
 Copyright (C) 2006-2015, Joachim Metz <joachim.metz@gmail.com>.
-This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .Sh SEE ALSO
 the libcdata.h include file
