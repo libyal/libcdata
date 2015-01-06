@@ -32,7 +32,7 @@ Tests:
 
 20150104
 * corrections in include header
-* update man page: libcdata.3
+* updated man page: libcdata.3
 
 20150102
 * added libcdata_range_list_get_spanning_range
