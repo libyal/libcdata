@@ -3,7 +3,7 @@
 # Version: 20150105
 
 $GitUrlPrefix = "https://github.com/libyal"
-$LocalLibs = @("libcerror","libcstring")
+$LocalLibs = @("libcerror","libcstring","libcthreads")
 
 foreach (${LocalLib} in ${LocalLibs})
 {
