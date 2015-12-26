@@ -195,7 +195,7 @@ int libcdata_tree_node_free(
 			{
 				internal_node->last_sub_node = next_node;
 			}
-			internal_node->number_of_sub_nodes -= 1;
+			internal_node->number_of_sub_nodes--;
 
 			if( next_node != NULL )
 			{
@@ -354,7 +354,7 @@ int libcdata_tree_node_empty(
 		{
 			internal_node->last_sub_node = next_node;
 		}
-		internal_node->number_of_sub_nodes -= 1;
+		internal_node->number_of_sub_nodes--;
 
 		if( next_node != NULL )
 		{
@@ -1115,7 +1115,7 @@ int libcdata_tree_node_append_node(
 		internal_node->previous_node        = internal_parent_node->last_sub_node;
 		internal_parent_node->last_sub_node = node;
 	}
-	internal_parent_node->number_of_sub_nodes += 1;
+	internal_parent_node->number_of_sub_nodes++;
 
 	return( 1 );
 }
@@ -1498,7 +1498,7 @@ int libcdata_tree_node_insert_node(
 	}
 	internal_node->parent_node = parent_node;
 
-	internal_parent_node->number_of_sub_nodes += 1;
+	internal_parent_node->number_of_sub_nodes++;
 
 	return( 1 );
 }
@@ -1856,7 +1856,7 @@ int libcdata_tree_node_remove_node(
 	internal_node->previous_node = NULL;
 	internal_node->next_node     = NULL;
 
-	internal_parent_node->number_of_sub_nodes -= 1;
+	internal_parent_node->number_of_sub_nodes--;
 
 	return( 1 );
 }

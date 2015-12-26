@@ -217,7 +217,7 @@ int libcdata_range_list_empty(
 			{
 				internal_range_list->last_element = next_element;
 			}
-			internal_range_list->number_of_elements -= 1;
+			internal_range_list->number_of_elements--;
 
 			if( next_element != NULL )
 			{
@@ -695,7 +695,7 @@ int libcdata_range_list_append_element(
 
 		return( -1 );
 	}
-	internal_range_list->number_of_elements += 1;
+	internal_range_list->number_of_elements++;
 
 	return( 1 );
 }
@@ -1853,7 +1853,7 @@ int libcdata_range_list_insert_element(
 			}
 		}
 	}
-	internal_range_list->number_of_elements += 1;
+	internal_range_list->number_of_elements++;
 
 	return( 1 );
 }
@@ -2036,7 +2036,7 @@ int libcdata_range_list_remove_element(
 
 		return( -1 );
 	}
-	internal_range_list->number_of_elements -= 1;
+	internal_range_list->number_of_elements--;
 
 	return( 1 );
 }

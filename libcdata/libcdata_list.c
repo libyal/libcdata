@@ -249,7 +249,7 @@ int libcdata_internal_list_empty(
 			{
 				internal_list->last_element = next_element;
 			}
-			internal_list->number_of_elements -= 1;
+			internal_list->number_of_elements--;
 
 			if( next_element != NULL )
 			{
@@ -1380,7 +1380,7 @@ int libcdata_list_prepend_element(
 
 		goto on_error;
 	}
-	internal_list->number_of_elements += 1;
+	internal_list->number_of_elements++;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -1542,7 +1542,7 @@ int libcdata_list_append_element(
 
 		goto on_error;
 	}
-	internal_list->number_of_elements += 1;
+	internal_list->number_of_elements++;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -1798,7 +1798,7 @@ int libcdata_list_insert_element(
 		internal_list->first_element = element;
 		internal_list->last_element  = element;
 
-		internal_list->number_of_elements += 1;
+		internal_list->number_of_elements++;
 	}
 	else
 	{
@@ -1994,7 +1994,7 @@ int libcdata_list_insert_element(
 					goto on_error;
 				}
 			}
-			internal_list->number_of_elements += 1;
+			internal_list->number_of_elements++;
 		}
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -2234,7 +2234,7 @@ int libcdata_list_remove_element(
 
 		return( -1 );
 	}
-	internal_list->number_of_elements -= 1;
+	internal_list->number_of_elements--;
 
 	return( 1 );
 }
