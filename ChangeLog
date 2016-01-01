@@ -31,6 +31,9 @@ Tests:
 * range list
   - libcdata_range_list_get_spanning_range
 
+20160101
+* 2016 update
+
 20151226
 * updated dependencies
 * code clean up
