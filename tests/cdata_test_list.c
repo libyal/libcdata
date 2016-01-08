@@ -169,7 +169,6 @@ int cdata_test_list_values(
 	libcerror_error_t *error = NULL;
 	int *element_value_test  = 0;
 	static char *function    = "cdata_test_list_values";
-	int element_index        = 0;
 	int element_value1       = 1;
 	int element_value2       = 2;
 	int element_value3       = 3;
@@ -647,7 +646,6 @@ int cdata_test_list_insert(
 {
 	libcdata_list_t *list    = NULL;
 	libcerror_error_t *error = NULL;
-	int *element_value_test  = 0;
 	static char *function    = "cdata_test_list_insert";
 	int element_value1       = 1;
 	int element_value2       = 2;

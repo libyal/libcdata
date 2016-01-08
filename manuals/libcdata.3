@@ -1,4 +1,4 @@
-.Dd January  4, 2015
+.Dd January  8, 2016
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -54,6 +54,8 @@ Array functions
 .Fn libcdata_array_append_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_array_insert_entry "libcdata_array_t *array, int *entry_index, intptr_t *entry, int (*entry_compare_function)( intptr_t *first_entry, intptr_t *second_entry, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_array_remove_entry "libcdata_array_t *array, int entry_index, intptr_t **entry, libcdata_error_t **error"
 .Pp
 Balanced tree functions
 .Ft int

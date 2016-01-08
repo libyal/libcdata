@@ -269,6 +269,16 @@ int libcdata_array_insert_entry(
      uint8_t insert_flags,
      libcdata_error_t **error );
 
+/* Removes an entry
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_array_remove_entry(
+     libcdata_array_t *array,
+     int entry_index,
+     intptr_t **entry,
+     libcdata_error_t **error );
+
 /* -------------------------------------------------------------------------
  * Balanced tree functions
  * ------------------------------------------------------------------------- */

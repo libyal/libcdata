@@ -185,6 +185,13 @@ int libcdata_array_insert_entry(
      uint8_t insert_flags,
      libcerror_error_t **error );
 
+LIBCDATA_EXTERN \
+int libcdata_array_remove_entry(
+     libcdata_array_t *array,
+     int entry_index,
+     intptr_t **entry,
+     libcerror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

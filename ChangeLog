@@ -7,7 +7,6 @@ TODO
 
 Types:
 * array
-  - add remove entry function ?
   - allocate in larger blocks
 * list
   - add current list element tracking like offset list ?
@@ -30,6 +29,9 @@ Tests:
 * btree
 * range list
   - libcdata_range_list_get_spanning_range
+
+20160108
+* added array remove entry function
 
 20160101
 * 2016 update

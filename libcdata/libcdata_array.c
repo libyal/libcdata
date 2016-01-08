@@ -779,39 +779,36 @@ int libcdata_internal_array_resize(
 	}
 	else if( internal_array->entries != NULL )
 	{
-		if( entry_free_function == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-			 "%s: invalid entry free function.",
-			 function );
-
-			return( -1 );
-		}
 		for( entry_iterator = number_of_entries;
 		     entry_iterator < internal_array->number_of_entries;
 		     entry_iterator++ )
 		{
 			if( internal_array->entries[ entry_iterator ] != NULL )
 			{
-				if( entry_free_function != NULL )
+				if( entry_free_function == NULL )
 				{
-					if( entry_free_function(
-					     &( internal_array->entries[ entry_iterator ] ),
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-						 "%s: unable to free array entry: %d.",
-						 function,
-						 entry_iterator );
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+					 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+					 "%s: invalid entry free function.",
+					 function );
 
-						result = -1;
-					}
+					return( -1 );
+				}
+				if( entry_free_function(
+				     &( internal_array->entries[ entry_iterator ] ),
+				     error ) != 1 )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+					 "%s: unable to free array entry: %d.",
+					 function,
+					 entry_iterator );
+
+					result = -1;
 				}
 				internal_array->entries[ entry_iterator ] = NULL;
 			}
@@ -1765,6 +1762,127 @@ int libcdata_array_insert_entry(
 	}
 #endif
 	return( result );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_array->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
+}
+
+/* Removes an entry
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_array_remove_entry(
+     libcdata_array_t *array,
+     int entry_index,
+     intptr_t **entry,
+     libcerror_error_t **error )
+{
+	libcdata_internal_array_t *internal_array = NULL;
+	static char *function                     = "libcdata_array_remove_entry";
+	int entry_iterator                        = 0;
+
+	if( array == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid array.",
+		 function );
+
+		return( -1 );
+	}
+	internal_array = (libcdata_internal_array_t *) array;
+
+	if( ( entry_index < 0 )
+	 || ( entry_index >= internal_array->number_of_entries ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid entry index value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( entry == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid entry.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_array->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	*entry = internal_array->entries[ entry_index ];
+
+	if( entry_index == ( internal_array->number_of_entries - 1 ) )
+	{
+		internal_array->entries[ entry_index ] = NULL;
+	}
+	else
+	{
+		for( entry_iterator = ( internal_array->number_of_entries - 1 );
+		     entry_iterator > entry_index;
+		     entry_iterator-- )
+		{
+			internal_array->entries[ entry_iterator - 1 ] = internal_array->entries[ entry_iterator ];
+			internal_array->entries[ entry_iterator ]     = NULL;
+		}
+	}
+	if( libcdata_internal_array_resize(
+	     internal_array,
+	     internal_array->number_of_entries - 1,
+	     NULL,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_RESIZE_FAILED,
+		 "%s: unable to resize array.",
+		 function );
+
+		goto on_error;
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_array->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( 1 );
 
 on_error:
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )

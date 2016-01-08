@@ -1071,7 +1071,6 @@ int cdata_test_array_insert(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
-	int *entry_value_test    = 0;
 	static char *function    = "cdata_test_array_insert";
 	int entry_index          = 0;
 	int entry_value1         = 1;
@@ -1459,6 +1458,389 @@ on_error:
 	return( -1 );
 }
 
+/* Tests removing entries
+ * Returns 1 if successful, 0 if not or -1 on error
+ */
+int cdata_test_array_remove(
+     void )
+{
+	libcdata_array_t *array  = NULL;
+	libcerror_error_t *error = NULL;
+	int *entry_value_test    = 0;
+	static char *function    = "cdata_test_array_remove";
+	int entry_index          = 0;
+	int entry_value1         = 1;
+	int entry_value2         = 2;
+	int entry_value3         = 3;
+	int entry_value4         = 4;
+	int number_of_entries    = 0;
+	int result               = 0;
+
+	array = NULL;
+
+	if( libcdata_array_initialize(
+	     &array,
+	     0,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create array.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value1,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append entry.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append entry.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value3,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append entry.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append entry.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_remove_entry(
+	          array,
+	          0,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to remove entry: 0.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing remove_entry\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 3 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     2,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 2.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value4 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value1,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append entry.",
+		 function );
+
+		goto on_error;
+	}
+	result = libcdata_array_remove_entry(
+	          array,
+	          2,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to remove entry: 2.",
+		 function );
+
+		goto on_error;
+	}
+	fprintf(
+	 stdout,
+	 "Testing remove_entry\t" );
+
+	if( result == 0 )
+	{
+		fprintf(
+		 stdout,
+		 "(FAIL)" );
+	}
+	else
+	{
+		fprintf(
+		 stdout,
+		 "(PASS)" );
+	}
+	fprintf(
+	 stdout,
+	 "\n" );
+
+	if( result != 0 )
+	{
+		if( libcdata_array_get_number_of_entries(
+		     array,
+		     &number_of_entries,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve number of entries.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_number_of_entries\t" );
+
+		result = ( number_of_entries == 3 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( result != 0 )
+	{
+		if( libcdata_array_get_entry_by_index(
+		     array,
+		     2,
+		     (intptr_t **) &entry_value_test,
+		     &error ) == -1 )
+		{
+			libcerror_error_set(
+			 &error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve entry: 2.",
+			 function );
+
+			goto on_error;
+		}
+		fprintf(
+		 stdout,
+		 "Testing get_entry_by_index\t" );
+
+		result = ( entry_value_test == &entry_value1 );
+
+		if( result == 0 )
+		{
+			fprintf(
+			 stdout,
+			 "(FAIL)" );
+		}
+		else
+		{
+			fprintf(
+			 stdout,
+			 "(PASS)" );
+		}
+		fprintf(
+		 stdout,
+		 "\n" );
+	}
+	if( libcdata_array_free(
+	     &array,
+	     NULL,
+	     &error ) == -1 )
+	{
+		libcerror_error_set(
+		 &error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free array.",
+		 function );
+
+		goto on_error;
+	}
+	return( result );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_backtrace_fprint(
+		 error,
+		 stdout );
+
+		libcerror_error_free(
+		 &error );
+	}
+	if( array != NULL )
+	{
+		libcdata_array_free(
+		 &array,
+		 NULL,
+		 NULL );
+	}
+	return( -1 );
+}
+
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
@@ -1561,6 +1943,16 @@ int main( int argc, char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 		fprintf(
 		 stderr,
 		 "Unable to test insert.\n" );
+
+		return( EXIT_FAILURE );
+	}
+	/* Test: remove entries
+	 */
+	if( cdata_test_array_remove() != 1 )
+	{
+		fprintf(
+		 stderr,
+		 "Unable to test remove.\n" );
 
 		return( EXIT_FAILURE );
 	}
