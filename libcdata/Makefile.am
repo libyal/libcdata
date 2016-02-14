@@ -27,7 +27,7 @@ libcdata_la_SOURCES = \
 	libcdata_types.h \
 	libcdata_unused.h
 
-libcdata_la_LIBADD  = \
+libcdata_la_LIBADD = \
 	@LIBCSTRING_LIBADD@ \
 	@LIBCERROR_LIBADD@ \
 	@LIBCTHREADS_LIBADD@ \
