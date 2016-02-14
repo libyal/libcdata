@@ -40,5 +40,5 @@
 	/* parameter */
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_INTERNAL_UNUSED_H ) */
 

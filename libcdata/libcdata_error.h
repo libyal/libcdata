@@ -23,9 +23,8 @@
 #define _LIBCDATA_INTERNAL_ERROR_H
 
 #include <common.h>
+#include <file_stream.h>
 #include <types.h>
-
-#include <stdio.h>
 
 #if !defined( HAVE_LOCAL_LIBCDATA )
 #include <libcdata/error.h>
@@ -71,5 +70,5 @@ int libcdata_error_backtrace_sprint(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_INTERNAL_ERROR_H ) */
 

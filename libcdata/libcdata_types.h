@@ -25,9 +25,9 @@
 #include <common.h>
 #include <types.h>
 
-/* Define HAVE_LOCAL_LIBCDATA for local use of libcstring
- * The definitions in <libcstring/types.h> are copied here
- * for local use of libcstring
+/* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
+ * The definitions in <libcdata/types.h> are copied here
+ * for local use of libcdata
  */
 #if defined( HAVE_LOCAL_LIBCDATA )
 
@@ -51,9 +51,9 @@ typedef intptr_t libcdata_range_list_t;
 typedef intptr_t libcdata_tree_t;
 typedef intptr_t libcdata_tree_node_t;
 
-#endif
+#endif /* defined( HAVE_DEBUG_OUTPUT ) && !defined( WINAPI ) */
 
-#endif
+#endif /* defined( HAVE_LOCAL_LIBCDATA ) */
 
-#endif
+#endif /* !defined( _LIBCDATA_INTERNAL_TYPES_H ) */
 
