@@ -19,6 +19,7 @@ check_SCRIPTS = \
 	test_list.sh \
 	test_list_element.sh \
 	test_range_list.sh \
+	test_runner.sh \
 	test_tree_node.sh
 
 EXTRA_DIST = \
