@@ -1550,7 +1550,7 @@ on_error:
  * Duplicate entries are allowed by default and inserted after the last duplicate entry.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
  *
- * Returns 1 if successful, 0 if the node already exists or -1 on error
+ * Returns 1 if successful, 0 if the entry already exists or -1 on error
  */
 int libcdata_array_insert_entry(
      libcdata_array_t *array,

@@ -57,7 +57,7 @@ enum LIBCDATA_INSERT_FLAGS
 
 	/* Only allow unique entries, no duplicates
 	 */
-	LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES	= 0x01,
+	LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES	= 0x01
 };
 
 #endif
