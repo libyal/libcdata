@@ -1,6 +1,7 @@
 MSVSCPP_FILES = \
 	cdata_test_array/cdata_test_array.vcproj \
 	cdata_test_btree/cdata_test_btree.vcproj \
+	cdata_test_get_version/cdata_test_get_version.vcproj \
 	cdata_test_list/cdata_test_list.vcproj \
 	cdata_test_list_element/cdata_test_list_element.vcproj \
 	cdata_test_range_list/cdata_test_range_list.vcproj \

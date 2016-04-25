@@ -6,21 +6,13 @@ AM_CPPFLAGS = \
 	@LIBCDATA_DLL_IMPORT@
 
 TESTS = \
-	test_array.sh \
-	test_list_element.sh \
-	test_list.sh \
-	test_range_list.sh \
-	test_tree_node.sh \
-	test_btree.sh
+	test_api_functions.sh \
+	test_api_types.sh
 
 check_SCRIPTS = \
-	test_array.sh \
-	test_btree.sh \
-	test_list.sh \
-	test_list_element.sh \
-	test_range_list.sh \
-	test_runner.sh \
-	test_tree_node.sh
+	test_api_functions.sh \
+	test_api_types.sh \
+	test_runner.sh
 
 EXTRA_DIST = \
 	$(check_SCRIPTS)
@@ -28,6 +20,7 @@ EXTRA_DIST = \
 check_PROGRAMS = \
 	cdata_test_array \
 	cdata_test_btree \
+	cdata_test_get_version \
 	cdata_test_list \
 	cdata_test_list_element \
 	cdata_test_range_list \
@@ -54,6 +47,16 @@ cdata_test_btree_SOURCES = \
 cdata_test_btree_LDADD = \
 	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
+	@LIBCSTRING_LIBADD@
+
+cdata_test_get_version_SOURCES = \
+	cdata_test_get_version.c \
+	cdata_test_libcdata.h \
+	cdata_test_libcstring.h \
+	cdata_test_unused.h
+
+cdata_test_get_version_LDADD = \
+	../libcdata/libcdata.la \
 	@LIBCSTRING_LIBADD@
 
 cdata_test_list_SOURCES = \
