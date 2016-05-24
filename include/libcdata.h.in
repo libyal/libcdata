@@ -28,6 +28,8 @@
 #include <libcdata/features.h>
 #include <libcdata/types.h>
 
+#include <stdio.h>
+
 #if defined( __cplusplus )
 extern "C" {
 #endif
