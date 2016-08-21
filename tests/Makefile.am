@@ -59,7 +59,6 @@ cdata_test_get_version_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcstring.h \
 	cdata_test_macros.h \
-	cdata_test_malloc.c cdata_test_malloc.h \
 	cdata_test_unused.h
 
 cdata_test_get_version_LDADD = \
