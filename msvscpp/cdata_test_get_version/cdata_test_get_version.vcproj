@@ -179,6 +179,10 @@
 				RelativePath="..\..\tests\cdata_test_get_version.c"
 				>
 			</File>
+			<File
+				RelativePath="..\..\tests\cdata_test_malloc.c"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -191,6 +195,14 @@
 			</File>
 			<File
 				RelativePath="..\..\tests\cdata_test_libcstring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\cdata_test_macros.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\cdata_test_malloc.h"
 				>
 			</File>
 			<File

@@ -196,5 +196,5 @@ int libcdata_array_remove_entry(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_INTERNAL_ARRAY_H ) */
 

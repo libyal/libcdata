@@ -31,6 +31,8 @@ cdata_test_array_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
 	cdata_test_libcstring.h \
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
 	cdata_test_unused.h
 
 cdata_test_array_LDADD = \
@@ -42,7 +44,10 @@ cdata_test_btree_SOURCES = \
 	cdata_test_btree.c \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h
+	cdata_test_libcstring.h \
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
+	cdata_test_unused.h
 
 cdata_test_btree_LDADD = \
 	../libcdata/libcdata.la \
@@ -53,6 +58,8 @@ cdata_test_get_version_SOURCES = \
 	cdata_test_get_version.c \
 	cdata_test_libcdata.h \
 	cdata_test_libcstring.h \
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
 	cdata_test_unused.h
 
 cdata_test_get_version_LDADD = \
@@ -63,7 +70,10 @@ cdata_test_list_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
 	cdata_test_libcstring.h \
-	cdata_test_list.c
+	cdata_test_list.c \
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
+	cdata_test_unused.h
 
 cdata_test_list_LDADD = \
 	../libcdata/libcdata.la \
@@ -74,7 +84,10 @@ cdata_test_list_element_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
 	cdata_test_libcstring.h \
-	cdata_test_list_element.c
+	cdata_test_list_element.c \
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
+	cdata_test_unused.h
 
 cdata_test_list_element_LDADD = \
 	../libcdata/libcdata.la \
@@ -85,7 +98,10 @@ cdata_test_range_list_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
 	cdata_test_libcstring.h \
-	cdata_test_range_list.c
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
+	cdata_test_range_list.c \
+	cdata_test_unused.h
 
 cdata_test_range_list_LDADD = \
 	../libcdata/libcdata.la \
@@ -96,7 +112,10 @@ cdata_test_tree_node_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
 	cdata_test_libcstring.h \
-	cdata_test_tree_node.c
+	cdata_test_macros.h \
+	cdata_test_malloc.c cdata_test_malloc.h \
+	cdata_test_tree_node.c \
+	cdata_test_unused.h
 
 cdata_test_tree_node_LDADD = \
 	../libcdata/libcdata.la \

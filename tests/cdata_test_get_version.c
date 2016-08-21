@@ -20,14 +20,14 @@
  */
 
 #include <common.h>
-#include <file_stream.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
-#include "cdata_test_libcstring.h"
 #include "cdata_test_libcdata.h"
+#include "cdata_test_libcstring.h"
+#include "cdata_test_macros.h"
 #include "cdata_test_unused.h"
 
 /* Tests retrieving the library version
@@ -46,11 +46,15 @@ int cdata_test_get_version(
 	          LIBCDATA_VERSION_STRING,
 	          9 );
 
-	if( result != 0 )
-	{
-		return( 0 );
-	}
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 0 );
+
 	return( 1 );
+
+on_error:
+	return( 0 );
 }
 
 /* The main program
@@ -68,10 +72,13 @@ int main(
 	CDATA_TEST_UNREFERENCED_PARAMETER( argc )
 	CDATA_TEST_UNREFERENCED_PARAMETER( argv )
 
-	if( cdata_test_get_version() != 1 )
-	{
-		return( EXIT_FAILURE );
-	}
+	CDATA_TEST_RUN(
+	 "libcdata_get_version",
+	 cdata_test_get_version() )
+
 	return( EXIT_SUCCESS );
+
+on_error:
+	return( EXIT_FAILURE );
 }
 
