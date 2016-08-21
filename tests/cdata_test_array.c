@@ -231,6 +231,372 @@ int cdata_test_array_initialize(
 	libcerror_error_free(
 	 &error );
 
+#if INT_MAX == SSIZE_MAX
+
+	result = libcdata_array_initialize(
+	          &array,
+	          INT_MAX,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "array",
+         array );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#endif /* INT_MAX == SSIZE_MAX */
+
+#if defined( HAVE_CDATA_TEST_MALLOC )
+
+	/* Test libcdata_array_initialize with malloc failing
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_initialize(
+	          &array,
+	          10,
+	          &error );
+
+	cdata_test_malloc_attempts_before_fail = -1;
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "array",
+         array );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	cdata_test_malloc_attempts_before_fail = 1;
+
+	result = libcdata_array_initialize(
+	          &array,
+	          10,
+	          &error );
+
+	cdata_test_malloc_attempts_before_fail = -1;
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "array",
+         array );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#endif /* defined( HAVE_CDATA_TEST_MALLOC ) */
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( array != NULL )
+	{
+		libcdata_array_free(
+		 &array,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_array_free function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_array_free(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_array_free(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_array_empty function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_array_empty(
+     void )
+{
+	libcdata_array_t *array  = NULL;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_array_initialize(
+	          &array,
+	          0,
+	          &error );
+
+	/* Test to empty an array without an entry tree function
+	 */
+	result = libcdata_array_empty(
+	          array,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_empty(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_array_free(
+	          &array,
+	          NULL,
+	          NULL );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( array != NULL )
+	{
+		libcdata_array_free(
+		 &array,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_array_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_array_clear(
+     void )
+{
+	libcdata_array_t *array  = NULL;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_array_initialize(
+	          &array,
+	          0,
+	          &error );
+
+	/* Test to clear an array without an entry tree function
+	 */
+	result = libcdata_array_clear(
+	          array,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_clear(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_array_free(
+	          &array,
+	          NULL,
+	          NULL );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( array != NULL )
+	{
+		libcdata_array_free(
+		 &array,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_array_clone function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_array_clone(
+     void )
+{
+	libcdata_array_t *array             = NULL;
+	libcdata_array_t *destination_array = NULL;
+	libcerror_error_t *error            = NULL;
+	int result                          = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_array_initialize(
+	          &array,
+	          0,
+	          &error );
+
+	/* Test clone of an intialized array
+	 */
+
+	/* Clean up
+	 */
+	result = libcdata_array_free(
+	          &array,
+	          NULL,
+	          NULL );
+
+	/* Test clone of a non-initialized array
+	 */
+	result = libcdata_array_clone(
+	          &destination_array,
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_array",
+	 destination_array );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_clone(
+	          &destination_array,
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
 	return( 1 );
 
 on_error:
@@ -299,6 +665,66 @@ int cdata_test_array_resize(
         CDATA_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_resize(
+	          NULL,
+	          10,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_resize(
+	          array,
+	          -10,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#if INT_MAX == SSIZE_MAX
+
+	result = libcdata_array_resize(
+	          NULL,
+	          INT_MAX,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#endif /* INT_MAX == SSIZE_MAX */
 
 	/* Clean up
 	 */
@@ -377,6 +803,24 @@ int cdata_test_array_reserve(
         CDATA_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_reverse(
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	/* Clean up
 	 */
@@ -484,6 +928,42 @@ int cdata_test_array_get_number_of_entries(
         CDATA_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_get_number_of_entries(
+	          NULL,
+	          &number_of_entries,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_get_number_of_entries(
+	          array,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	/* Clean up
 	 */
@@ -602,6 +1082,44 @@ int cdata_test_array_get_entry_by_index(
 	libcerror_error_free(
 	 &error );
 
+	/* Test error cases
+	 */
+	result = libcdata_array_get_entry_by_index(
+	          NULL,
+	          0,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_get_entry_by_index(
+	          array,
+	          0,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libcdata_array_free(
@@ -698,6 +1216,66 @@ int cdata_test_array_set_entry_by_index(
 
 	libcerror_error_free(
 	 &error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_set_entry_by_index(
+	          NULL,
+	          0,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          -1,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#if INT_MAX == SSIZE_MAX
+
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          INT_MAX,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#endif /* INT_MAX == SSIZE_MAX */
 
 	/* Clean up
 	 */
@@ -1184,9 +1762,21 @@ int main( int argc, char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 	 "libcdata_array_initialize",
 	 cdata_test_array_initialize() )
 
-	/* TODO add test for libcdata_array_empty */
-	/* TODO add test for libcdata_array_clear */
-	/* TODO add test for libcdata_array_clone */
+	CDATA_TEST_RUN(
+	 "libcdata_array_free",
+	 cdata_test_array_free() )
+
+	CDATA_TEST_RUN(
+	 "libcdata_array_empty",
+	 cdata_test_array_empty() )
+
+	CDATA_TEST_RUN(
+	 "libcdata_array_clear",
+	 cdata_test_array_clear() )
+
+	CDATA_TEST_RUN(
+	 "libcdata_array_clone",
+	 cdata_test_array_clone() )
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_resize",
