@@ -30,7 +30,7 @@
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
 #include "cdata_test_macros.h"
-#include "cdata_test_malloc.h"
+#include "cdata_test_memory.h"
 #include "cdata_test_unused.h"
 
 /* Test entry compare function

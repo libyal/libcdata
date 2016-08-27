@@ -121,6 +121,7 @@ stamp-h[1-9]
 /libcdata/libcdata_definitions.h
 /tests/cdata_test_array
 /tests/cdata_test_btree
+/tests/cdata_test_error
 /tests/cdata_test_get_version
 /tests/cdata_test_list
 /tests/cdata_test_list_element

@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _CDATA_TEST_MALLOC_H )
-#define _CDATA_TEST_MALLOC_H
+#if !defined( _CDATA_TEST_MEMORY_H )
+#define _CDATA_TEST_MEMORY_H
 
 #include <common.h>
 
@@ -28,19 +28,23 @@
 extern "C" {
 #endif
 
-#if defined( HAVE_GNU_DL_DLSYM ) && !defined( WINAPI )
+#if defined( HAVE_GNU_DL_DLSYM ) && defined( __GNUC__ ) && !defined( __clang__ )
 
-#define HAVE_CDATA_TEST_MALLOC		1
+#define HAVE_CDATA_TEST_MEMORY		1
 
 extern int cdata_test_malloc_attempts_before_fail;
 
+extern int cdata_test_memcpy_attempts_before_fail;
+
+extern int cdata_test_memset_attempts_before_fail;
+
 extern int cdata_test_realloc_attempts_before_fail;
 
-#endif /* defined( HAVE_GNU_DL_DLSYM ) && !defined( WINAPI ) */
+#endif /* defined( HAVE_GNU_DL_DLSYM ) && defined( __GNUC__ ) && !defined( __clang__ ) */
 
 #if defined( __cplusplus )
 }
 #endif
 
-#endif /* !defined( _CDATA_TEST_MALLOC_H ) */
+#endif /* !defined( _CDATA_TEST_MEMORY_H ) */
 

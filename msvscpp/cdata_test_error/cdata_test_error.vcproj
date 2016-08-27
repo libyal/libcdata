@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="cdata_test_range_list"
-	ProjectGUID="{7993BEFC-1B5E-48FD-9D99-CD979FC39564}"
-	RootNamespace="cdata_test_range_list"
+	Name="cdata_test_error"
+	ProjectGUID="{4D279874-1690-4425-8AFA-603ECCF02EAA}"
+	RootNamespace="cdata_test_error"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -176,11 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\tests\cdata_test_memory.c"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\cdata_test_range_list.c"
+				RelativePath="..\..\tests\cdata_test_error.c"
 				>
 			</File>
 		</Filter>
@@ -194,19 +190,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\tests\cdata_test_libcerror.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\tests\cdata_test_libcstring.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\tests\cdata_test_macros.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\tests\cdata_test_memory.h"
 				>
 			</File>
 			<File
