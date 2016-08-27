@@ -30,144 +30,242 @@
 #include "cdata_test_libcdata.h"
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
+#include "cdata_test_macros.h"
+#include "cdata_test_memory.h"
+#include "cdata_test_unused.h"
 
-/* Tests initializing the range list
- * Make sure the value range_list is referencing, is set to NULL
- * Returns 1 if successful, 0 if not or -1 on error
+/* Tests the libcdata_range_list_initialize function
+ * Returns 1 if successful or 0 if not
  */
 int cdata_test_range_list_initialize(
-     libcdata_range_list_t **range_list,
-     int expected_result )
+     void )
 {
-	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_range_list_initialize";
-	int result               = 0;
+	libcdata_range_list_t *range_list = NULL;
+	libcerror_error_t *error          = NULL;
+	int result                        = 0;
 
-	fprintf(
-	 stdout,
-	 "Testing initialize\t" );
-
+	/* Test libcdata_range_list_initialize without entries
+	 */
 	result = libcdata_range_list_initialize(
-	          range_list,
+	          &range_list,
 	          &error );
 
-	if( result != 1 )
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "range_list",
+         range_list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_range_list_free(
+	          &range_list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "range_list",
+         range_list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_range_list_initialize(
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	range_list = (libcdata_range_list_t *) 0x12345678UL;
+
+	result = libcdata_range_list_initialize(
+	          &range_list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	range_list = NULL;
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_range_list_initialize with malloc failing
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_range_list_initialize(
+	          &range_list,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
 	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create range list.",
-		 function );
-	}
-	if( result != expected_result )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
+		cdata_test_malloc_attempts_before_fail = -1;
 	}
 	else
 	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
 
-	if( result == -1 )
-	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "range_list",
+		 range_list );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
 		libcerror_error_free(
 		 &error );
 	}
-	if( result == 1 )
+	/* Test libcdata_range_list_initialize with memset failing
+	 */
+	cdata_test_memset_attempts_before_fail = 0;
+
+	result = libcdata_range_list_initialize(
+	          &range_list,
+	          &error );
+
+	if( cdata_test_memset_attempts_before_fail != -1 )
 	{
-		if( libcdata_range_list_free(
-		     range_list,
-		     NULL,
-		     &error ) != 1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free array.",
-			 function );
-
-			libcerror_error_backtrace_fprint(
-			 error,
-			 stdout );
-
-			libcerror_error_free(
-			 &error );
-
-			return( -1 );
-		}
+		cdata_test_memset_attempts_before_fail = -1;
 	}
-	if( result != expected_result )
+	else
 	{
-		return( 0 );
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "range_list",
+		 range_list );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
 	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
 	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( range_list != NULL )
+	{
+		libcdata_range_list_free(
+		 &range_list,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_range_list_free function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_range_list_free(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_range_list_free(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
 }
 
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-int wmain( int argc, wchar_t * const argv[] )
+int wmain(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #else
-int main( int argc, char * const argv[] )
+int main(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #endif
 {
-	libcdata_range_list_t *range_list = NULL;
+	CDATA_TEST_UNREFERENCED_PARAMETER( argc )
+	CDATA_TEST_UNREFERENCED_PARAMETER( argv )
 
-	if( argc != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unsupported number of arguments.\n" );
+	CDATA_TEST_RUN(
+	 "libcdata_range_list_initialize",
+	 cdata_test_range_list_initialize() )
 
-		return( EXIT_FAILURE );
-	}
-	range_list = NULL;
+	CDATA_TEST_RUN(
+	 "libcdata_range_list_free",
+	 cdata_test_range_list_free() )
 
-	if( cdata_test_range_list_initialize(
-	     &range_list,
-	     1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	range_list = (libcdata_range_list_t *) 0x12345678UL;
-
-	if( cdata_test_range_list_initialize(
-	     &range_list,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	if( cdata_test_range_list_initialize(
-	     NULL,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
 	return( EXIT_SUCCESS );
+
+on_error:
+	return( EXIT_FAILURE );
 }
 

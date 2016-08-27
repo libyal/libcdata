@@ -30,91 +30,9 @@
 #include "cdata_test_libcdata.h"
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
-
-/* Tests initializing the list
- * Make sure the value list is referencing, is set to NULL
- * Returns 1 if successful, 0 if not or -1 on error
- */
-int cdata_test_list_initialize(
-     libcdata_list_t **list,
-     int expected_result )
-{
-	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_list_initialize";
-	int result               = 0;
-
-	fprintf(
-	 stdout,
-	 "Testing initialize\t" );
-
-	result = libcdata_list_initialize(
-	          list,
-	          &error );
-
-	if( result != 1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create list.",
-		 function );
-	}
-	if( result != expected_result )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result == -1 )
-	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
-		libcerror_error_free(
-		 &error );
-	}
-	if( result == 1 )
-	{
-		if( libcdata_list_free(
-		     list,
-		     NULL,
-		     &error ) != 1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free list.",
-			 function );
-
-			libcerror_error_backtrace_fprint(
-			 error,
-			 stdout );
-
-			libcerror_error_free(
-			 &error );
-
-			return( -1 );
-		}
-	}
-	if( result != expected_result )
-	{
-		return( 0 );
-	}
-	return( 1 );
-}
+#include "cdata_test_macros.h"
+#include "cdata_test_memory.h"
+#include "cdata_test_unused.h"
 
 /* Test element compare function
  * Returns return LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
@@ -157,6 +75,212 @@ int cdata_test_list_element_compare_function(
 		return( LIBCDATA_COMPARE_GREATER );
 	}
 	return( LIBCDATA_COMPARE_EQUAL );
+}
+
+/* Tests the libcdata_list_initialize function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_initialize(
+     void )
+{
+	libcdata_list_t *list    = NULL;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test libcdata_list_initialize without entries
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_list_initialize(
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	list = (libcdata_list_t *) 0x12345678UL;
+
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	list = NULL;
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_list_initialize with malloc failing
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "list",
+		 list );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_list_initialize with memset failing
+	 */
+	cdata_test_memset_attempts_before_fail = 0;
+
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	if( cdata_test_memset_attempts_before_fail != -1 )
+	{
+		cdata_test_memset_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "list",
+		 list );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_free function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_free(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_free(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
 }
 
 /* Tests get, set, append, prepend and insert of values
@@ -1028,55 +1152,27 @@ on_error:
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-int wmain( int argc, wchar_t * const argv[] )
+int wmain(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #else
-int main( int argc, char * const argv[] )
+int main(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #endif
 {
-	libcdata_list_t *list = NULL;
+	CDATA_TEST_UNREFERENCED_PARAMETER( argc )
+	CDATA_TEST_UNREFERENCED_PARAMETER( argv )
 
-	if( argc != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unsupported number of arguments.\n" );
+	CDATA_TEST_RUN(
+	 "libcdata_list_initialize",
+	 cdata_test_list_initialize() )
 
-		return( EXIT_FAILURE );
-	}
-	list = NULL;
+	CDATA_TEST_RUN(
+	 "libcdata_list_free",
+	 cdata_test_list_free() )
 
-	if( cdata_test_list_initialize(
-	     &list,
-	     1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	list = (libcdata_list_t *) 0x12345678UL;
-
-	if( cdata_test_list_initialize(
-	     &list,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	if( cdata_test_list_initialize(
-	     NULL,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
+/* TODO: refactor */
 	/* Test: get, set, prepend, append and insert values
 	 */
 	if( cdata_test_list_values() != 1 )
@@ -1097,8 +1193,9 @@ int main( int argc, char * const argv[] )
 
 		return( EXIT_FAILURE );
 	}
-	/* TODO: test libcdata_list_clone
-	 */
 	return( EXIT_SUCCESS );
+
+on_error:
+	return( EXIT_FAILURE );
 }
 

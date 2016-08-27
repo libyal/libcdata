@@ -25,150 +25,271 @@
 #include <stdlib.h>
 #endif
 
-#include <stdio.h>
-
 #include "cdata_test_libcdata.h"
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
+#include "cdata_test_macros.h"
+#include "cdata_test_memory.h"
+#include "cdata_test_unused.h"
 
-/* Tests initializing the tree
- * Make sure the value tree is referencing, is set to NULL
- * Returns 1 if successful, 0 if not or -1 on error
+/* Tests the libcdata_btree_initialize function
+ * Returns 1 if successful or 0 if not
  */
 int cdata_test_btree_initialize(
-     libcdata_btree_t **tree,
-     int expected_result )
+     void )
 {
+	libcdata_btree_t *btree  = NULL;
 	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_btree_initialize";
 	int result               = 0;
 
-	fprintf(
-	 stdout,
-	 "Testing initialize\t" );
-
+	/* Test libcdata_btree_initialize without entries
+	 */
 	result = libcdata_btree_initialize(
-	          tree,
-	          253,
+	          &btree,
+	          100,
 	          &error );
 
-	if( result != 1 )
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "btree",
+         btree );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_btree_free(
+	          &btree,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "btree",
+         btree );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_initialize(
+	          NULL,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	btree = (libcdata_btree_t *) 0x12345678UL;
+
+	result = libcdata_btree_initialize(
+	          &btree,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	btree = NULL;
+
+	result = libcdata_btree_initialize(
+	          &btree,
+	          -1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "btree",
+         btree );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_btree_initialize with malloc failing
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_btree_initialize(
+	          &btree,
+	          10,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
 	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create tree.",
-		 function );
-	}
-	if( result != expected_result )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
+		cdata_test_malloc_attempts_before_fail = -1;
 	}
 	else
 	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
 
-	if( result == -1 )
-	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "btree",
+		 btree );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
 		libcerror_error_free(
 		 &error );
 	}
-	if( result == 1 )
+	/* Test libcdata_btree_initialize with memset failing
+	 */
+	cdata_test_memset_attempts_before_fail = 0;
+
+	result = libcdata_btree_initialize(
+	          &btree,
+	          10,
+	          &error );
+
+	if( cdata_test_memset_attempts_before_fail != -1 )
 	{
-		if( libcdata_btree_free(
-		     tree,
-		     NULL,
-		     &error ) != 1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-			 "%s: unable to free tree.",
-			 function );
-
-			libcerror_error_backtrace_fprint(
-			 error,
-			 stdout );
-
-			libcerror_error_free(
-			 &error );
-
-			return( -1 );
-		}
+		cdata_test_memset_attempts_before_fail = -1;
 	}
-	if( result != expected_result )
+	else
 	{
-		return( 0 );
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "btree",
+		 btree );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
 	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
 	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( btree != NULL )
+	{
+		libcdata_btree_free(
+		 &btree,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_free function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_free(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_free(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
 }
 
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-int wmain( int argc, wchar_t * const argv[] )
+int wmain(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #else
-int main( int argc, char * const argv[] )
+int main(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #endif
 {
-	libcdata_btree_t *tree = NULL;
+	CDATA_TEST_UNREFERENCED_PARAMETER( argc )
+	CDATA_TEST_UNREFERENCED_PARAMETER( argv )
 
-	if( argc != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unsupported number of arguments.\n" );
+	CDATA_TEST_RUN(
+	 "libcdata_btree_initialize",
+	 cdata_test_btree_initialize() )
 
-		return( EXIT_FAILURE );
-	}
-	tree = NULL;
+	CDATA_TEST_RUN(
+	 "libcdata_btree_free",
+	 cdata_test_btree_free() )
 
-	if( cdata_test_btree_initialize(
-	     &tree,
-	     1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	tree = (libcdata_btree_t *) 0x12345678UL;
-
-	if( cdata_test_btree_initialize(
-	     &tree,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
-	if( cdata_test_btree_initialize(
-	     NULL,
-	     -1 ) != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test initialize.\n" );
-
-		return( EXIT_FAILURE );
-	}
 	return( EXIT_SUCCESS );
+
+on_error:
+	return( EXIT_FAILURE );
 }
 
