@@ -30,6 +30,9 @@ Tests:
 * range list
   - libcdata_range_list_get_spanning_range
 
+20160827
+* worked on tests
+
 20160821
 * worked on tests
 

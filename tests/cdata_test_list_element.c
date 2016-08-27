@@ -40,9 +40,9 @@
 int cdata_test_list_element_initialize(
      void )
 {
-	libcdata_list_element_t *list_element  = NULL;
-	libcerror_error_t *error = NULL;
-	int result               = 0;
+	libcdata_list_element_t *list_element = NULL;
+	libcerror_error_t *error              = NULL;
+	int result                            = 0;
 
 	/* Test libcdata_list_element_initialize without entries
 	 */
