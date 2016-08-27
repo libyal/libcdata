@@ -256,7 +256,7 @@ int cdata_test_array_initialize(
 
 #endif /* INT_MAX == SSIZE_MAX */
 
-#if defined( HAVE_CDATA_TEST_MALLOC )
+#if defined( HAVE_CDATA_TEST_MEMORY )
 
 	/* Test libcdata_array_initialize with malloc failing
 	 */
@@ -267,24 +267,28 @@ int cdata_test_array_initialize(
 	          10,
 	          &error );
 
-	cdata_test_malloc_attempts_before_fail = -1;
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
 
-	CDATA_TEST_ASSERT_EQUAL(
-	 "result",
-	 result,
-	 -1 );
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "array",
+		 array );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "array",
-         array );
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
-
-	libcerror_error_free(
-	 &error );
-
+		libcerror_error_free(
+		 &error );
+	}
 	cdata_test_malloc_attempts_before_fail = 1;
 
 	result = libcdata_array_initialize(
@@ -292,25 +296,89 @@ int cdata_test_array_initialize(
 	          10,
 	          &error );
 
-	cdata_test_malloc_attempts_before_fail = -1;
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
 
-	CDATA_TEST_ASSERT_EQUAL(
-	 "result",
-	 result,
-	 -1 );
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "array",
+		 array );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "array",
-         array );
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_array_initialize with memset failing
+	 */
+	cdata_test_memset_attempts_before_fail = 0;
 
-	libcerror_error_free(
-	 &error );
+	result = libcdata_array_initialize(
+	          &array,
+	          10,
+	          &error );
 
-#endif /* defined( HAVE_CDATA_TEST_MALLOC ) */
+	if( cdata_test_memset_attempts_before_fail != -1 )
+	{
+		cdata_test_memset_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "array",
+		 array );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	cdata_test_memset_attempts_before_fail = 1;
+
+	result = libcdata_array_initialize(
+	          &array,
+	          10,
+	          &error );
+
+	if( cdata_test_memset_attempts_before_fail != -1 )
+	{
+		cdata_test_memset_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "array",
+		 array );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 	return( 1 );
 
@@ -544,13 +612,6 @@ int cdata_test_array_clone(
 	/* Test clone of an intialized array
 	 */
 
-	/* Clean up
-	 */
-	result = libcdata_array_free(
-	          &array,
-	          NULL,
-	          NULL );
-
 	/* Test clone of a non-initialized array
 	 */
 	result = libcdata_array_clone(
@@ -596,6 +657,13 @@ int cdata_test_array_clone(
 
 	libcerror_error_free(
 	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_array_free(
+	          &array,
+	          NULL,
+	          NULL );
 
 	return( 1 );
 
@@ -1353,6 +1421,25 @@ int cdata_test_array_prepend_entry(
          "error",
          error );
 
+	/* Test error cases
+	 */
+	result = libcdata_array_prepend_entry(
+	          NULL,
+	          (intptr_t *) &entry_value6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libcdata_array_free(
@@ -1441,6 +1528,44 @@ int cdata_test_array_append_entry(
         CDATA_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	/* Test error cases
+	 */
+	result = libcdata_array_append_entry(
+	          NULL,
+	          &entry_index,
+	          (intptr_t *) &entry_value6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_append_entry(
+	          array,
+	          NULL,
+	          (intptr_t *) &entry_value6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
 
 	/* Clean up
 	 */
@@ -1628,6 +1753,68 @@ int cdata_test_array_insert_entry(
          "error",
          error );
 
+	/* Test error cases
+	 */
+	result = libcdata_array_insert_entry(
+	          NULL,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &cdata_test_array_entry_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_insert_entry(
+	          array,
+	          NULL,
+	          (intptr_t *) &entry_value2,
+	          &cdata_test_array_entry_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_insert_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          NULL,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libcdata_array_free(
@@ -1715,6 +1902,80 @@ int cdata_test_array_remove_entry(
          "error",
          error );
 
+	/* Test error cases
+	 */
+	result = libcdata_array_remove_entry(
+	          NULL,
+	          0,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_remove_entry(
+	          array,
+	          0,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_remove_entry(
+	          array,
+	          -1,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_remove_entry(
+	          array,
+	          1000,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libcdata_array_free(
@@ -1743,21 +2004,18 @@ on_error:
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
-int wmain( int argc, wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
+int wmain(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #else
-int main( int argc, char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
+int main(
+     int argc CDATA_TEST_ATTRIBUTE_UNUSED,
+     char * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )
 #endif
 {
+	CDATA_TEST_UNREFERENCED_PARAMETER( argc )
 	CDATA_TEST_UNREFERENCED_PARAMETER( argv )
 
-	if( argc != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unsupported number of arguments.\n" );
-
-		return( EXIT_FAILURE );
-	}
 	CDATA_TEST_RUN(
 	 "libcdata_array_initialize",
 	 cdata_test_array_initialize() )
