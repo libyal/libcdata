@@ -20,7 +20,6 @@
  */
 
 #include <common.h>
-#include <file_stream.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>

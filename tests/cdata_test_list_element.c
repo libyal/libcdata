@@ -25,8 +25,6 @@
 #include <stdlib.h>
 #endif
 
-#include <stdio.h>
-
 #include "cdata_test_libcdata.h"
 #include "cdata_test_libcerror.h"
 #include "cdata_test_libcstring.h"
