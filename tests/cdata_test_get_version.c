@@ -46,7 +46,7 @@ int cdata_test_get_version(
 	          LIBCDATA_VERSION_STRING,
 	          9 );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 0 );
