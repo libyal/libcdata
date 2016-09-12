@@ -3,7 +3,7 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libuna
+Name: libcdata
 Description: Library to support cross-platform C generic data functions
 Version: @VERSION@
 Libs: -L${libdir} -lcdata
