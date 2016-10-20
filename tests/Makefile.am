@@ -21,10 +21,10 @@ check_PROGRAMS = \
 	cdata_test_array \
 	cdata_test_btree \
 	cdata_test_error \
-	cdata_test_get_version \
 	cdata_test_list \
 	cdata_test_list_element \
 	cdata_test_range_list \
+	cdata_test_support \
 	cdata_test_tree_node
 
 cdata_test_array_SOURCES = \
@@ -63,17 +63,6 @@ cdata_test_error_SOURCES = \
 	cdata_test_unused.h
 
 cdata_test_error_LDADD = \
-	../libcdata/libcdata.la \
-	@LIBCSTRING_LIBADD@
-
-cdata_test_get_version_SOURCES = \
-	cdata_test_get_version.c \
-	cdata_test_libcdata.h \
-	cdata_test_libcstring.h \
-	cdata_test_macros.h \
-	cdata_test_unused.h
-
-cdata_test_get_version_LDADD = \
 	../libcdata/libcdata.la \
 	@LIBCSTRING_LIBADD@
 
@@ -117,6 +106,17 @@ cdata_test_range_list_SOURCES = \
 cdata_test_range_list_LDADD = \
 	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@ \
+	@LIBCSTRING_LIBADD@
+
+cdata_test_support_SOURCES = \
+	cdata_test_libcdata.h \
+	cdata_test_libcstring.h \
+	cdata_test_macros.h \
+	cdata_test_support.c \
+	cdata_test_unused.h
+
+cdata_test_support_LDADD = \
+	../libcdata/libcdata.la \
 	@LIBCSTRING_LIBADD@
 
 cdata_test_tree_node_SOURCES = \

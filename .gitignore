@@ -122,10 +122,10 @@ stamp-h[1-9]
 /tests/cdata_test_array
 /tests/cdata_test_btree
 /tests/cdata_test_error
-/tests/cdata_test_get_version
 /tests/cdata_test_list
 /tests/cdata_test_list_element
 /tests/cdata_test_range_list
+/tests/cdata_test_support
 /tests/cdata_test_tree_node
 /tests/tmp*
 
