@@ -206,5 +206,5 @@ int libcdata_list_remove_element(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_INTERNAL_LIST_H ) */
 

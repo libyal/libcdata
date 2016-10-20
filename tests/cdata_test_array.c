@@ -1101,17 +1101,44 @@ int cdata_test_array_reserve(
 	          (intptr_t *) &entry_value2,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          1,
 	          (intptr_t *) &entry_value3,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          2,
 	          (intptr_t *) &entry_value4,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
 	/* Test to reverse an array
 	 */
@@ -1394,17 +1421,44 @@ int cdata_test_array_get_entry_by_index(
 	          (intptr_t *) &entry_value2,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value3,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value4,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
 	/* Test to retrieve an entry that is in bounds
 	 */
@@ -1576,17 +1630,44 @@ int cdata_test_array_get_entry_by_value(
 	          (intptr_t *) &entry_value2,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value3,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value4,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
 	/* Test to retrieve an entry that exists
 	 */
@@ -2486,17 +2567,44 @@ int cdata_test_array_remove_entry(
 	          (intptr_t *) &entry_value2,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value3,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value4,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
 	/* Test to remove an entry that is in bounds
 	 */

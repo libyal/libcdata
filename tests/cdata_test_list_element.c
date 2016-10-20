@@ -238,6 +238,330 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libcdata_list_element_get_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_get_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	intptr_t *value          = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_get_value(
+	          NULL,
+	          &value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_set_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_set_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	intptr_t *value          = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_set_value(
+	          NULL,
+	          value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_get_previous_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_get_previous_element(
+     void )
+{
+	libcdata_list_element_t *previous_element = NULL;
+	libcerror_error_t *error                  = NULL;
+	int result                                = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_get_previous_element(
+	          NULL,
+	          &previous_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_set_previous_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_set_previous_element(
+     void )
+{
+	libcdata_list_element_t *previous_element = NULL;
+	libcerror_error_t *error                  = NULL;
+	int result                                = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_set_previous_element(
+	          NULL,
+	          previous_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_get_next_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_get_next_element(
+     void )
+{
+	libcdata_list_element_t *next_element = NULL;
+	libcerror_error_t *error              = NULL;
+	int result                            = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_get_next_element(
+	          NULL,
+	          &next_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_set_next_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_set_next_element(
+     void )
+{
+	libcdata_list_element_t *next_element = NULL;
+	libcerror_error_t *error              = NULL;
+	int result                            = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_set_next_element(
+	          NULL,
+	          next_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_get_elements function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_get_elements(
+     void )
+{
+	libcdata_list_element_t *next_element     = NULL;
+	libcdata_list_element_t *previous_element = NULL;
+	libcerror_error_t *error                  = NULL;
+	int result                                = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_get_elements(
+	          NULL,
+	          &previous_element,
+	          &next_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_element_set_elements function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_element_set_elements(
+     void )
+{
+	libcdata_list_element_t *next_element     = NULL;
+	libcdata_list_element_t *previous_element = NULL;
+	libcerror_error_t *error                  = NULL;
+	int result                                = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_element_set_elements(
+	          NULL,
+	          previous_element,
+	          next_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
 /* The main program
  */
 #if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
@@ -260,6 +584,38 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_free",
 	 cdata_test_list_element_free )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_get_value",
+	 cdata_test_list_element_get_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_set_value",
+	 cdata_test_list_element_set_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_get_previous_element",
+	 cdata_test_list_element_get_previous_element )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_set_previous_element",
+	 cdata_test_list_element_set_previous_element )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_get_next_element",
+	 cdata_test_list_element_get_next_element )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_set_next_element",
+	 cdata_test_list_element_set_next_element )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_get_elements",
+	 cdata_test_list_element_get_elements )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_element_set_elements",
+	 cdata_test_list_element_set_elements )
 
 	return( EXIT_SUCCESS );
 

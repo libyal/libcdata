@@ -124,5 +124,5 @@ int libcdata_list_element_set_elements(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_INTERNAL_LIST_ELEMENT_H ) */
 
