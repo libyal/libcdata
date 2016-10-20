@@ -123,23 +123,23 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_error_free",
-	 cdata_test_error_free() )
+	 cdata_test_error_free );
 
 	CDATA_TEST_RUN(
 	 "libcdata_error_fprint",
-	 cdata_test_error_fprint() )
+	 cdata_test_error_fprint );
 
 	CDATA_TEST_RUN(
 	 "libcdata_error_sprint",
-	 cdata_test_error_sprint() )
+	 cdata_test_error_sprint );
 
 	CDATA_TEST_RUN(
 	 "libcdata_error_backtrace_fprint",
-	 cdata_test_error_backtrace_fprint() )
+	 cdata_test_error_backtrace_fprint );
 
 	CDATA_TEST_RUN(
 	 "libcdata_error_backtrace_sprint",
-	 cdata_test_error_backtrace_sprint() )
+	 cdata_test_error_backtrace_sprint );
 
 	return( EXIT_SUCCESS );
 

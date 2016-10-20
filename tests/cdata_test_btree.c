@@ -49,7 +49,7 @@ int cdata_test_btree_initialize(
 	          100,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
@@ -67,7 +67,7 @@ int cdata_test_btree_initialize(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
@@ -87,7 +87,7 @@ int cdata_test_btree_initialize(
 	          0,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -106,7 +106,7 @@ int cdata_test_btree_initialize(
 	          0,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -125,7 +125,7 @@ int cdata_test_btree_initialize(
 	          -1,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -158,7 +158,7 @@ int cdata_test_btree_initialize(
 	}
 	else
 	{
-		CDATA_TEST_ASSERT_EQUAL(
+		CDATA_TEST_ASSERT_EQUAL_INT(
 		 "result",
 		 result,
 		 -1 );
@@ -189,7 +189,7 @@ int cdata_test_btree_initialize(
 	}
 	else
 	{
-		CDATA_TEST_ASSERT_EQUAL(
+		CDATA_TEST_ASSERT_EQUAL_INT(
 		 "result",
 		 result,
 		 -1 );
@@ -241,7 +241,7 @@ int cdata_test_btree_free(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -281,11 +281,11 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_initialize",
-	 cdata_test_btree_initialize() )
+	 cdata_test_btree_initialize )
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_free",
-	 cdata_test_btree_free() )
+	 cdata_test_btree_free )
 
 	return( EXIT_SUCCESS );
 

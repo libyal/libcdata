@@ -93,7 +93,7 @@ int cdata_test_list_initialize(
 	          &list,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
@@ -111,7 +111,7 @@ int cdata_test_list_initialize(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
@@ -130,7 +130,7 @@ int cdata_test_list_initialize(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -148,7 +148,7 @@ int cdata_test_list_initialize(
 	          &list,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -178,7 +178,7 @@ int cdata_test_list_initialize(
 	}
 	else
 	{
-		CDATA_TEST_ASSERT_EQUAL(
+		CDATA_TEST_ASSERT_EQUAL_INT(
 		 "result",
 		 result,
 		 -1 );
@@ -208,7 +208,7 @@ int cdata_test_list_initialize(
 	}
 	else
 	{
-		CDATA_TEST_ASSERT_EQUAL(
+		CDATA_TEST_ASSERT_EQUAL_INT(
 		 "result",
 		 result,
 		 -1 );
@@ -260,7 +260,7 @@ int cdata_test_list_free(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -1166,11 +1166,11 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_initialize",
-	 cdata_test_list_initialize() )
+	 cdata_test_list_initialize )
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_free",
-	 cdata_test_list_free() )
+	 cdata_test_list_free )
 
 /* TODO: refactor */
 	/* Test: get, set, prepend, append and insert values

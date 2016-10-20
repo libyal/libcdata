@@ -48,7 +48,7 @@ int cdata_test_range_list_initialize(
 	          &range_list,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
@@ -66,7 +66,7 @@ int cdata_test_range_list_initialize(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
@@ -85,7 +85,7 @@ int cdata_test_range_list_initialize(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -103,7 +103,7 @@ int cdata_test_range_list_initialize(
 	          &range_list,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -133,7 +133,7 @@ int cdata_test_range_list_initialize(
 	}
 	else
 	{
-		CDATA_TEST_ASSERT_EQUAL(
+		CDATA_TEST_ASSERT_EQUAL_INT(
 		 "result",
 		 result,
 		 -1 );
@@ -163,7 +163,7 @@ int cdata_test_range_list_initialize(
 	}
 	else
 	{
-		CDATA_TEST_ASSERT_EQUAL(
+		CDATA_TEST_ASSERT_EQUAL_INT(
 		 "result",
 		 result,
 		 -1 );
@@ -215,7 +215,7 @@ int cdata_test_range_list_free(
 	          NULL,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL(
+	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
@@ -255,11 +255,11 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_initialize",
-	 cdata_test_range_list_initialize() )
+	 cdata_test_range_list_initialize )
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_free",
-	 cdata_test_range_list_free() )
+	 cdata_test_range_list_free )
 
 	return( EXIT_SUCCESS );
 
