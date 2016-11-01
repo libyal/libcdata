@@ -213,5 +213,5 @@ typedef intptr_t libcdata_tree_node_t;
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_TYPES_H ) */
 

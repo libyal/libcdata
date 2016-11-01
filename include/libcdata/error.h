@@ -39,7 +39,7 @@ enum LIBCDATA_ERROR_DOMAINS
 	LIBCDATA_ERROR_DOMAIN_INPUT			= (int) 'i',
 	LIBCDATA_ERROR_DOMAIN_MEMORY			= (int) 'm',
 	LIBCDATA_ERROR_DOMAIN_OUTPUT			= (int) 'o',
-	LIBCDATA_ERROR_DOMAIN_RUNTIME			= (int) 'r',
+	LIBCDATA_ERROR_DOMAIN_RUNTIME			= (int) 'r'
 };
 
 /* The argument error codes
@@ -208,6 +208,17 @@ enum LIBCDATA_MEMORY_ERROR
 	LIBCDATA_MEMORY_ERROR_SET_FAILED		= 3
 };
 
+/* The output error codes
+ */
+enum LIBCDATA_OUTPUT_ERROR
+{
+	LIBCDATA_OUTPUT_ERROR_GENERIC			= 0,
+
+	/* There is insuficient space to write the output
+	 */
+	LIBCDATA_OUTPUT_ERROR_INSUFFICIENT_SPACE	= 1
+};
+
 /* The runtime error codes
  * to signify errors regarding runtime processing
  */
@@ -276,16 +287,5 @@ enum LIBCDATA_RUNTIME_ERROR
 	LIBCDATA_RUNTIME_ERROR_ABORT_REQUESTED		= 15
 };
 
-/* The output error codes
- */
-enum LIBCDATA_OUTPUT_ERROR
-{
-	LIBCDATA_OUTPUT_ERROR_GENERIC			= 0,
-
-	/* There is insuficient space to write the output
-	 */
-	LIBCDATA_OUTPUT_ERROR_INSUFFICIENT_SPACE	= 1
-};
-
-#endif
+#endif /* !defined( _LIBCDATA_ERROR_H ) */
 

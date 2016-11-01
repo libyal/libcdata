@@ -24,7 +24,7 @@
 
 /* The libcdata type support features
  */
-#if defined( WINAPI ) || @HAVE_WIDE_CHARACTER_TYPE@
+#if defined( HAVE_WIDE_CHARACTER_TYPE ) || @HAVE_WIDE_CHARACTER_TYPE@
 #define LIBCDATA_HAVE_WIDE_CHARACTER_TYPE	1
 #endif
 
@@ -42,5 +42,5 @@
 #endif
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_FEATURES_H ) */
 
