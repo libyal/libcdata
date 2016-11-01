@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBCDATA_INTERNAL_LIST_ELEMENT_H )
-#define _LIBCDATA_INTERNAL_LIST_ELEMENT_H
+#if !defined( _LIBCDATA_LIST_ELEMENT_H )
+#define _LIBCDATA_LIST_ELEMENT_H
 
 #include <common.h>
 #include <types.h>
@@ -124,5 +124,5 @@ int libcdata_list_element_set_elements(
 }
 #endif
 
-#endif /* !defined( _LIBCDATA_INTERNAL_LIST_ELEMENT_H ) */
+#endif /* !defined( _LIBCDATA_LIST_ELEMENT_H ) */
 

@@ -28,6 +28,8 @@
 #include <libcdata/features.h>
 #include <libcdata/types.h>
 
+#include <stdio.h>
+
 #if defined( __cplusplus )
 extern "C" {
 #endif
@@ -1138,5 +1140,5 @@ int libcdata_tree_node_get_leaf_node_list(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_H ) */
 

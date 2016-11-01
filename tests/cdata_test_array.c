@@ -566,7 +566,7 @@ int cdata_test_array_empty(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -669,7 +669,7 @@ int cdata_test_array_clear(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -758,7 +758,7 @@ int cdata_test_array_clone(
 	result = libcdata_array_free(
 	          &destination_array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -867,7 +867,7 @@ int cdata_test_array_clone(
 	result = libcdata_array_free(
 	          &source_array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1029,7 +1029,7 @@ int cdata_test_array_resize(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1178,7 +1178,7 @@ int cdata_test_array_reserve(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1347,7 +1347,7 @@ int cdata_test_array_get_number_of_entries(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1555,7 +1555,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1762,7 +1762,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -1945,7 +1945,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -2066,7 +2066,7 @@ int cdata_test_array_prepend_entry(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -2219,7 +2219,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -2493,7 +2493,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -2707,7 +2707,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_free(
 	          &array,
 	          NULL,
-	          NULL );
+	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",

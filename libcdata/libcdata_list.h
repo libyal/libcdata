@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBCDATA_INTERNAL_LIST_H )
-#define _LIBCDATA_INTERNAL_LIST_H
+#if !defined( _LIBCDATA_LIST_H )
+#define _LIBCDATA_LIST_H
 
 #include <common.h>
 #include <types.h>
@@ -206,5 +206,5 @@ int libcdata_list_remove_element(
 }
 #endif
 
-#endif /* !defined( _LIBCDATA_INTERNAL_LIST_H ) */
+#endif /* !defined( _LIBCDATA_LIST_H ) */
 

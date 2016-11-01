@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBCDATA_INTERNAL_ARRAY_H )
-#define _LIBCDATA_INTERNAL_ARRAY_H
+#if !defined( _LIBCDATA_ARRAY_H )
+#define _LIBCDATA_ARRAY_H
 
 #include <common.h>
 #include <types.h>
@@ -196,5 +196,5 @@ int libcdata_array_remove_entry(
 }
 #endif
 
-#endif /* !defined( _LIBCDATA_INTERNAL_ARRAY_H ) */
+#endif /* !defined( _LIBCDATA_ARRAY_H ) */
 

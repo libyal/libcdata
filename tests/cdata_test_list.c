@@ -364,6 +364,25 @@ int cdata_test_list_get_number_of_elements(
 	int number_of_elements   = 0;
 	int result               = 0;
 
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	/* Test error cases
 	 */
 	result = libcdata_list_get_number_of_elements(
@@ -400,6 +419,26 @@ int cdata_test_list_get_number_of_elements(
 	libcerror_error_free(
 	 &error );
 
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	return( 1 );
 
 on_error:
@@ -407,6 +446,13 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
 	}
 	return( 0 );
 }
@@ -422,6 +468,25 @@ int cdata_test_list_get_first_element(
 	libcerror_error_t *error              = NULL;
 	int result                            = 0;
 
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	/* Test error cases
 	 */
 	result = libcdata_list_get_first_element(
@@ -458,6 +523,26 @@ int cdata_test_list_get_first_element(
 	libcerror_error_free(
 	 &error );
 
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	return( 1 );
 
 on_error:
@@ -465,6 +550,13 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
 	}
 	return( 0 );
 }
@@ -480,6 +572,25 @@ int cdata_test_list_get_last_element(
 	libcerror_error_t *error              = NULL;
 	int result                            = 0;
 
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	/* Test error cases
 	 */
 	result = libcdata_list_get_last_element(
@@ -516,6 +627,26 @@ int cdata_test_list_get_last_element(
 	libcerror_error_free(
 	 &error );
 
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	return( 1 );
 
 on_error:
@@ -523,6 +654,13 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
 	}
 	return( 0 );
 }
@@ -537,6 +675,25 @@ int cdata_test_list_get_element_by_index(
 	libcdata_list_element_t *list_element = NULL;
 	libcerror_error_t *error              = NULL;
 	int result                            = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
 	/* Test error cases
 	 */
@@ -594,6 +751,26 @@ int cdata_test_list_get_element_by_index(
 	libcerror_error_free(
 	 &error );
 
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	return( 1 );
 
 on_error:
@@ -602,477 +779,91 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
 	return( 0 );
 }
 
-/* TODO: refactor */
-
-/* Tests get, set, append, prepend and insert of values
- * Returns 1 if successful, 0 if not or -1 on error
+/* Tests the libcdata_list_get_value_by_index function
+ * Returns 1 if successful or 0 if not
  */
-int cdata_test_list_values(
+int cdata_test_list_get_value_by_index(
      void )
 {
 	libcdata_list_t *list    = NULL;
 	libcerror_error_t *error = NULL;
-	int *element_value_test  = 0;
-	static char *function    = "cdata_test_list_values";
-	int element_value1       = 1;
-	int element_value2       = 2;
-	int element_value3       = 3;
-	int element_value4       = 4;
-	int element_value5       = 5;
-	int number_of_elements   = 0;
+	intptr_t *value          = NULL;
 	int result               = 0;
 
-	list = NULL;
-
-	if( libcdata_list_initialize(
-	     &list,
-	     &error ) == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create list.",
-		 function );
-
-		goto on_error;
-	}
-	result = libcdata_list_append_value(
-	          list,
-	          (intptr_t *) &element_value3,
-	          &error );
-
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to append element.",
-		 function );
-
-		goto on_error;
-	}
-	result = libcdata_list_append_value(
-	          list,
-	          (intptr_t *) &element_value5,
-	          &error );
-
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to append element.",
-		 function );
-
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing append_value\t" );
-
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result != 0 )
-	{
-		if( libcdata_list_get_number_of_elements(
-		     list,
-		     &number_of_elements,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve number of elements.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_number_of_elements\t" );
-
-		result = ( number_of_elements == 2 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	if( result != 0 )
-	{
-		if( libcdata_list_get_value_by_index(
-		     list,
-		     1,
-		     (intptr_t **) &element_value_test,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve value: 1.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_value_by_index\t" );
-
-		result = ( element_value_test == &element_value5 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	result = libcdata_list_prepend_value(
-	          list,
-	          (intptr_t *) &element_value2,
-	          &error );
-
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to prepend value.",
-		 function );
-
-		goto on_error;
-	}
-	result = libcdata_list_prepend_value(
-	          list,
-	          (intptr_t *) &element_value1,
-	          &error );
-
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to prepend value.",
-		 function );
-
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing prepend_value\t" );
-
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result != 0 )
-	{
-		if( libcdata_list_get_number_of_elements(
-		     list,
-		     &number_of_elements,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve number of elements.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_number_of_elements\t" );
-
-		result = ( number_of_elements == 4 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	if( result != 0 )
-	{
-		if( libcdata_list_get_value_by_index(
-		     list,
-		     1,
-		     (intptr_t **) &element_value_test,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve value: 1.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_value_by_index\t" );
-
-		result = ( element_value_test == &element_value2 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	/* Test if insert of new value succeeds
+	/* Initialize test
 	 */
-	result = libcdata_list_insert_value(
-	          list,
-	          (intptr_t *) &element_value4,
-	          &cdata_test_list_element_compare_function,
-	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	result = libcdata_list_initialize(
+	          &list,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert value.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value\t" );
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
 
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
-	if( result != 0 )
-	{
-		if( libcdata_list_get_number_of_elements(
-		     list,
-		     &number_of_elements,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve number of elements.",
-			 function );
+	/* Test error cases
+	 */
+	result = libcdata_list_get_value_by_index(
+	          NULL,
+	          0,
+	          &value,
+	          &error );
 
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_number_of_elements\t" );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		result = ( number_of_elements == 5 );
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
 
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	result = libcdata_list_empty(
-	          list,
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
 	          NULL,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to empty list.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing empty\t" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
 
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
-	if( result != 0 )
-	{
-		if( libcdata_list_get_number_of_elements(
-		     list,
-		     &number_of_elements,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve number of elements.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_number_of_elements\t" );
-
-		result = ( number_of_elements == 0 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	if( libcdata_list_free(
-	     &list,
-	     NULL,
-	     &error ) == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free list.",
-		 function );
-
-		goto on_error;
-	}
-	return( result );
+	return( 1 );
 
 on_error:
 	if( error != NULL )
 	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
 		libcerror_error_free(
 		 &error );
 	}
@@ -1083,383 +874,280 @@ on_error:
 		 NULL,
 		 NULL );
 	}
-	return( -1 );
+	return( 0 );
 }
 
-/* Tests insert of values
- * Returns 1 if successful, 0 if not or -1 on error
+/* Tests the libcdata_list_prepend_element function
+ * Returns 1 if successful or 0 if not
  */
-int cdata_test_list_insert(
+int cdata_test_list_prepend_element(
+     void )
+{
+	libcdata_list_t *list             = NULL;
+	libcdata_list_element_t *element1 = NULL;
+	libcdata_list_element_t *element2 = NULL;
+	libcerror_error_t *error          = NULL;
+	int result                        = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "element1",
+         element1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_element_initialize(
+	          &element2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "element2",
+         element2 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test prepend element
+	 */
+	result = libcdata_list_prepend_element(
+	          list,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_prepend_element(
+	          list,
+	          element2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_list_prepend_element(
+	          NULL,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( element2 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element2,
+		 NULL,
+		 NULL );
+	}
+	if( element1 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element1,
+		 NULL,
+		 NULL );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_prepend_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_prepend_value(
      void )
 {
 	libcdata_list_t *list    = NULL;
 	libcerror_error_t *error = NULL;
-	static char *function    = "cdata_test_list_insert";
-	int element_value1       = 1;
-	int element_value2       = 2;
-	int element_value3       = 3;
-	int element_value4       = 4;
-	int number_of_elements   = 0;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
 
-	list = NULL;
-
-	if( libcdata_list_initialize(
-	     &list,
-	     &error ) == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create list.",
-		 function );
-
-		goto on_error;
-	}
-	/* Test if insert of new value on an empty list succeeds
+	/* Initialize test
 	 */
-	result = libcdata_list_insert_value(
-	          list,
-	          (intptr_t *) &element_value3,
-	          &cdata_test_list_element_compare_function,
-	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	result = libcdata_list_initialize(
+	          &list,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert element.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value on empty list\t" );
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
 
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
-	/* Test if insert of new value before the first element succeeds
+	/* Test prepend value
 	 */
-	result = libcdata_list_insert_value(
+	result = libcdata_list_prepend_value(
 	          list,
-	          (intptr_t *) &element_value1,
-	          &cdata_test_list_element_compare_function,
-	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          (intptr_t *) &value1,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert value.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value before first value\t" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	/* Test if insert of new value after the first element succeeds
-	 */
-	result = libcdata_list_insert_value(
+	result = libcdata_list_prepend_value(
 	          list,
-	          (intptr_t *) &element_value2,
-	          &cdata_test_list_element_compare_function,
-	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          (intptr_t *) &value2,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert value.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value after first value\t" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	/* Test if insert of duplicate value fails
+	/* Test error cases
 	 */
-	result = libcdata_list_insert_value(
-	          list,
-	          (intptr_t *) &element_value2,
-	          &cdata_test_list_element_compare_function,
-	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	result = libcdata_list_prepend_value(
+	          NULL,
+	          (intptr_t *) &value1,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert value.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value of duplicate\t" );
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
 
-	if( result != 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
+	libcerror_error_free(
+	 &error );
 
-		result = 0;
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-
-		result = 1;
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	/* Test if insert of new value after the last element succeeds
+	/* Clean up
 	 */
-	result = libcdata_list_insert_value(
-	          list,
-	          (intptr_t *) &element_value4,
-	          &cdata_test_list_element_compare_function,
-	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
 	          &error );
 
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert value.",
-		 function );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value after last value\t" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
 
-	if( result == 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
 
-	if( result != 0 )
-	{
-		if( libcdata_list_get_number_of_elements(
-		     list,
-		     &number_of_elements,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve number of elements.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_number_of_elements\t" );
-
-		result = ( number_of_elements == 4 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	/* Test if insert of duplicate value succeeds
-	 */
-	result = libcdata_list_insert_value(
-	          list,
-	          (intptr_t *) &element_value2,
-	          &cdata_test_list_element_compare_function,
-	          0,
-	          &error );
-
-	if( result == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert value.",
-		 function );
-
-		goto on_error;
-	}
-	fprintf(
-	 stdout,
-	 "Testing insert_value of duplicate\t" );
-
-	if( result != 0 )
-	{
-		fprintf(
-		 stdout,
-		 "(FAIL)" );
-	}
-	else
-	{
-		fprintf(
-		 stdout,
-		 "(PASS)" );
-	}
-	fprintf(
-	 stdout,
-	 "\n" );
-
-	if( result != 0 )
-	{
-		if( libcdata_list_get_number_of_elements(
-		     list,
-		     &number_of_elements,
-		     &error ) == -1 )
-		{
-			libcerror_error_set(
-			 &error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve number of elements.",
-			 function );
-
-			goto on_error;
-		}
-		fprintf(
-		 stdout,
-		 "Testing get_number_of_elements\t" );
-
-		result = ( number_of_elements == 5 );
-
-		if( result == 0 )
-		{
-			fprintf(
-			 stdout,
-			 "(FAIL)" );
-		}
-		else
-		{
-			fprintf(
-			 stdout,
-			 "(PASS)" );
-		}
-		fprintf(
-		 stdout,
-		 "\n" );
-	}
-	if( libcdata_list_free(
-	     &list,
-	     NULL,
-	     &error ) == -1 )
-	{
-		libcerror_error_set(
-		 &error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free list.",
-		 function );
-
-		goto on_error;
-	}
-	return( result );
+	return( 1 );
 
 on_error:
 	if( error != NULL )
 	{
-		libcerror_error_backtrace_fprint(
-		 error,
-		 stdout );
-
 		libcerror_error_free(
 		 &error );
 	}
@@ -1470,7 +1158,378 @@ on_error:
 		 NULL,
 		 NULL );
 	}
-	return( -1 );
+	return( 0 );
+}
+
+/* Tests the libcdata_list_append_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_append_element(
+     void )
+{
+	libcdata_list_t *list             = NULL;
+	libcdata_list_element_t *element1 = NULL;
+	libcdata_list_element_t *element2 = NULL;
+	libcerror_error_t *error          = NULL;
+	int result                        = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "element1",
+         element1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_element_initialize(
+	          &element2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "element2",
+         element2 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test append element
+	 */
+	result = libcdata_list_append_element(
+	          list,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_list_append_element(
+	          NULL,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( element2 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element2,
+		 NULL,
+		 NULL );
+	}
+	if( element1 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element1,
+		 NULL,
+		 NULL );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_append_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_append_value(
+     void )
+{
+	libcdata_list_t *list    = NULL;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test append value
+	 */
+	result = libcdata_list_append_value(
+	          list,
+	          (intptr_t *) &value1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	result = libcdata_list_append_value(
+	          list,
+	          (intptr_t *) &value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_list_append_value(
+	          NULL,
+	          (intptr_t *) &value1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_remove_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_remove_element(
+     void )
+{
+	libcdata_list_t *list            = NULL;
+	libcdata_list_element_t *element = NULL;
+	libcerror_error_t *error         = NULL;
+	int result                       = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	/* Test error cases
+	 */
+	result = libcdata_list_remove_element(
+	          NULL,
+	          element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "list",
+         list );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 NULL,
+		 NULL );
+	}
+	return( 0 );
 }
 
 /* The main program
@@ -1518,36 +1577,33 @@ int main(
 	 "libcdata_list_get_element_by_index",
 	 cdata_test_list_get_element_by_index )
 
-	/* TODO: add test for libcdata_list_get_value_by_index */
-	/* TODO: add test for libcdata_list_prepend_element */
-	/* TODO: add test for libcdata_list_prepend_value */
-	/* TODO: add test for libcdata_list_append_element */
-	/* TODO: add test for libcdata_list_append_value */
+	CDATA_TEST_RUN(
+	 "libcdata_list_get_value_by_index",
+	 cdata_test_list_get_value_by_index )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_prepend_element",
+	 cdata_test_list_prepend_element )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_prepend_value",
+	 cdata_test_list_prepend_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_append_element",
+	 cdata_test_list_append_element )
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_append_value",
+	 cdata_test_list_append_value )
+
 	/* TODO: add test for libcdata_list_insert_element */
 	/* TODO: add test for libcdata_list_insert_value */
-	/* TODO: add test for libcdata_list_remove_element */
 
-/* TODO: refactor */
-	/* Test: get, set, prepend, append and insert values
-	 */
-	if( cdata_test_list_values() != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test values.\n" );
+	CDATA_TEST_RUN(
+	 "libcdata_list_remove_element",
+	 cdata_test_list_remove_element )
 
-		return( EXIT_FAILURE );
-	}
-	/* Test: insert values
-	 */
-	if( cdata_test_list_insert() != 1 )
-	{
-		fprintf(
-		 stderr,
-		 "Unable to test insert.\n" );
-
-		return( EXIT_FAILURE );
-	}
 	return( EXIT_SUCCESS );
 
 on_error:
