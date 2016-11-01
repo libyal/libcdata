@@ -25,8 +25,6 @@
 #include <common.h>
 #include <types.h>
 
-#include <stdio.h>
-
 #include "libcdata_extern.h"
 
 #if defined( __cplusplus )
@@ -45,5 +43,5 @@ const char *libcdata_get_version(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_SUPPORT_H ) */
 

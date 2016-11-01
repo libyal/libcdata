@@ -34,6 +34,19 @@
 #include "cdata_test_memory.h"
 #include "cdata_test_unused.h"
 
+/* Test value free function
+ * Returns 1 if successful or -1 on error
+ */
+int cdata_test_tree_node_value_free_function(
+     intptr_t **value CDATA_TEST_ATTRIBUTE_UNUSED,
+     libcerror_error_t **error CDATA_TEST_ATTRIBUTE_UNUSED )
+{
+	CDATA_TEST_UNREFERENCED_PARAMETER( value )
+	CDATA_TEST_UNREFERENCED_PARAMETER( error )
+
+	return( 1 );
+}
+
 /* Tests the libcdata_tree_node_initialize function
  * Returns 1 if successful or 0 if not
  */
@@ -262,6 +275,27 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_tree_node_free",
 	 cdata_test_tree_node_free )
+
+	/* TODO add tests for libcdata_tree_node_empty */
+	/* TODO add tests for libcdata_tree_node_clone */
+	/* TODO add tests for libcdata_tree_node_get_value */
+	/* TODO add tests for libcdata_tree_node_set_value */
+	/* TODO add tests for libcdata_tree_node_get_parent_node */
+	/* TODO add tests for libcdata_tree_node_set_parent_node */
+	/* TODO add tests for libcdata_tree_node_get_previous_node */
+	/* TODO add tests for libcdata_tree_node_set_previous_node */
+	/* TODO add tests for libcdata_tree_node_get_next_node */
+	/* TODO add tests for libcdata_tree_node_set_next_node */
+	/* TODO add tests for libcdata_tree_node_get_nodes */
+	/* TODO add tests for libcdata_tree_node_set_nodes */
+	/* TODO add tests for libcdata_tree_node_append_value */
+	/* TODO add tests for libcdata_tree_node_insert_node */
+	/* TODO add tests for libcdata_tree_node_insert_value */
+	/* TODO add tests for libcdata_tree_node_replace_node */
+	/* TODO add tests for libcdata_tree_node_remove_node */
+	/* TODO add tests for libcdata_tree_node_get_number_of_sub_nodes */
+	/* TODO add tests for libcdata_tree_node_get_sub_node_by_index */
+	/* TODO add tests for libcdata_tree_node_get_leaf_node_list */
 
 	return( EXIT_SUCCESS );
 

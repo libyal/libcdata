@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBCDATA_INTERNAL_TREE_NODE_H )
-#define _LIBCDATA_INTERNAL_TREE_NODE_H
+#if !defined( _LIBCDATA_TREE_NODE_H )
+#define _LIBCDATA_TREE_NODE_H
 
 #include <common.h>
 #include <types.h>
@@ -233,5 +233,5 @@ int libcdata_tree_node_get_leaf_node_list(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_TREE_NODE_H ) */
 

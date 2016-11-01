@@ -90,5 +90,5 @@ int libcdata_range_list_value_merge(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_RANGE_LIST_VALUE_H ) */
 

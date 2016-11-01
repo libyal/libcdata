@@ -19,8 +19,8 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if !defined( _LIBCDATA_INTERNAL_RANGE_LIST_H )
-#define _LIBCDATA_INTERNAL_RANGE_LIST_H
+#if !defined( _LIBCDATA_RANGE_LIST_H )
+#define _LIBCDATA_RANGE_LIST_H
 
 #include <common.h>
 #include <types.h>
@@ -239,5 +239,5 @@ int libcdata_range_list_get_spanning_range(
 }
 #endif
 
-#endif
+#endif /* !defined( _LIBCDATA_RANGE_LIST_H ) */
 

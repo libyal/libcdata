@@ -10,6 +10,7 @@ Types:
   - allocate in larger blocks
 * list
   - add current list element tracking like offset list ?
+  - libcdata_list_remove_element and re-enable tests
 * range list
   - add get/set range list value functions ?
 * tree node
