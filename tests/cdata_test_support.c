@@ -20,13 +20,14 @@
  */
 
 #include <common.h>
+#include <narrow_string.h>
+#include <types.h>
 
 #if defined( HAVE_STDLIB_H ) || defined( WINAPI )
 #include <stdlib.h>
 #endif
 
 #include "cdata_test_libcdata.h"
-#include "cdata_test_libcstring.h"
 #include "cdata_test_macros.h"
 #include "cdata_test_unused.h"
 
@@ -41,7 +42,7 @@ int cdata_test_get_version(
 
 	version_string = libcdata_get_version();
 
-	result = libcstring_narrow_string_compare(
+	result = narrow_string_compare(
 	          version_string,
 	          LIBCDATA_VERSION_STRING,
 	          9 );
@@ -59,7 +60,7 @@ on_error:
 
 /* The main program
  */
-#if defined( LIBCSTRING_HAVE_WIDE_SYSTEM_CHARACTER )
+#if defined( HAVE_WIDE_SYSTEM_CHARACTER )
 int wmain(
      int argc CDATA_TEST_ATTRIBUTE_UNUSED,
      wchar_t * const argv[] CDATA_TEST_ATTRIBUTE_UNUSED )

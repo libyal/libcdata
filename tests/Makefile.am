@@ -1,7 +1,6 @@
 AM_CPPFLAGS = \
 	-I$(top_srcdir)/include \
 	-I$(top_srcdir)/common \
-	@LIBCSTRING_CPPFLAGS@ \
 	@LIBCERROR_CPPFLAGS@ \
 	@LIBCDATA_DLL_IMPORT@
 
@@ -31,45 +30,38 @@ cdata_test_array_SOURCES = \
 	cdata_test_array.c \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
 	cdata_test_unused.h
 
 cdata_test_array_LDADD = \
 	../libcdata/libcdata.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 cdata_test_btree_SOURCES = \
 	cdata_test_btree.c \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
 	cdata_test_unused.h
 
 cdata_test_btree_LDADD = \
 	../libcdata/libcdata.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 cdata_test_error_SOURCES = \
 	cdata_test_error.c \
 	cdata_test_libcdata.h \
-	cdata_test_libcstring.h \
 	cdata_test_macros.h \
 	cdata_test_unused.h
 
 cdata_test_error_LDADD = \
-	../libcdata/libcdata.la \
-	@LIBCSTRING_LIBADD@
+	../libcdata/libcdata.la
 
 cdata_test_list_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h \
 	cdata_test_list.c \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
@@ -77,13 +69,11 @@ cdata_test_list_SOURCES = \
 
 cdata_test_list_LDADD = \
 	../libcdata/libcdata.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 cdata_test_list_element_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h \
 	cdata_test_list_element.c \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
@@ -91,13 +81,11 @@ cdata_test_list_element_SOURCES = \
 
 cdata_test_list_element_LDADD = \
 	../libcdata/libcdata.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 cdata_test_range_list_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
 	cdata_test_range_list.c \
@@ -105,24 +93,20 @@ cdata_test_range_list_SOURCES = \
 
 cdata_test_range_list_LDADD = \
 	../libcdata/libcdata.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 cdata_test_support_SOURCES = \
 	cdata_test_libcdata.h \
-	cdata_test_libcstring.h \
 	cdata_test_macros.h \
 	cdata_test_support.c \
 	cdata_test_unused.h
 
 cdata_test_support_LDADD = \
-	../libcdata/libcdata.la \
-	@LIBCSTRING_LIBADD@
+	../libcdata/libcdata.la
 
 cdata_test_tree_node_SOURCES = \
 	cdata_test_libcdata.h \
 	cdata_test_libcerror.h \
-	cdata_test_libcstring.h \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
 	cdata_test_tree_node.c \
@@ -130,8 +114,7 @@ cdata_test_tree_node_SOURCES = \
 
 cdata_test_tree_node_LDADD = \
 	../libcdata/libcdata.la \
-	@LIBCERROR_LIBADD@ \
-	@LIBCSTRING_LIBADD@
+	@LIBCERROR_LIBADD@
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

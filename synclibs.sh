@@ -4,7 +4,7 @@
 # Version: 20160912
 
 GIT_URL_PREFIX="https://github.com/libyal";
-LOCAL_LIBS="libcerror libcstring libcthreads";
+LOCAL_LIBS="libcerror libcthreads";
 
 OLDIFS=$IFS;
 IFS=" ";

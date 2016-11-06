@@ -9,7 +9,6 @@ MSVSCPP_FILES = \
 	cdata_test_tree_node/cdata_test_tree_node.vcproj \
 	libcdata/libcdata.vcproj \
 	libcerror/libcerror.vcproj \
-	libcstring/libcstring.vcproj \
 	libcthreads/libcthreads.vcproj \
 	libcdata.sln
 

@@ -37,7 +37,7 @@
 
 #define LIBCDATA_VERSION				@VERSION@
 
-/* The libcstring version string
+/* The libcdata version string
  */
 #define LIBCDATA_VERSION_STRING				"@VERSION@"
 
