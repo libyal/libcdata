@@ -24,11 +24,11 @@
 
 #include <libcdata/types.h>
 
-#define LIBCDATA_VERSION				@VERSION@
+#define LIBCDATA_VERSION			@VERSION@
 
 /* The libcdata version string
  */
-#define LIBCDATA_VERSION_STRING				"@VERSION@"
+#define LIBCDATA_VERSION_STRING			"@VERSION@"
 
 /* The comparison definitions
  */

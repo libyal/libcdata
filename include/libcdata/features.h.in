@@ -24,10 +24,6 @@
 
 /* The libcdata type support features
  */
-#if defined( WINAPI ) || @HAVE_WIDE_CHARACTER_TYPE@
-#define LIBCDATA_HAVE_WIDE_CHARACTER_TYPE	1
-#endif
-
 #if defined( WINAPI ) || @HAVE_MULTI_THREAD_SUPPORT@
 #define LIBCDATA_HAVE_MULTI_THREAD_SUPPORT	1
 #endif
