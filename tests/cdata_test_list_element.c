@@ -1,5 +1,5 @@
 /*
- * Library list element type testing program
+ * Library list element type test program
  *
  * Copyright (C) 2006-2017, Joachim Metz <joachim.metz@gmail.com>
  *

@@ -1,5 +1,5 @@
 /*
- * Library range list type testing program
+ * Library range list type test program
  *
  * Copyright (C) 2006-2017, Joachim Metz <joachim.metz@gmail.com>
  *

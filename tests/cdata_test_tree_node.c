@@ -1,5 +1,5 @@
 /*
- * Library tree node type testing program
+ * Library tree node type test program
  *
  * Copyright (C) 2006-2017, Joachim Metz <joachim.metz@gmail.com>
  *
