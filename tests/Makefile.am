@@ -23,6 +23,7 @@ check_PROGRAMS = \
 	cdata_test_list \
 	cdata_test_list_element \
 	cdata_test_range_list \
+	cdata_test_range_list_value \
 	cdata_test_support \
 	cdata_test_tree_node
 
@@ -92,6 +93,18 @@ cdata_test_range_list_SOURCES = \
 	cdata_test_unused.h
 
 cdata_test_range_list_LDADD = \
+	../libcdata/libcdata.la \
+	@LIBCERROR_LIBADD@
+
+cdata_test_range_list_value_SOURCES = \
+	cdata_test_libcdata.h \
+	cdata_test_libcerror.h \
+	cdata_test_macros.h \
+	cdata_test_memory.c cdata_test_memory.h \
+	cdata_test_range_list_value.c \
+	cdata_test_unused.h
+
+cdata_test_range_list_value_LDADD = \
 	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@
 

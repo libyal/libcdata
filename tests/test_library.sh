@@ -11,7 +11,7 @@ TEST_PREFIX=`dirname ${PWD}`;
 TEST_PREFIX=`basename ${TEST_PREFIX} | sed 's/^lib\([^-]*\).*$/\1/'`;
 
 TEST_PROFILE="lib${TEST_PREFIX}";
-LIBRARY_TESTS="array btree error list list_element range_list support tree_node";
+LIBRARY_TESTS="array btree error list list_element range_list range_list_value support tree_node";
 LIBRARY_TESTS_WITH_INPUT="";
 OPTION_SETS="";
 

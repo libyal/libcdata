@@ -5,6 +5,7 @@ MSVSCPP_FILES = \
 	cdata_test_list/cdata_test_list.vcproj \
 	cdata_test_list_element/cdata_test_list_element.vcproj \
 	cdata_test_range_list/cdata_test_range_list.vcproj \
+	cdata_test_range_list_value/cdata_test_range_list_value.vcproj \
 	cdata_test_support/cdata_test_support.vcproj \
 	cdata_test_tree_node/cdata_test_tree_node.vcproj \
 	libcdata/libcdata.vcproj \

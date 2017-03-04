@@ -10,7 +10,7 @@ $TestPrefix = Split-Path -path ${Pwd}.Path -parent
 $TestPrefix = Split-Path -path ${TestPrefix} -leaf
 $TestPrefix = ${TestPrefix}.Substring(3)
 
-$LibraryTests = "array btree error list list_element range_list support tree_node"
+$LibraryTests = "array btree error list list_element range_list range_list_value support tree_node"
 $LibraryTestsWithInput = ""
 
 $TestToolDirectory = "..\msvscpp\Release"
