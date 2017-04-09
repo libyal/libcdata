@@ -56,6 +56,12 @@ int cdata_test_tree_node_initialize(
 	libcerror_error_t *error        = NULL;
 	int result                      = 0;
 
+#if defined( HAVE_CDATA_TEST_MEMORY )
+	int number_of_malloc_fail_tests = 1;
+	int number_of_memset_fail_tests = 1;
+	int test_number                 = 0;
+#endif
+
 	/* Test libcdata_tree_node_initialize without entries
 	 */
 	result = libcdata_tree_node_initialize(
@@ -133,65 +139,91 @@ int cdata_test_tree_node_initialize(
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
-	/* Test libcdata_tree_node_initialize with malloc failing
-	 */
-	cdata_test_malloc_attempts_before_fail = 0;
-
-	result = libcdata_tree_node_initialize(
-	          &tree_node,
-	          &error );
-
-	if( cdata_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		cdata_test_malloc_attempts_before_fail = -1;
+		/* Test libcdata_tree_node_initialize with malloc failing
+		 */
+		cdata_test_malloc_attempts_before_fail = test_number;
+
+		result = libcdata_tree_node_initialize(
+		          &tree_node,
+		          &error );
+
+		if( cdata_test_malloc_attempts_before_fail != -1 )
+		{
+			cdata_test_malloc_attempts_before_fail = -1;
+
+			if( tree_node != NULL )
+			{
+				libcdata_tree_node_free(
+				 &tree_node,
+				 NULL,
+				 NULL );
+			}
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "tree_node",
+			 tree_node );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libcdata_tree_node_initialize with memset failing
+		 */
+		cdata_test_memset_attempts_before_fail = test_number;
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "tree_node",
-		 tree_node );
+		result = libcdata_tree_node_initialize(
+		          &tree_node,
+		          &error );
 
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+		if( cdata_test_memset_attempts_before_fail != -1 )
+		{
+			cdata_test_memset_attempts_before_fail = -1;
 
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libcdata_tree_node_initialize with memset failing
-	 */
-	cdata_test_memset_attempts_before_fail = 0;
+			if( tree_node != NULL )
+			{
+				libcdata_tree_node_free(
+				 &tree_node,
+				 NULL,
+				 NULL );
+			}
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-	result = libcdata_tree_node_initialize(
-	          &tree_node,
-	          &error );
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "tree_node",
+			 tree_node );
 
-	if( cdata_test_memset_attempts_before_fail != -1 )
-	{
-		cdata_test_memset_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "tree_node",
-		 tree_node );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 

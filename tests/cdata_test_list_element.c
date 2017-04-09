@@ -43,6 +43,12 @@ int cdata_test_list_element_initialize(
 	libcerror_error_t *error              = NULL;
 	int result                            = 0;
 
+#if defined( HAVE_CDATA_TEST_MEMORY )
+	int number_of_malloc_fail_tests       = 1;
+	int number_of_memset_fail_tests       = 1;
+	int test_number                       = 0;
+#endif
+
 	/* Test libcdata_list_element_initialize without entries
 	 */
 	result = libcdata_list_element_initialize(
@@ -120,65 +126,91 @@ int cdata_test_list_element_initialize(
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
-	/* Test libcdata_list_element_initialize with malloc failing
-	 */
-	cdata_test_malloc_attempts_before_fail = 0;
-
-	result = libcdata_list_element_initialize(
-	          &list_element,
-	          &error );
-
-	if( cdata_test_malloc_attempts_before_fail != -1 )
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
 	{
-		cdata_test_malloc_attempts_before_fail = -1;
+		/* Test libcdata_list_element_initialize with malloc failing
+		 */
+		cdata_test_malloc_attempts_before_fail = test_number;
+
+		result = libcdata_list_element_initialize(
+		          &list_element,
+		          &error );
+
+		if( cdata_test_malloc_attempts_before_fail != -1 )
+		{
+			cdata_test_malloc_attempts_before_fail = -1;
+
+			if( list_element != NULL )
+			{
+				libcdata_list_element_free(
+				 &list_element,
+				 NULL,
+				 NULL );
+			}
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "list_element",
+			 list_element );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+		}
 	}
-	else
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
 	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+		/* Test libcdata_list_element_initialize with memset failing
+		 */
+		cdata_test_memset_attempts_before_fail = test_number;
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "list_element",
-		 list_element );
+		result = libcdata_list_element_initialize(
+		          &list_element,
+		          &error );
 
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
+		if( cdata_test_memset_attempts_before_fail != -1 )
+		{
+			cdata_test_memset_attempts_before_fail = -1;
 
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libcdata_list_element_initialize with memset failing
-	 */
-	cdata_test_memset_attempts_before_fail = 0;
+			if( list_element != NULL )
+			{
+				libcdata_list_element_free(
+				 &list_element,
+				 NULL,
+				 NULL );
+			}
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
 
-	result = libcdata_list_element_initialize(
-	          &list_element,
-	          &error );
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "list_element",
+			 list_element );
 
-	if( cdata_test_memset_attempts_before_fail != -1 )
-	{
-		cdata_test_memset_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "list_element",
-		 list_element );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
+			libcerror_error_free(
+			 &error );
+		}
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
