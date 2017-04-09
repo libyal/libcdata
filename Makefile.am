@@ -17,10 +17,9 @@ DPKG_FILES = \
 	dpkg/compat \
 	dpkg/control \
 	dpkg/copyright \
-	dpkg/copyright.in \
 	dpkg/rules \
-	dpkg/libcdata-dev.docs \
-	dpkg/libcdata.docs \
+	dpkg/libcdata-dev.install \
+	dpkg/libcdata.install \
 	dpkg/source/format
 
 GETTEXT_FILES = \
