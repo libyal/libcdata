@@ -33,6 +33,8 @@
 #include "cdata_test_memory.h"
 #include "cdata_test_unused.h"
 
+#include "../libcdata/libcdata_array.h"
+
 /* Test entry free function
  * Returns 1 if successful or -1 on error
  */
@@ -2710,6 +2712,12 @@ int main(
 	 "libcdata_array_empty",
 	 cdata_test_array_empty )
 
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_internal_array_clear */
+
+#endif /* defined( __GNUC__ ) */
+
 	CDATA_TEST_RUN(
 	 "libcdata_array_clear",
 	 cdata_test_array_clear )
@@ -2717,6 +2725,12 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_array_clone",
 	 cdata_test_array_clone )
+
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_internal_array_resize */
+
+#endif /* defined( __GNUC__ ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_resize",

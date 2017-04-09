@@ -33,6 +33,8 @@
 #include "cdata_test_memory.h"
 #include "cdata_test_unused.h"
 
+#include "../libcdata/libcdata_btree.h"
+
 /* Test value compare function
  * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  */
@@ -95,8 +97,8 @@ int cdata_test_btree_initialize(
 	int result                      = 0;
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
-	int number_of_malloc_fail_tests = 1;
-	int number_of_memset_fail_tests = 1;
+	int number_of_malloc_fail_tests = 4;
+	int number_of_memset_fail_tests = 4;
 	int test_number                 = 0;
 #endif
 
@@ -348,6 +350,291 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ )
+
+/* Tests the libcdata_btree_free_values_list function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_free_values_list(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_free_values_list(
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_node_get_sub_node_by_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_node_get_sub_node_by_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_node_get_sub_node_by_value(
+	          NULL,
+	          NULL,
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_node_get_upper_node_by_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_node_get_upper_node_by_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_node_get_upper_node_by_value(
+	          NULL,
+	          NULL,
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_node_append_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_node_append_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_node_append_value(
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_node_insert_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_node_insert_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_node_insert_value(
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_node_replace_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_node_replace_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_node_replace_value(
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_btree_node_remove_value function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_btree_node_remove_value(
+     void )
+{
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Test error cases
+	 */
+	result = libcdata_btree_node_remove_value(
+	          NULL,
+	          NULL,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) */
+
 /* Tests the libcdata_btree_get_number_of_values function
  * Returns 1 if successful or 0 if not
  */
@@ -542,6 +829,40 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_btree_free",
 	 cdata_test_btree_free )
+
+#if defined( __GNUC__ )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_free_values_list",
+	 cdata_test_btree_free_values_list )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_node_get_sub_node_by_value",
+	 cdata_test_btree_node_get_sub_node_by_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_node_get_upper_node_by_value",
+	 cdata_test_btree_node_get_upper_node_by_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_node_append_value",
+	 cdata_test_btree_node_append_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_node_insert_value",
+	 cdata_test_btree_node_insert_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_node_replace_value",
+	 cdata_test_btree_node_replace_value )
+
+	CDATA_TEST_RUN(
+	 "libcdata_btree_node_remove_value",
+	 cdata_test_btree_node_remove_value )
+
+#endif /* defined( __GNUC__ ) */
+
+	/* TODO add test for libcdata_btree_node_split */
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_get_number_of_values",
