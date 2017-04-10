@@ -1087,15 +1087,49 @@ int main(
 	 "libcdata_range_list_get_number_of_elements",
 	 cdata_test_range_list_get_number_of_elements )
 
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_range_list_set_first_element */
+
+	/* TODO add test for libcdata_range_list_set_last_element */
+
+	/* TODO add test for libcdata_range_list_append_element */
+
+	/* TODO add test for libcdata_range_list_append_value */
+
+#endif /* defined( __GNUC__ ) */
+
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_insert_range",
 	 cdata_test_range_list_insert_range )
 
 	/* TODO add tests for libcdata_range_list_insert_range_list */
 
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_range_list_insert_element */
+
+	/* TODO add test for libcdata_range_list_insert_value */
+
+	/* TODO add test for libcdata_range_list_remove_element */
+
+#endif /* defined( __GNUC__ ) */
+
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_remove_range",
 	 cdata_test_range_list_remove_range )
+
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_range_list_get_element_by_index */
+
+	/* TODO add test for libcdata_range_list_get_element_at_offset */
+
+	/* TODO add test for libcdata_range_list_get_value_by_index */
+
+	/* TODO add test for libcdata_range_list_get_value_at_offset */
+
+#endif /* defined( __GNUC__ ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_range_by_index",

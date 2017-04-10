@@ -97,8 +97,8 @@ int cdata_test_btree_initialize(
 	int result                      = 0;
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
-	int number_of_malloc_fail_tests = 4;
-	int number_of_memset_fail_tests = 4;
+	int number_of_malloc_fail_tests = 5;
+	int number_of_memset_fail_tests = 5;
 	int test_number                 = 0;
 #endif
 
@@ -203,6 +203,12 @@ int cdata_test_btree_initialize(
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
+	/* 1 fail in memory_allocate_structure
+	 * 2 fail in libcdata_array_initialize - memory_allocate_structure
+	 * 3 fail in libcdata_array_initialize - memory_allocate of entries
+	 * 4 fail in libcdata_array_initialize - libcthreads_read_write_lock_initialize
+	 * 5 fail in libcdata_tree_node_initialize - memory_allocate_structure
+	 */
 	for( test_number = 0;
 	     test_number < number_of_malloc_fail_tests;
 	     test_number++ )
@@ -396,16 +402,100 @@ on_error:
 int cdata_test_btree_node_get_sub_node_by_value(
      void )
 {
-	libcerror_error_t *error = NULL;
-	int result               = 0;
+	libcdata_list_element_t *values_list_element = NULL;
+	libcdata_tree_node_t *node                   = NULL;
+	libcdata_tree_node_t *sub_node               = NULL;
+	libcerror_error_t *error                     = NULL;
+	intptr_t *value                              = NULL;
+	int result                                   = 0;
 
 	/* Test error cases
 	 */
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          NULL,
+	          value,
+	          &cdata_test_btree_value_compare_function,
+	          &sub_node,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_sub_node_by_value(
+	          node,
 	          NULL,
+	          &cdata_test_btree_value_compare_function,
+	          &sub_node,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_sub_node_by_value(
+	          node,
+	          value,
 	          NULL,
+	          &sub_node,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_sub_node_by_value(
+	          node,
+	          value,
+	          &cdata_test_btree_value_compare_function,
 	          NULL,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_sub_node_by_value(
+	          node,
+	          value,
+	          &cdata_test_btree_value_compare_function,
+	          &sub_node,
 	          NULL,
 	          &error );
 
@@ -438,16 +528,100 @@ on_error:
 int cdata_test_btree_node_get_upper_node_by_value(
      void )
 {
-	libcerror_error_t *error = NULL;
-	int result               = 0;
+	libcdata_list_element_t *values_list_element = NULL;
+	libcdata_tree_node_t *node                   = NULL;
+	libcdata_tree_node_t *upper_node             = NULL;
+	libcerror_error_t *error                     = NULL;
+	intptr_t *value                              = NULL;
+	int result                                   = 0;
 
 	/* Test error cases
 	 */
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          NULL,
+	          value,
+	          &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_upper_node_by_value(
+	          node,
 	          NULL,
+	          &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_upper_node_by_value(
+	          node,
+	          value,
 	          NULL,
+	          &upper_node,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_upper_node_by_value(
+	          node,
+	          value,
+	          &cdata_test_btree_value_compare_function,
 	          NULL,
+	          &values_list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+        CDATA_TEST_ASSERT_IS_NOT_NULL(
+         "error",
+         error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_btree_node_get_upper_node_by_value(
+	          node,
+	          value,
+	          &cdata_test_btree_value_compare_function,
+	          &upper_node,
 	          NULL,
 	          &error );
 

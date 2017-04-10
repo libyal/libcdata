@@ -125,8 +125,8 @@ int cdata_test_array_initialize(
 	int result                      = 0;
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
-	int number_of_malloc_fail_tests = 2;
-	int number_of_memset_fail_tests = 2;
+	int number_of_malloc_fail_tests = 3;
+	int number_of_memset_fail_tests = 3;
 	int test_number                 = 0;
 #endif
 
@@ -294,6 +294,10 @@ int cdata_test_array_initialize(
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
+	/* 1 fail in memory_allocate_structure
+	 * 2 fail in memory_allocate of entries
+	 * 3 fail in libcthreads_read_write_lock_initialize
+	 */
 	for( test_number = 0;
 	     test_number < number_of_malloc_fail_tests;
 	     test_number++ )

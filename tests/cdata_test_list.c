@@ -1986,6 +1986,12 @@ int main(
 	 "libcdata_list_free",
 	 cdata_test_list_free )
 
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_internal_list_empty */
+
+#endif /* defined( __GNUC__ ) */
+
 	CDATA_TEST_RUN(
 	 "libcdata_list_empty",
 	 cdata_test_list_empty )
@@ -2000,9 +2006,25 @@ int main(
 	 "libcdata_list_get_first_element",
 	 cdata_test_list_get_first_element )
 
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_internal_list_set_first_element */
+
+	/* TODO add test for libcdata_list_set_first_element */
+
+#endif /* defined( __GNUC__ ) */
+
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_last_element",
 	 cdata_test_list_get_last_element )
+
+#if defined( __GNUC__ )
+
+	/* TODO add test for libcdata_internal_list_set_last_element */
+
+	/* TODO add test for libcdata_list_set_last_element */
+
+#endif /* defined( __GNUC__ ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_element_by_index",
