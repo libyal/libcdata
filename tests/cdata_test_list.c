@@ -1986,11 +1986,11 @@ int main(
 	 "libcdata_list_free",
 	 cdata_test_list_free )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	/* TODO add test for libcdata_internal_list_empty */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_empty",
@@ -2006,25 +2006,25 @@ int main(
 	 "libcdata_list_get_first_element",
 	 cdata_test_list_get_first_element )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	/* TODO add test for libcdata_internal_list_set_first_element */
 
 	/* TODO add test for libcdata_list_set_first_element */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_last_element",
 	 cdata_test_list_get_last_element )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	/* TODO add test for libcdata_internal_list_set_last_element */
 
 	/* TODO add test for libcdata_list_set_last_element */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_element_by_index",

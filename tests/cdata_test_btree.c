@@ -356,7 +356,7 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 /* Tests the libcdata_btree_free_values_list function
  * Returns 1 if successful or 0 if not
@@ -807,7 +807,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* defined( __GNUC__ ) */
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 /* Tests the libcdata_btree_get_number_of_values function
  * Returns 1 if successful or 0 if not
@@ -1004,7 +1004,7 @@ int main(
 	 "libcdata_btree_free",
 	 cdata_test_btree_free )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_free_values_list",
@@ -1034,7 +1034,7 @@ int main(
 	 "libcdata_btree_node_remove_value",
 	 cdata_test_btree_node_remove_value )
 
-#endif /* defined( __GNUC__ ) */
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	/* TODO add test for libcdata_btree_node_split */
 

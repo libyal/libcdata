@@ -2716,11 +2716,11 @@ int main(
 	 "libcdata_array_empty",
 	 cdata_test_array_empty )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	/* TODO add test for libcdata_internal_array_clear */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_clear",
@@ -2730,11 +2730,11 @@ int main(
 	 "libcdata_array_clone",
 	 cdata_test_array_clone )
 
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	/* TODO add test for libcdata_internal_array_resize */
 
-#endif /* defined( __GNUC__ ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_resize",
