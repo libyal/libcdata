@@ -100,8 +100,8 @@ int cdata_test_array_entry_compare_function(
 	/* This is necessary otherwise the comparision messes up
 	 * as in e.g. 5 > 6 is true.
          */
-	first_value  = (int) *first_entry;
-	second_value = (int) *second_entry;
+	first_value  = *( (int *) first_entry );
+	second_value = *( (int *) second_entry );
 
 	if( first_value < second_value )
 	{

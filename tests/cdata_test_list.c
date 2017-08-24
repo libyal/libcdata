@@ -1726,12 +1726,13 @@ on_error:
 int cdata_test_list_remove_element(
      void )
 {
-	libcdata_list_t *list             = NULL;
-	libcdata_list_element_t *element1 = NULL;
-	libcdata_list_element_t *element2 = NULL;
-	libcerror_error_t *error          = NULL;
-	int number_of_elements            = 0;
-	int result                        = 0;
+	libcdata_list_t *list                    = NULL;
+	libcdata_list_element_t *element1        = NULL;
+	libcdata_list_element_t *element1_backup = NULL;
+	libcdata_list_element_t *element2        = NULL;
+	libcerror_error_t *error                 = NULL;
+	int number_of_elements                   = 0;
+	int result                               = 0;
 
 	/* Initialize test
 	 */
@@ -1769,6 +1770,8 @@ int cdata_test_list_remove_element(
          "error",
          error );
 
+	element1_backup = element1;
+
 	result = libcdata_list_append_element(
 	          list,
 	          element1,
@@ -1782,6 +1785,8 @@ int cdata_test_list_remove_element(
         CDATA_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	element1 = NULL;
 
 	result = libcdata_list_element_initialize(
 	          &element2,
@@ -1814,6 +1819,8 @@ int cdata_test_list_remove_element(
          "error",
          error );
 
+	element2 = NULL;
+
 	/* Test remove element
 	 */
 	result = libcdata_list_get_number_of_elements(
@@ -1837,7 +1844,7 @@ int cdata_test_list_remove_element(
 
 	result = libcdata_list_remove_element(
 	          list,
-	          element1,
+	          element1_backup,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1848,6 +1855,8 @@ int cdata_test_list_remove_element(
         CDATA_TEST_ASSERT_IS_NULL(
          "error",
          error );
+
+	element1 = element1_backup;
 
 	result = libcdata_list_get_number_of_elements(
 	          list,
@@ -1945,6 +1954,24 @@ int cdata_test_list_remove_element(
          "error",
          error );
 
+	result = libcdata_list_element_free(
+	          &element1,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "element1",
+         element1 );
+
+        CDATA_TEST_ASSERT_IS_NULL(
+         "error",
+         error );
+
 	return( 1 );
 
 on_error:
@@ -1953,11 +1980,25 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
+	if( element1 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element1,
+		 NULL,
+		 NULL );
+	}
+	if( element2 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element2,
+		 NULL,
+		 NULL );
+	}
 	if( list != NULL )
 	{
 		libcdata_list_free(
 		 &list,
-		 &cdata_test_list_value_free_function,
+		 NULL,
 		 NULL );
 	}
 	return( 0 );
