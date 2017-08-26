@@ -109,7 +109,7 @@ int libcdata_array_initialize(
 	}
 	/* Pre-allocate in blocks of 16 entries
 	 */
-	if( number_of_entries >= (size_t) ( INT_MAX - 16 ) )
+	if( number_of_entries >= (int) ( INT_MAX - 16 ) )
 	{
 		number_of_allocated_entries = INT_MAX;
 	}
@@ -715,7 +715,7 @@ int libcdata_internal_array_resize(
 	{
 		/* Pre-allocate in blocks of 16 entries
 		 */
-		if( number_of_entries >= (size_t) ( INT_MAX - 16 ) )
+		if( number_of_entries >= (int) ( INT_MAX - 16 ) )
 		{
 			number_of_allocated_entries = INT_MAX;
 		}
