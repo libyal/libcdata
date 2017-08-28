@@ -71,7 +71,7 @@ int cdata_test_btree_value_compare_function(
 	}
 	/* This is necessary otherwise the comparision messes up
 	 * as in e.g. 5 > 6 is true.
-         */
+	 */
 	first_compare_value  = (int) *first_value;
 	second_compare_value = (int) *second_value;
 
@@ -114,13 +114,13 @@ int cdata_test_btree_initialize(
 	 result,
 	 1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "btree",
-         btree );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "btree",
+	 btree );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libcdata_btree_free(
 	          &btree,
@@ -132,13 +132,13 @@ int cdata_test_btree_initialize(
 	 result,
 	 1 );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "btree",
-         btree );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "btree",
+	 btree );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -152,9 +152,9 @@ int cdata_test_btree_initialize(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -171,9 +171,9 @@ int cdata_test_btree_initialize(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -190,13 +190,13 @@ int cdata_test_btree_initialize(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "btree",
-         btree );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "btree",
+	 btree );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -338,9 +338,9 @@ int cdata_test_btree_free(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -378,9 +378,9 @@ int cdata_test_btree_free_values_list(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -424,9 +424,9 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -444,9 +444,9 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -464,9 +464,9 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -484,9 +484,9 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -504,9 +504,9 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -550,9 +550,9 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -570,9 +570,9 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -590,9 +590,9 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -610,9 +610,9 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -630,9 +630,9 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -669,9 +669,9 @@ int cdata_test_btree_node_append_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -709,9 +709,9 @@ int cdata_test_btree_node_insert_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -749,9 +749,9 @@ int cdata_test_btree_node_replace_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -789,9 +789,9 @@ int cdata_test_btree_node_remove_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -831,9 +831,9 @@ int cdata_test_btree_get_number_of_values(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -872,9 +872,9 @@ int cdata_test_btree_get_value_by_index(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -919,9 +919,9 @@ int cdata_test_btree_insert_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -963,9 +963,9 @@ int cdata_test_btree_remove_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );

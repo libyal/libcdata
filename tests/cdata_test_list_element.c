@@ -60,13 +60,13 @@ int cdata_test_list_element_initialize(
 	 result,
 	 1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "list_element",
-         list_element );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libcdata_list_element_free(
 	          &list_element,
@@ -78,13 +78,13 @@ int cdata_test_list_element_initialize(
 	 result,
 	 1 );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "list_element",
-         list_element );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list_element",
+	 list_element );
 
-        CDATA_TEST_ASSERT_IS_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -97,9 +97,9 @@ int cdata_test_list_element_initialize(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -115,9 +115,9 @@ int cdata_test_list_element_initialize(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -253,9 +253,9 @@ int cdata_test_list_element_free(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -293,9 +293,9 @@ int cdata_test_list_element_get_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -333,9 +333,9 @@ int cdata_test_list_element_set_value(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -373,9 +373,9 @@ int cdata_test_list_element_get_previous_element(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -413,9 +413,9 @@ int cdata_test_list_element_set_previous_element(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -453,9 +453,9 @@ int cdata_test_list_element_get_next_element(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -493,9 +493,9 @@ int cdata_test_list_element_set_next_element(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -535,9 +535,9 @@ int cdata_test_list_element_get_elements(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
@@ -577,9 +577,9 @@ int cdata_test_list_element_set_elements(
 	 result,
 	 -1 );
 
-        CDATA_TEST_ASSERT_IS_NOT_NULL(
-         "error",
-         error );
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
 
 	libcerror_error_free(
 	 &error );
