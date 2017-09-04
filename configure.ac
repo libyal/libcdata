@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libcdata],
- [20170903],
+ [20170904],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -37,7 +37,6 @@ AM_GNU_GETTEXT_VERSION([0.18.1])
 
 dnl Check for compiler language support
 AC_C_CONST
-AC_C_INLINE
 AC_C_VOLATILE
 
 dnl Check for large file support
@@ -46,13 +45,10 @@ AC_SYS_LARGEFILE
 dnl Check if WINAPI support should be enabled
 AX_COMMON_CHECK_ENABLE_WINAPI
 
-dnl Check if wide character type should be enabled
-AX_COMMON_CHECK_ENABLE_WIDE_CHARACTER_TYPE
-
 dnl Check for type definitions
 AX_TYPES_CHECK_LOCAL
 
-dnl Check if common headers and functions are available
+dnl Check if common required headers and functions are available
 AX_COMMON_CHECK_LOCAL
 
 dnl Check if libcerror or required headers and functions are available
@@ -61,10 +57,10 @@ AX_LIBCERROR_CHECK_ENABLE
 dnl Check if libcthreads or required headers and functions are available
 AX_LIBCTHREADS_CHECK_ENABLE
 
-dnl Check for library function support
+dnl Check if libcdata required headers and functions are available
 AX_LIBCDATA_CHECK_LOCAL
 
-dnl Check for test function support
+dnl Check if tests required headers and functions are available
 AX_TESTS_CHECK_LOCAL
 
 dnl Check if DLL support is needed
@@ -144,11 +140,10 @@ AC_OUTPUT
 dnl Print a summary
 AC_MSG_NOTICE([
 Building:
-   libcerror support:           $ac_cv_libcerror
-   libcthreads support:         $ac_cv_libcthreads
+   libcerror support:       $ac_cv_libcerror
+   libcthreads support:     $ac_cv_libcthreads
 
 Features:
-   Multi-threading support:     $ac_cv_libcthreads_multi_threading
-   Wide character type support: $ac_cv_enable_wide_character_type
+   Multi-threading support: $ac_cv_libcthreads_multi_threading
 ]);
 

@@ -73,5 +73,5 @@ enum LIBCDATA_INSERT_FLAGS
 
 #endif /* !defined( HAVE_LOCAL_LIBCDATA ) */
 
-#endif
+#endif /* !defined( LIBCDATA_INTERNAL_DEFINITIONS_H ) */
 
