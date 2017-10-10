@@ -7,4 +7,6 @@ coverage:
     patch: true
     changes: false
   ignore:
+    - "libcerror/*"
+    - "libcthreads/*"
     - "tests/*"
