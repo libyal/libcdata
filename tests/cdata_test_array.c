@@ -27,6 +27,18 @@
 #include <stdlib.h>
 #endif
 
+#include <errno.h>
+
+#if defined( HAVE_GNU_DL_DLSYM )
+#define __USE_GNU
+#include <dlfcn.h>
+#undef __USE_GNU
+#endif
+
+#if defined( HAVE_GNU_DL_DLSYM ) && defined( __GNUC__ ) && !defined( __clang__ ) && !defined( __CYGWIN__ )
+#define HAVE_CDATA_TEST_FUNCTION_HOOK		1
+#endif
+
 #include "cdata_test_libcdata.h"
 #include "cdata_test_libcerror.h"
 #include "cdata_test_macros.h"
@@ -34,6 +46,82 @@
 #include "cdata_test_unused.h"
 
 #include "../libcdata/libcdata_array.h"
+
+#if defined( HAVE_CDATA_TEST_FUNCTION_HOOK )
+
+static int (*cdata_test_real_pthread_rwlock_lock)(pthread_rwlock_t *)   = NULL;
+static int (*cdata_test_real_pthread_rwlock_unlock)(pthread_rwlock_t *) = NULL;
+
+int cdata_test_pthread_rwlock_lock_attempts_before_fail                 = -1;
+int cdata_test_pthread_rwlock_unlock_attempts_before_fail               = -1;
+
+#endif /* defined( HAVE_CDATA_TEST_FUNCTION_HOOK ) */
+
+int cdata_test_array_entry_clone_function_return_value = 1;
+
+#if defined( HAVE_CDATA_TEST_FUNCTION_HOOK )
+
+/* Custom pthread_rwlock_lock for testing error cases
+ * Returns 0 if successful or an error value otherwise
+ */
+int pthread_rwlock_lock(
+     pthread_rwlock_t *rwlock )
+{
+	int result = 0;
+
+	if( cdata_test_real_pthread_rwlock_lock == NULL )
+	{
+		cdata_test_real_pthread_rwlock_lock = dlsym(
+		                                       RTLD_NEXT,
+		                                       "pthread_rwlock_lock" );
+	}
+	if( cdata_test_pthread_rwlock_lock_attempts_before_fail == 0 )
+	{
+		cdata_test_pthread_rwlock_lock_attempts_before_fail = -1;
+
+		return( EBUSY );
+	}
+	else if( cdata_test_pthread_rwlock_lock_attempts_before_fail > 0 )
+	{
+		cdata_test_pthread_rwlock_lock_attempts_before_fail--;
+	}
+	result = cdata_test_real_pthread_rwlock_lock(
+	          rwlock );
+
+	return( result );
+}
+
+/* Custom pthread_rwlock_unlock for testing error cases
+ * Returns 0 if successful or an error value otherwise
+ */
+int pthread_rwlock_unlock(
+     pthread_rwlock_t *rwlock )
+{
+	int result = 0;
+
+	if( cdata_test_real_pthread_rwlock_unlock == NULL )
+	{
+		cdata_test_real_pthread_rwlock_unlock = dlsym(
+		                                         RTLD_NEXT,
+		                                         "pthread_rwlock_unlock" );
+	}
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail == 0 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		return( EBUSY );
+	}
+	else if( cdata_test_pthread_rwlock_unlock_attempts_before_fail > 0 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail--;
+	}
+	result = cdata_test_real_pthread_rwlock_unlock(
+	          rwlock );
+
+	return( result );
+}
+
+#endif /* defined( HAVE_CDATA_TEST_FUNCTION_HOOK ) */
 
 /* Test entry free function
  * Returns 1 if successful or -1 on error
@@ -60,7 +148,7 @@ int cdata_test_array_entry_clone_function(
 	CDATA_TEST_UNREFERENCED_PARAMETER( source_entry )
 	CDATA_TEST_UNREFERENCED_PARAMETER( error )
 
-	return( 1 );
+	return( cdata_test_array_entry_clone_function_return_value );
 }
 
 /* Test entry compare function
@@ -548,6 +636,113 @@ on_error:
 	return( 0 );
 }
 
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+/* Tests the libcdata_internal_array_clear function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_internal_array_clear(
+     void )
+{
+	libcdata_internal_array_t *internal_array = NULL;
+	libcerror_error_t *error                  = NULL;
+	int result                                = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_array_initialize(
+	          (libcdata_array_t **) &internal_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "internal_array",
+	 internal_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_internal_array_clear
+	 */
+	result = libcdata_internal_array_clear(
+	          internal_array,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libcdata_internal_array_clear(
+	          NULL,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_array_free(
+	          (libcdata_array_t **) &internal_array,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "internal_array",
+	 internal_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( internal_array != NULL )
+	{
+		libcdata_array_free(
+		 (libcdata_array_t **) &internal_array,
+	         &cdata_test_array_entry_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 /* Tests the libcdata_array_clear function
  * Returns 1 if successful or 0 if not
  */
@@ -578,11 +773,11 @@ int cdata_test_array_clear(
 	 "error",
 	 error );
 
-	/* Test to clear an array without an entry tree function
+	/* Test libcdata_array_clear
 	 */
 	result = libcdata_array_clear(
 	          array,
-	          NULL,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -598,7 +793,7 @@ int cdata_test_array_clear(
 	 */
 	result = libcdata_array_clear(
 	          NULL,
-	          NULL,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -617,7 +812,7 @@ int cdata_test_array_clear(
 	 */
 	result = libcdata_array_free(
 	          &array,
-	          NULL,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -645,7 +840,7 @@ on_error:
 	{
 		libcdata_array_free(
 		 &array,
-		 NULL,
+	         &cdata_test_array_entry_free_function,
 		 NULL );
 	}
 	return( 0 );
@@ -660,6 +855,8 @@ int cdata_test_array_clone(
 	libcdata_array_t *destination_array = NULL;
 	libcdata_array_t *source_array      = NULL;
 	libcerror_error_t *error            = NULL;
+	int entry_index          = 0;
+	int entry_value2         = 2;
 	int result                          = 0;
 
 	/* Initialize test
@@ -682,7 +879,22 @@ int cdata_test_array_clone(
 	 "error",
 	 error );
 
-	/* Test clone of an intialized array
+	result = libcdata_array_append_entry(
+	          source_array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_array_clone with intialized array
 	 */
 	result = libcdata_array_clone(
 	          &destination_array,
@@ -722,7 +934,7 @@ int cdata_test_array_clone(
 	 "error",
 	 error );
 
-	/* Test clone of a non-initialized array
+	/* Test libcdata_array_clone with non-intialized array
 	 */
 	result = libcdata_array_clone(
 	          &destination_array,
@@ -748,9 +960,9 @@ int cdata_test_array_clone(
 	 */
 	result = libcdata_array_clone(
 	          NULL,
-	          NULL,
-	          NULL,
-	          NULL,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -773,9 +985,9 @@ int cdata_test_array_clone(
 
 	result = libcdata_array_clone(
 	          &destination_array,
-	          NULL,
-	          NULL,
-	          NULL,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -794,10 +1006,179 @@ int cdata_test_array_clone(
 
 	result = libcdata_array_clone(
 	          &destination_array,
+	          source_array,
 	          NULL,
-	          NULL,
+	          &cdata_test_array_entry_clone_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_clone(
+	          &destination_array,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
 	          NULL,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+/* TODO: Test libcdata_array_initialize returning NULL destination_array */
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_array_clone with malloc failing in libcdata_array_initialize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_clone(
+	          &destination_array,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+
+		if( destination_array != NULL )
+		{
+			libcdata_array_free(
+			 &destination_array,
+			 &cdata_test_array_entry_free_function,
+			 &error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_array",
+		 destination_array );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
+#if defined( HAVE_CDATA_TEST_FUNCTION_HOOK )
+
+	/* Test libcdata_array_clone with pthread_rwlock_lock failing in libcthreads_read_write_lock_grab_for_read
+	 */
+	cdata_test_pthread_rwlock_lock_attempts_before_fail = 0;
+
+	result = libcdata_array_clone(
+	          &destination_array,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_lock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_lock_attempts_before_fail = -1;
+
+		if( destination_array != NULL )
+		{
+			libcdata_array_free(
+			 &destination_array,
+			 &cdata_test_array_entry_free_function,
+			 &error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_array_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
+
+	result = libcdata_array_clone(
+	          &destination_array,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( destination_array != NULL )
+		{
+			libcdata_array_free(
+			 &destination_array,
+			 &cdata_test_array_entry_free_function,
+			 &error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_FUNCTION_HOOK ) */
+
+	/* Test libcdata_array_clone with entry_clone_function failing
+	 */
+	cdata_test_array_entry_clone_function_return_value = -1;
+
+	result = libcdata_array_clone(
+	          &destination_array,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
+	          &error );
+
+	cdata_test_array_entry_clone_function_return_value = 1;
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -815,7 +1196,7 @@ int cdata_test_array_clone(
 	 */
 	result = libcdata_array_free(
 	          &source_array,
-	          NULL,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -843,11 +1224,177 @@ on_error:
 	{
 		libcdata_array_free(
 		 &source_array,
-		 NULL,
+		 &cdata_test_array_entry_free_function,
 		 NULL );
 	}
 	return( 0 );
 }
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+/* Tests the libcdata_internal_array_resize function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_internal_array_resize(
+     void )
+{
+	libcdata_internal_array_t *internal_array  = NULL;
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_array_initialize(
+	          (libcdata_array_t **) &internal_array,
+	          2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "internal_array",
+	 internal_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test to resize an array to a larger number of entries
+	 */
+	result = libcdata_internal_array_resize(
+	          internal_array,
+	          35,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test to resize an array to a smaller number of entries
+	 */
+	result = libcdata_internal_array_resize(
+	          internal_array,
+	          4,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libcdata_internal_array_resize(
+	          NULL,
+	          10,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_internal_array_resize(
+	          internal_array,
+	          -10,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if INT_MAX == SSIZE_MAX
+
+	result = libcdata_internal_array_resize(
+	          NULL,
+	          INT_MAX,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#endif /* INT_MAX == SSIZE_MAX */
+
+	/* Clean up
+	 */
+	result = libcdata_array_free(
+	          (libcdata_array_t **) &internal_array,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "internal_array",
+	 internal_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( internal_array != NULL )
+	{
+		libcdata_array_free(
+		 (libcdata_array_t **) &internal_array,
+		 &cdata_test_array_entry_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 /* Tests the libcdata_array_resize function
  * Returns 1 if successful or 0 if not
@@ -879,29 +1426,12 @@ int cdata_test_array_resize(
 	 "error",
 	 error );
 
-	/* Test to resize an array to a larger number of entries
+	/* Test libcdata_array_resize
 	 */
 	result = libcdata_array_resize(
 	          array,
-	          35,
-	          NULL,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test to resize an array to a smaller number of entries
-	 */
-	result = libcdata_array_resize(
-	          array,
-	          4,
-	          NULL,
+	          10,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -918,7 +1448,7 @@ int cdata_test_array_resize(
 	result = libcdata_array_resize(
 	          NULL,
 	          10,
-	          NULL,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -932,52 +1462,72 @@ int cdata_test_array_resize(
 
 	libcerror_error_free(
 	 &error );
+
+#if defined( HAVE_CDATA_TEST_FUNCTION_HOOK )
+
+	/* Test libcdata_array_resize with pthread_rwlock_lock failing in libcthreads_read_write_lock_grab_for_write
+	 */
+	cdata_test_pthread_rwlock_lock_attempts_before_fail = 0;
 
 	result = libcdata_array_resize(
 	          array,
-	          -10,
-	          NULL,
+	          10,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
+	if( cdata_test_pthread_rwlock_lock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_lock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
 
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "error",
-	 error );
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
-	libcerror_error_free(
-	 &error );
-
-#if INT_MAX == SSIZE_MAX
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_array_resize with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
 	result = libcdata_array_resize(
-	          NULL,
-	          INT_MAX,
-	          NULL,
+	          array,
+	          10,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
 
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "error",
-	 error );
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
 
-	libcerror_error_free(
-	 &error );
-
-#endif /* INT_MAX == SSIZE_MAX */
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_FUNCTION_HOOK ) */
 
 	/* Clean up
 	 */
 	result = libcdata_array_free(
 	          &array,
-	          NULL,
+	          &cdata_test_array_entry_free_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1005,7 +1555,7 @@ on_error:
 	{
 		libcdata_array_free(
 		 &array,
-		 NULL,
+		 &cdata_test_array_entry_free_function,
 		 NULL );
 	}
 	return( 0 );
@@ -1089,7 +1639,7 @@ int cdata_test_array_reserve(
 	 "error",
 	 error );
 
-	/* Test to reverse an array
+	/* Test libcdata_array_reverse
 	 */
 	result = libcdata_array_reverse(
 	          array,
@@ -1121,6 +1671,62 @@ int cdata_test_array_reserve(
 
 	libcerror_error_free(
 	 &error );
+
+#if defined( HAVE_CDATA_TEST_FUNCTION_HOOK )
+
+	/* Test libcdata_array_reverse with pthread_rwlock_lock failing in libcthreads_read_write_lock_grab_for_write
+	 */
+	cdata_test_pthread_rwlock_lock_attempts_before_fail = 0;
+
+	result = libcdata_array_reverse(
+	          array,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_lock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_lock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_array_reverse with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
+
+	result = libcdata_array_reverse(
+	          array,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_FUNCTION_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1224,17 +1830,44 @@ int cdata_test_array_get_number_of_entries(
 	          (intptr_t *) &entry_value2,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value3,
 	          &error );
 
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &entry_value4,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	result = libcdata_array_get_number_of_entries(
 	          array,
@@ -2718,7 +3351,9 @@ int main(
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
-	/* TODO add test for libcdata_internal_array_clear */
+	CDATA_TEST_RUN(
+	 "libcdata_internal_array_clear",
+	 cdata_test_internal_array_clear )
 
 #endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
@@ -2732,7 +3367,9 @@ int main(
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
-	/* TODO add test for libcdata_internal_array_resize */
+	CDATA_TEST_RUN(
+	 "libcdata_internal_array_resize",
+	 cdata_test_internal_array_resize )
 
 #endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 

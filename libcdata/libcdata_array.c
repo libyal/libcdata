@@ -569,7 +569,7 @@ int libcdata_array_clone(
 	internal_source_array = (libcdata_internal_array_t *) source_array;
 
 	if( libcdata_array_initialize(
-	     destination_array,
+	     (libcdata_array_t **) &internal_destination_array,
 	     internal_source_array->number_of_entries,
 	     error ) != 1 )
 	{
@@ -580,9 +580,9 @@ int libcdata_array_clone(
 		 "%s: unable to create destination array.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
-	if( *destination_array == NULL )
+	if( internal_destination_array == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -591,10 +591,8 @@ int libcdata_array_clone(
 		 "%s: missing destination array.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
-	internal_destination_array = (libcdata_internal_array_t *) *destination_array;
-
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_source_array->read_write_lock,
@@ -633,7 +631,7 @@ int libcdata_array_clone(
 					 function,
 					 entry_iterator );
 
-					break;
+					goto on_error;
 				}
 			}
 		}
@@ -653,17 +651,20 @@ int libcdata_array_clone(
 		goto on_error;
 	}
 #endif
-	if( result != 1 )
-	{
-		goto on_error;
-	}
+	*destination_array = (libcdata_array_t *) internal_destination_array;
+
 	return( 1 );
 
 on_error:
-	if( *destination_array != NULL )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_read(
+	 internal_source_array->read_write_lock,
+	 NULL );
+#endif
+	if( internal_destination_array != NULL )
 	{
 		libcdata_array_free(
-		 destination_array,
+		 (libcdata_array_t **) &internal_destination_array,
 		 entry_free_function,
 		 NULL );
 	}
