@@ -2126,30 +2126,33 @@ int libcdata_tree_node_get_leaf_node_list(
 			}
 		}
 	}
-	else if( internal_node->value == NULL )
+	else
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid node - missing value.",
-		 function );
+		if( internal_node->value == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: invalid node - missing value.",
+			 function );
 
-		return( -1 );
-	}
-	else if( libcdata_list_append_value(
-	          *leaf_node_list,
-	          internal_node->value,
-	          error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to append tree node to leaf node list.",
-		 function );
+			return( -1 );
+		}
+		if( libcdata_list_append_value(
+		     *leaf_node_list,
+		     internal_node->value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append tree node to leaf node list.",
+			 function );
 
-		return( -1 );
+			return( -1 );
+		}
 	}
 	return( 1 );
 }
