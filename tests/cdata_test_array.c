@@ -36,6 +36,7 @@
 
 #include "../libcdata/libcdata_array.h"
 
+int cdata_test_array_entry_free_function_return_value  = 1;
 int cdata_test_array_entry_clone_function_return_value = 1;
 
 /* Test entry free function
@@ -48,7 +49,7 @@ int cdata_test_array_entry_free_function(
 	CDATA_TEST_UNREFERENCED_PARAMETER( entry )
 	CDATA_TEST_UNREFERENCED_PARAMETER( error )
 
-	return( 1 );
+	return( cdata_test_array_entry_free_function_return_value );
 }
 
 /* Test entry clone function
@@ -540,6 +541,8 @@ int cdata_test_array_empty(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
+	int entry_index          = 0;
+	int entry_value2         = 2;
 	int result               = 0;
 
 	/* Initialize test
@@ -597,6 +600,44 @@ int cdata_test_array_empty(
 	libcerror_error_free(
 	 &error );
 
+	/* Test libcdata_array_empty with entry_free_function failing in libcdata_internal_array_clear
+	 */
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	cdata_test_array_entry_free_function_return_value = -1;
+
+	result = libcdata_array_empty(
+	          array,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	cdata_test_array_entry_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_empty with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -627,6 +668,7 @@ int cdata_test_array_empty(
 		 &error );
 	}
 	/* Test libcdata_array_empty with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -703,6 +745,8 @@ int cdata_test_internal_array_clear(
 {
 	libcdata_internal_array_t *internal_array = NULL;
 	libcerror_error_t *error                  = NULL;
+	int entry_index                           = 0;
+	int entry_value2                          = 2;
 	int result                                = 0;
 
 	/* Initialize test
@@ -720,6 +764,21 @@ int cdata_test_internal_array_clear(
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "internal_array",
 	 internal_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_array_append_entry(
+	          (libcdata_array_t *) internal_array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -747,6 +806,44 @@ int cdata_test_internal_array_clear(
 	          NULL,
 	          &cdata_test_array_entry_free_function,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test libcdata_internal_array_clear with entry_free_function failing
+	 */
+	result = libcdata_array_append_entry(
+	          (libcdata_array_t *) internal_array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	cdata_test_array_entry_free_function_return_value = -1;
+
+	result = libcdata_internal_array_clear(
+	          internal_array,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	cdata_test_array_entry_free_function_return_value = 1;
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -808,6 +905,8 @@ int cdata_test_array_clear(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
+	int entry_index          = 0;
+	int entry_value2         = 2;
 	int result               = 0;
 
 	/* Initialize test
@@ -865,6 +964,44 @@ int cdata_test_array_clear(
 	libcerror_error_free(
 	 &error );
 
+	/* Test libcdata_array_clear with entry_free_function failing in libcdata_internal_array_clear
+	 */
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	cdata_test_array_entry_free_function_return_value = -1;
+
+	result = libcdata_array_clear(
+	          array,
+	          &cdata_test_array_entry_free_function,
+	          &error );
+
+	cdata_test_array_entry_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_clear with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -895,6 +1032,7 @@ int cdata_test_array_clear(
 		 &error );
 	}
 	/* Test libcdata_array_clear with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1204,6 +1342,31 @@ int cdata_test_array_clone(
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
+	/* Test libcdata_array_clone with entry_clone_function failing
+	 */
+	cdata_test_array_entry_clone_function_return_value = -1;
+
+	result = libcdata_array_clone(
+	          &destination_array,
+	          source_array,
+	          &cdata_test_array_entry_free_function,
+	          &cdata_test_array_entry_clone_function,
+	          &error );
+
+	cdata_test_array_entry_clone_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_clone with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
@@ -1244,6 +1407,7 @@ int cdata_test_array_clone(
 		 &error );
 	}
 	/* Test libcdata_array_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1281,31 +1445,6 @@ int cdata_test_array_clone(
 		 &error );
 	}
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
-
-	/* Test libcdata_array_clone with entry_clone_function failing
-	 */
-	cdata_test_array_entry_clone_function_return_value = -1;
-
-	result = libcdata_array_clone(
-	          &destination_array,
-	          source_array,
-	          &cdata_test_array_entry_free_function,
-	          &cdata_test_array_entry_clone_function,
-	          &error );
-
-	cdata_test_array_entry_clone_function_return_value = 1;
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "error",
-	 error );
-
-	libcerror_error_free(
-	 &error );
 
 	/* Clean up
 	 */
@@ -1578,6 +1717,8 @@ int cdata_test_array_resize(
 	libcerror_error_free(
 	 &error );
 
+/* TODO test failing libcdata_internal_array_resize */
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_resize with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -1609,6 +1750,7 @@ int cdata_test_array_resize(
 		 &error );
 	}
 	/* Test libcdata_array_resize with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1816,6 +1958,7 @@ int cdata_test_array_reserve(
 		 &error );
 	}
 	/* Test libcdata_array_reverse with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2069,6 +2212,7 @@ int cdata_test_array_get_number_of_entries(
 		 &error );
 	}
 	/* Test libcdata_array_get_number_of_entries with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2336,6 +2480,7 @@ int cdata_test_array_get_entry_by_index(
 		 &error );
 	}
 	/* Test libcdata_array_get_entry_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2644,6 +2789,7 @@ int cdata_test_array_get_entry_by_value(
 		 &error );
 	}
 	/* Test libcdata_array_get_entry_by_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2888,6 +3034,7 @@ int cdata_test_array_set_entry_by_index(
 		 &error );
 	}
 	/* Test libcdata_array_set_entry_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3038,6 +3185,8 @@ int cdata_test_array_prepend_entry(
 	libcerror_error_free(
 	 &error );
 
+/* TODO test failing libcdata_internal_array_resize */
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_prepend_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -3068,6 +3217,7 @@ int cdata_test_array_prepend_entry(
 		 &error );
 	}
 	/* Test libcdata_array_prepend_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3249,6 +3399,8 @@ int cdata_test_array_append_entry(
 	libcerror_error_free(
 	 &error );
 
+/* TODO test failing libcdata_internal_array_resize */
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_append_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -3280,6 +3432,7 @@ int cdata_test_array_append_entry(
 		 &error );
 	}
 	/* Test libcdata_array_append_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3583,6 +3736,30 @@ int cdata_test_array_insert_entry(
 	libcerror_error_free(
 	 &error );
 
+	result = libcdata_array_insert_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &cdata_test_array_entry_compare_function,
+	          0xff,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+/* TODO test with libcdata_internal_array_resize function failing */
+/* TODO test with entry_compare function failing */
+/* TODO test with entry_compare function returning unsupported value */
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_insert_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -3616,6 +3793,7 @@ int cdata_test_array_insert_entry(
 		 &error );
 	}
 	/* Test libcdata_array_insert_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3861,6 +4039,8 @@ int cdata_test_array_remove_entry(
 	libcerror_error_free(
 	 &error );
 
+/* TODO test with libcdata_internal_array_resize function failing */
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
 	/* Test libcdata_array_remove_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
@@ -3892,6 +4072,7 @@ int cdata_test_array_remove_entry(
 		 &error );
 	}
 	/* Test libcdata_array_remove_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
