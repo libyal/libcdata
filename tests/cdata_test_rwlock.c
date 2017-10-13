@@ -49,6 +49,11 @@ int cdata_test_pthread_rwlock_rdlock_attempts_before_fail                       
 int cdata_test_pthread_rwlock_wrlock_attempts_before_fail                                           = -1;
 int cdata_test_pthread_rwlock_unlock_attempts_before_fail                                           = -1;
 
+#if defined( TODO )
+
+/* TODO currently disabled since this causes the tests to segfault on Ubuntu 14.04
+ */
+
 /* Custom pthread_rwlock_init for testing error cases
  * Returns 0 if successful or an error value otherwise
  */
@@ -80,6 +85,8 @@ int pthread_rwlock_init(
 
 	return( result );
 }
+
+#endif /* defined( TODO ) */
 
 /* Custom pthread_rwlock_destroy for testing error cases
  * Returns 0 if successful or an error value otherwise
