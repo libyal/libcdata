@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libcdata],
- [20171010],
+ [20171014],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
