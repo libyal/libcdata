@@ -2422,6 +2422,86 @@ int cdata_test_range_list_get_range_by_index(
 	libcerror_error_free(
 	 &error );
 
+	result = libcdata_range_list_get_range_by_index(
+	          range_list,
+	          -1,
+	          &range_start,
+	          &range_size,
+	          &value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_range_list_get_range_by_index(
+	          range_list,
+	          0,
+	          NULL,
+	          &range_size,
+	          &value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_range_list_get_range_by_index(
+	          range_list,
+	          0,
+	          &range_start,
+	          NULL,
+	          &value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_range_list_get_range_by_index(
+	          range_list,
+	          0,
+	          &range_start,
+	          &range_size,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 	/* Clean up
 	 */
 	result = libcdata_range_list_free(
