@@ -130,7 +130,7 @@ int cdata_test_array_initialize(
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 	int number_of_malloc_fail_tests = 3;
-	int number_of_memset_fail_tests = 3;
+	int number_of_memset_fail_tests = 2;
 	int test_number                 = 0;
 #endif
 
@@ -346,6 +346,9 @@ int cdata_test_array_initialize(
 			 &error );
 		}
 	}
+	/* 1 fail in memset after memory_allocate_structure
+	 * 2 fail in memset after memory_allocate of entries
+	 */
 	for( test_number = 0;
 	     test_number < number_of_memset_fail_tests;
 	     test_number++ )
@@ -476,6 +479,26 @@ int cdata_test_array_free(
 	if( cdata_test_pthread_rwlock_destroy_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_destroy_attempts_before_fail = -1;
+
+		/* Clean up
+		 */
+		result = libcdata_array_free(
+		          &array,
+		          &cdata_test_array_entry_free_function,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "array",
+		 array );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
 	}
 	else
 	{
@@ -484,6 +507,10 @@ int cdata_test_array_free(
 		 result,
 		 -1 );
 
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "array",
+		 array );
+
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
 		 error );
@@ -491,26 +518,6 @@ int cdata_test_array_free(
 		libcerror_error_free(
 		 &error );
 	}
-	/* Clean up
-	 */
-	result = libcdata_array_free(
-	          &array,
-	          &cdata_test_array_entry_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "array",
-	 array );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	return( 1 );
