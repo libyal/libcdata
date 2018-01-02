@@ -156,7 +156,7 @@ int libcdata_range_list_insert_element(
 int libcdata_range_list_insert_value(
      libcdata_range_list_t *range_list,
      libcdata_list_element_t *range_list_element,
-     libcdata_range_list_value_t *range_list_value,
+     libcdata_range_list_value_t *value,
      libcerror_error_t **error );
 
 int libcdata_range_list_remove_element(

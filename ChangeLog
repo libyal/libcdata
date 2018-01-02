@@ -12,6 +12,7 @@ Types:
   - libcdata_list_remove_element and re-enable tests
 * range list
   - add get/set range list value functions ?
+  - add thread lock
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !
