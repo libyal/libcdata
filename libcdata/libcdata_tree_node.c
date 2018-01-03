@@ -152,103 +152,22 @@ int libcdata_tree_node_free(
 
 			return( -1 );
 		}
-		number_of_sub_nodes = internal_node->number_of_sub_nodes;
-
-		sub_node = internal_node->first_sub_node;
-
-		for( sub_node_index = 0;
-		     sub_node_index < number_of_sub_nodes;
-		     sub_node_index++ )
+		if( libcdata_tree_node_empty(
+		     *node,
+		     value_free_function,
+		     error ) != 1 )
 		{
-			if( libcdata_tree_node_get_nodes(
-			     sub_node,
-			     &parent_node,
-			     &previous_node,
-			     &next_node,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve nodes of sub node: %d.",
-				 function,
-				 sub_node_index );
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to empty node.",
+			 function );
 
-				return( -1 );
-			}
-			if( previous_node != NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-				 "%s: invalid sub node: %d - previous node is set.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-			internal_node->first_sub_node = next_node;
-
-			if( internal_node->last_sub_node == sub_node )
-			{
-				internal_node->last_sub_node = next_node;
-			}
-			internal_node->number_of_sub_nodes--;
-
-			if( next_node != NULL )
-			{
-				if( libcdata_tree_node_set_previous_node(
-				     next_node,
-				     NULL,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-					 "%s: unable to set previous node of sub node: %d.",
-					 function,
-					 sub_node_index + 1 );
-
-					return( -1 );
-				}
-			}
-			if( libcdata_tree_node_set_nodes(
-			     sub_node,
-			     NULL,
-			     NULL,
-			     NULL,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set nodes of sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-			if( libcdata_tree_node_free(
-			     &sub_node,
-			     value_free_function,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-				 "%s: unable to free sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				result = -1;
-			}
-			sub_node = next_node;
+			result = -1;
 		}
+		*node = NULL;
+
 		if( internal_node->value != NULL )
 		{
 			if( value_free_function != NULL )
@@ -271,8 +190,6 @@ int libcdata_tree_node_free(
 		}
 		memory_free(
 		 internal_node );
-
-		*node = NULL;
 	}
 	return( result );
 }
@@ -1045,8 +962,6 @@ int libcdata_tree_node_append_node(
 
 		return( -1 );
 	}
-	internal_node->parent_node = parent_node;
-
 	if( internal_parent_node->number_of_sub_nodes == 0 )
 	{
 		if( internal_parent_node->first_sub_node != NULL )
@@ -1115,6 +1030,8 @@ int libcdata_tree_node_append_node(
 		internal_node->previous_node        = internal_parent_node->last_sub_node;
 		internal_parent_node->last_sub_node = node;
 	}
+	internal_node->parent_node = parent_node;
+
 	internal_parent_node->number_of_sub_nodes++;
 
 	return( 1 );
