@@ -115,14 +115,8 @@ int libcdata_tree_node_free(
      libcerror_error_t **error )
 {
 	libcdata_internal_tree_node_t *internal_node = NULL;
-	libcdata_tree_node_t *next_node              = NULL;
-	libcdata_tree_node_t *parent_node            = NULL;
-	libcdata_tree_node_t *previous_node          = NULL;
-	libcdata_tree_node_t *sub_node               = NULL;
 	static char *function                        = "libcdata_tree_node_free";
-	int number_of_sub_nodes                      = 0;
 	int result                                   = 1;
-	int sub_node_index                           = 0;
 
 	if( node == NULL )
 	{
