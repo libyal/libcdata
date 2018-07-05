@@ -2021,11 +2021,11 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_initialize",
-	 cdata_test_list_initialize )
+	 cdata_test_list_initialize );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_free",
-	 cdata_test_list_free )
+	 cdata_test_list_free );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
@@ -2035,17 +2035,17 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_empty",
-	 cdata_test_list_empty )
+	 cdata_test_list_empty );
 
 	/* TODO: add test for libcdata_list_clone */
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_number_of_elements",
-	 cdata_test_list_get_number_of_elements )
+	 cdata_test_list_get_number_of_elements );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_first_element",
-	 cdata_test_list_get_first_element )
+	 cdata_test_list_get_first_element );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
@@ -2057,7 +2057,7 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_last_element",
-	 cdata_test_list_get_last_element )
+	 cdata_test_list_get_last_element );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
@@ -2069,39 +2069,39 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_element_by_index",
-	 cdata_test_list_get_element_by_index )
+	 cdata_test_list_get_element_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_value_by_index",
-	 cdata_test_list_get_value_by_index )
+	 cdata_test_list_get_value_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_prepend_element",
-	 cdata_test_list_prepend_element )
+	 cdata_test_list_prepend_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_prepend_value",
-	 cdata_test_list_prepend_value )
+	 cdata_test_list_prepend_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_append_element",
-	 cdata_test_list_append_element )
+	 cdata_test_list_append_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_append_value",
-	 cdata_test_list_append_value )
+	 cdata_test_list_append_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_insert_element",
-	 cdata_test_list_insert_element )
+	 cdata_test_list_insert_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_insert_value",
-	 cdata_test_list_insert_value )
+	 cdata_test_list_insert_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_remove_element",
-	 cdata_test_list_remove_element )
+	 cdata_test_list_remove_element );
 
 	return( EXIT_SUCCESS );
 

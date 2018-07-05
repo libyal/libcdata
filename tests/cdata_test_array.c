@@ -4164,79 +4164,79 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_initialize",
-	 cdata_test_array_initialize )
+	 cdata_test_array_initialize );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_free",
-	 cdata_test_array_free )
+	 cdata_test_array_free );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_empty",
-	 cdata_test_array_empty )
+	 cdata_test_array_empty );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_internal_array_clear",
-	 cdata_test_internal_array_clear )
+	 cdata_test_internal_array_clear );
 
 #endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_clear",
-	 cdata_test_array_clear )
+	 cdata_test_array_clear );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_clone",
-	 cdata_test_array_clone )
+	 cdata_test_array_clone );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_internal_array_resize",
-	 cdata_test_internal_array_resize )
+	 cdata_test_internal_array_resize );
 
 #endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_resize",
-	 cdata_test_array_resize )
+	 cdata_test_array_resize );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_reverse",
-	 cdata_test_array_reserve )
+	 cdata_test_array_reserve );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_get_number_of_entries",
-	 cdata_test_array_get_number_of_entries )
+	 cdata_test_array_get_number_of_entries );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_get_entry_by_index",
-	 cdata_test_array_get_entry_by_index )
+	 cdata_test_array_get_entry_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_get_entry_by_value",
-	 cdata_test_array_get_entry_by_value )
+	 cdata_test_array_get_entry_by_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_set_entry_by_index",
-	 cdata_test_array_set_entry_by_index )
+	 cdata_test_array_set_entry_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_prepend_entry",
-	 cdata_test_array_prepend_entry )
+	 cdata_test_array_prepend_entry );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_append_entry",
-	 cdata_test_array_append_entry )
+	 cdata_test_array_append_entry );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_insert_entry",
-	 cdata_test_array_insert_entry )
+	 cdata_test_array_insert_entry );
 
 	CDATA_TEST_RUN(
 	 "libcdata_array_remove_entry",
-	 cdata_test_array_remove_entry )
+	 cdata_test_array_remove_entry );
 
 	return( EXIT_SUCCESS );
 

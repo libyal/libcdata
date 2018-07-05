@@ -2359,71 +2359,71 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_initialize",
-	 cdata_test_btree_initialize )
+	 cdata_test_btree_initialize );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_free",
-	 cdata_test_btree_free )
+	 cdata_test_btree_free );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_free_values_list",
-	 cdata_test_btree_free_values_list )
+	 cdata_test_btree_free_values_list );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_get_sub_node_by_value",
-	 cdata_test_btree_node_get_sub_node_by_value )
+	 cdata_test_btree_node_get_sub_node_by_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_get_upper_node_by_value",
-	 cdata_test_btree_node_get_upper_node_by_value )
+	 cdata_test_btree_node_get_upper_node_by_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_append_value",
-	 cdata_test_btree_node_append_value )
+	 cdata_test_btree_node_append_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_insert_value",
-	 cdata_test_btree_node_insert_value )
+	 cdata_test_btree_node_insert_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_replace_value",
-	 cdata_test_btree_node_replace_value )
+	 cdata_test_btree_node_replace_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_remove_value",
-	 cdata_test_btree_node_remove_value )
+	 cdata_test_btree_node_remove_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_node_split",
-	 cdata_test_btree_node_split )
+	 cdata_test_btree_node_split );
 
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_get_number_of_values",
-	 cdata_test_btree_get_number_of_values )
+	 cdata_test_btree_get_number_of_values );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_get_value_by_index",
-	 cdata_test_btree_get_value_by_index )
+	 cdata_test_btree_get_value_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_get_value_by_value",
-	 cdata_test_btree_get_value_by_value )
+	 cdata_test_btree_get_value_by_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_insert_value",
-	 cdata_test_btree_insert_value )
+	 cdata_test_btree_insert_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_replace_value",
-	 cdata_test_btree_replace_value )
+	 cdata_test_btree_replace_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_btree_remove_value",
-	 cdata_test_btree_remove_value )
+	 cdata_test_btree_remove_value );
 
 	return( EXIT_SUCCESS );
 

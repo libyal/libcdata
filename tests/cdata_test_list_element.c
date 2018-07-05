@@ -1789,43 +1789,43 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_initialize",
-	 cdata_test_list_element_initialize )
+	 cdata_test_list_element_initialize );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_free",
-	 cdata_test_list_element_free )
+	 cdata_test_list_element_free );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_get_value",
-	 cdata_test_list_element_get_value )
+	 cdata_test_list_element_get_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_set_value",
-	 cdata_test_list_element_set_value )
+	 cdata_test_list_element_set_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_get_previous_element",
-	 cdata_test_list_element_get_previous_element )
+	 cdata_test_list_element_get_previous_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_set_previous_element",
-	 cdata_test_list_element_set_previous_element )
+	 cdata_test_list_element_set_previous_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_get_next_element",
-	 cdata_test_list_element_get_next_element )
+	 cdata_test_list_element_get_next_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_set_next_element",
-	 cdata_test_list_element_set_next_element )
+	 cdata_test_list_element_set_next_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_get_elements",
-	 cdata_test_list_element_get_elements )
+	 cdata_test_list_element_get_elements );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_element_set_elements",
-	 cdata_test_list_element_set_elements )
+	 cdata_test_list_element_set_elements );
 
 	return( EXIT_SUCCESS );
 

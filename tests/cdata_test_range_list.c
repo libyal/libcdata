@@ -2834,107 +2834,107 @@ int main(
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_initialize",
-	 cdata_test_range_list_initialize )
+	 cdata_test_range_list_initialize );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_free",
-	 cdata_test_range_list_free )
+	 cdata_test_range_list_free );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_empty",
-	 cdata_test_range_list_empty )
+	 cdata_test_range_list_empty );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_clone",
-	 cdata_test_range_list_clone )
+	 cdata_test_range_list_clone );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_number_of_elements",
-	 cdata_test_range_list_get_number_of_elements )
+	 cdata_test_range_list_get_number_of_elements );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_set_first_element",
-	 cdata_test_range_list_set_first_element )
+	 cdata_test_range_list_set_first_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_set_last_element",
-	 cdata_test_range_list_set_last_element )
+	 cdata_test_range_list_set_last_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_append_element",
-	 cdata_test_range_list_append_element )
+	 cdata_test_range_list_append_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_append_value",
-	 cdata_test_range_list_append_value )
+	 cdata_test_range_list_append_value );
 
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_insert_range",
-	 cdata_test_range_list_insert_range )
+	 cdata_test_range_list_insert_range );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_insert_range_list",
-	 cdata_test_range_list_insert_range_list )
+	 cdata_test_range_list_insert_range_list );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_insert_element",
-	 cdata_test_range_list_insert_element )
+	 cdata_test_range_list_insert_element );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_insert_value",
-	 cdata_test_range_list_insert_value )
+	 cdata_test_range_list_insert_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_remove_element",
-	 cdata_test_range_list_remove_element )
+	 cdata_test_range_list_remove_element );
 
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_remove_range",
-	 cdata_test_range_list_remove_range )
+	 cdata_test_range_list_remove_range );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_element_by_index",
-	 cdata_test_range_list_get_element_by_index )
+	 cdata_test_range_list_get_element_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_element_at_offset",
-	 cdata_test_range_list_get_element_at_offset )
+	 cdata_test_range_list_get_element_at_offset );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_value_by_index",
-	 cdata_test_range_list_get_value_by_index )
+	 cdata_test_range_list_get_value_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_value_at_offset",
-	 cdata_test_range_list_get_value_at_offset )
+	 cdata_test_range_list_get_value_at_offset );
 
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_range_by_index",
-	 cdata_test_range_list_get_range_by_index )
+	 cdata_test_range_list_get_range_by_index );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_range_at_offset",
-	 cdata_test_range_list_get_range_at_offset )
+	 cdata_test_range_list_get_range_at_offset );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_range_is_present",
-	 cdata_test_range_list_range_is_present )
+	 cdata_test_range_list_range_is_present );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_spanning_range",
-	 cdata_test_range_list_spanning_range )
+	 cdata_test_range_list_spanning_range );
 
 	return( EXIT_SUCCESS );
 
