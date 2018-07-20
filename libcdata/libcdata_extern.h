@@ -37,8 +37,11 @@
 
 #include <libcdata/extern.h>
 
+#define LIBCDATA_EXTERN_VARIABLE	LIBCDATA_EXTERN
+
 #else
-#define LIBCDATA_EXTERN	/* extern */
+#define LIBCDATA_EXTERN		/* extern */
+#define LIBCDATA_EXTERN_VARIABLE	extern
 
 #endif /* !defined( HAVE_LOCAL_LIBCDATA ) */
 
