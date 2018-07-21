@@ -1302,8 +1302,6 @@ int cdata_test_array_clone(
 	libcerror_error_free(
 	 &error );
 
-/* TODO: Test libcdata_array_initialize returning NULL destination_array */
-
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
 	/* Test libcdata_array_clone with malloc failing in libcdata_array_initialize
@@ -1348,6 +1346,8 @@ int cdata_test_array_clone(
 		 &error );
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
+/* TODO: Test libcdata_array_initialize returning NULL destination_array */
 
 	/* Test libcdata_array_clone with entry_clone_function failing
 	 */

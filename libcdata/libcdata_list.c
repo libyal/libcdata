@@ -519,7 +519,7 @@ int libcdata_list_clone(
 			 function,
 			 element_index );
 
-			break;
+			goto on_error;
 		}
 		result = value_clone_function(
 		          &destination_value,
@@ -536,7 +536,7 @@ int libcdata_list_clone(
 			 function,
 			 element_index );
 
-			break;
+			goto on_error;
 		}
 		result = libcdata_list_append_value(
 		          *destination_list,
@@ -552,7 +552,7 @@ int libcdata_list_clone(
 			 "%s: unable to append destination value to destination list.",
 			 function );
 
-			break;
+			goto on_error;
 		}
 		destination_value = NULL;
 
@@ -571,7 +571,7 @@ int libcdata_list_clone(
 			 function,
 			 element_index );
 
-			break;
+			goto on_error;
 		}
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -589,10 +589,6 @@ int libcdata_list_clone(
 		goto on_error;
 	}
 #endif
-	if( result != 1 )
-	{
-		goto on_error;
-	}
 	return( 1 );
 
 on_error:
@@ -2162,6 +2158,21 @@ int libcdata_list_remove_element(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	if( libcdata_list_element_get_elements(
 	     element,
 	     &previous_element,
@@ -2175,7 +2186,7 @@ int libcdata_list_remove_element(
 		 "%s: unable to retrieve previous and next element from list element.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	if( element == internal_list->first_element )
 	{
@@ -2199,7 +2210,7 @@ int libcdata_list_remove_element(
 			 "%s: unable to set previous element of next element.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	if( previous_element != NULL )
@@ -2216,7 +2227,7 @@ int libcdata_list_remove_element(
 			 "%s: unable to set next element of previous element.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	if( libcdata_list_element_set_elements(
@@ -2232,10 +2243,33 @@ int libcdata_list_remove_element(
 		 "%s: unable to set previous and next element of list element.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	internal_list->number_of_elements--;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_list->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
 }
 
