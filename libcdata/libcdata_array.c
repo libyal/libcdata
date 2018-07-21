@@ -514,7 +514,6 @@ int libcdata_array_clone(
 	libcdata_internal_array_t *internal_source_array      = NULL;
 	static char *function                                 = "libcdata_array_clone";
 	int entry_iterator                                    = 0;
-	int result                                            = 1;
 
 	if( destination_array == NULL )
 	{
@@ -616,12 +615,10 @@ int libcdata_array_clone(
 		{
 			if( internal_source_array->entries[ entry_iterator ] != NULL )
 			{
-				result = entry_clone_function(
-				          &( internal_destination_array->entries[ entry_iterator ] ),
-				          internal_source_array->entries[ entry_iterator ],
-				          error );
-
-				if( result != 1 )
+				if( entry_clone_function(
+				     &( internal_destination_array->entries[ entry_iterator ] ),
+				     internal_source_array->entries[ entry_iterator ],
+				     error ) != 1 )
 				{
 					libcerror_error_set(
 					 error,
@@ -648,7 +645,7 @@ int libcdata_array_clone(
 		 "%s: unable to release read/write lock for reading.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 #endif
 	*destination_array = (libcdata_array_t *) internal_destination_array;

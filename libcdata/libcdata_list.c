@@ -399,13 +399,11 @@ int libcdata_list_clone(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_internal_list_t *internal_source_list = NULL;
-	libcdata_list_element_t *source_list_element   = NULL;
-	intptr_t *destination_value                    = NULL;
-	intptr_t *source_value                         = NULL;
-	static char *function                          = "libcdata_list_clone";
-	int element_index                              = 0;
-	int result                                     = 1;
+	libcdata_internal_list_t *internal_source_list                 = NULL;
+	libcdata_internal_list_element_t *internal_source_list_element = NULL;
+	intptr_t *destination_value                                    = NULL;
+	static char *function                                          = "libcdata_list_clone";
+	int element_index                                              = 0;
 
 	if( destination_list == NULL )
 	{
@@ -498,80 +496,59 @@ int libcdata_list_clone(
 		goto on_error;
 	}
 #endif
-	source_list_element = internal_source_list->first_element;
-
-	for( element_index = 0;
-	     element_index < internal_source_list->number_of_elements;
-	     element_index++ )
+	if( internal_source_list->first_element != NULL )
 	{
-		result = libcdata_list_element_get_value(
-		          source_list_element,
-		          &source_value,
-		          error );
+		internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list->first_element;
 
-		if( result != 1 )
+		for( element_index = 0;
+		     element_index < internal_source_list->number_of_elements;
+		     element_index++ )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve value from source list element: %d.",
-			 function,
-			 element_index );
+			if( internal_source_list_element == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+				 "%s: missing source list element: %d.",
+				 function,
+				 element_index );
 
-			goto on_error;
-		}
-		result = value_clone_function(
-		          &destination_value,
-		          source_value,
-		          error );
+				goto on_error;
+			}
+			if( value_clone_function(
+			     &destination_value,
+			     internal_source_list_element->value,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create destination value: %d.",
+				 function,
+				 element_index );
 
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create destination value: %d.",
-			 function,
-			 element_index );
+				goto on_error;
+			}
+			if( libcdata_list_append_value(
+			     *destination_list,
+			     destination_value,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+				 "%s: unable to append value: %d to destination list.",
+				 function,
+				 element_index );
 
-			goto on_error;
-		}
-		result = libcdata_list_append_value(
-		          *destination_list,
-		          destination_value,
-		          error );
+				goto on_error;
+			}
+			destination_value = NULL;
 
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to append destination value to destination list.",
-			 function );
-
-			goto on_error;
-		}
-		destination_value = NULL;
-
-		result = libcdata_list_element_get_next_element(
-		          source_list_element,
-		          &source_list_element,
-		          error );
-
-		if( result != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve next element from source list element: %d.",
-			 function,
-			 element_index );
-
-			goto on_error;
+			internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list_element->next_element;
 		}
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -586,12 +563,17 @@ int libcdata_list_clone(
 		 "%s: unable to release read/write lock for reading.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 #endif
 	return( 1 );
 
 on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_read(
+	 internal_source_list->read_write_lock,
+	 NULL );
+#endif
 	if( destination_value != NULL )
 	{
 		value_free_function(

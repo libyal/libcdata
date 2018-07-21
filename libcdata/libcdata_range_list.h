@@ -27,6 +27,7 @@
 
 #include "libcdata_extern.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_range_list_value.h"
 #include "libcdata_types.h"
 
@@ -57,6 +58,12 @@ struct libcdata_internal_range_list
 	/* The current list element index
 	 */
 	int current_element_index;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	/* The read/write lock
+	 */
+	libcthreads_read_write_lock_t *read_write_lock;
+#endif
 };
 
 LIBCDATA_EXTERN \
@@ -67,6 +74,13 @@ int libcdata_range_list_initialize(
 LIBCDATA_EXTERN \
 int libcdata_range_list_free(
      libcdata_range_list_t **range_list,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
+
+int libcdata_internal_range_list_empty(
+     libcdata_internal_range_list_t *internal_range_list,
      int (*value_free_function)(
             intptr_t **value,
             libcerror_error_t **error ),
@@ -99,8 +113,18 @@ int libcdata_range_list_get_number_of_elements(
      int *number_of_elements,
      libcerror_error_t **error );
 
+int libcdata_internal_range_list_set_first_element(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error );
+
 int libcdata_range_list_set_first_element(
      libcdata_range_list_t *range_list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error );
+
+int libcdata_internal_range_list_set_last_element(
+     libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error );
 

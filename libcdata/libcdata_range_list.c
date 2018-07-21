@@ -25,6 +25,7 @@
 
 #include "libcdata_definitions.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_list_element.h"
 #include "libcdata_range_list.h"
 #include "libcdata_range_list_value.h"
@@ -89,8 +90,26 @@ int libcdata_range_list_initialize(
 		 "%s: unable to clear range list.",
 		 function );
 
+		memory_free(
+		 internal_range_list );
+
+		return( -1 );
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_initialize(
+	     &( internal_range_list->read_write_lock ),
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to intialize read/write lock.",
+		 function );
+
 		goto on_error;
 	}
+#endif
 	*range_list = (libcdata_range_list_t *) internal_range_list;
 
 	return( 1 );
@@ -115,8 +134,9 @@ int libcdata_range_list_free(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	static char *function = "libcdata_range_list_free";
-	int result            = 1;
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	static char *function                               = "libcdata_range_list_free";
+	int result                                          = 1;
 
 	if( range_list == NULL )
 	{
@@ -131,12 +151,28 @@ int libcdata_range_list_free(
 	}
 	if( *range_list != NULL )
 	{
-		result = libcdata_range_list_empty(
-		          *range_list,
-		          value_free_function,
-		          error );
+		internal_range_list = (libcdata_internal_range_list_t *) *range_list;
+		*range_list         = NULL;
 
-		if( result != 1 )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+		if( libcthreads_read_write_lock_free(
+		     &( internal_range_list->read_write_lock ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free read/write lock.",
+			 function );
+
+			result = -1;
+		}
+#endif
+		if( libcdata_internal_range_list_empty(
+		     internal_range_list,
+		     value_free_function,
+		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
@@ -144,11 +180,11 @@ int libcdata_range_list_free(
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to empty range list.",
 			 function );
+
+			result = -1;
 		}
 		memory_free(
-		 *range_list );
-
-		*range_list = NULL;
+		 internal_range_list );
 	}
 	return( result );
 }
@@ -157,23 +193,22 @@ int libcdata_range_list_free(
  * Uses the value_free_function to free the element value
  * Returns 1 if successful or -1 on error
  */
-int libcdata_range_list_empty(
-     libcdata_range_list_t *range_list,
+int libcdata_internal_range_list_empty(
+     libcdata_internal_range_list_t *internal_range_list,
      int (*value_free_function)(
             intptr_t **value,
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_internal_range_list_t *internal_range_list = NULL;
-	libcdata_list_element_t *list_element               = NULL;
-	libcdata_list_element_t *next_element               = NULL;
-	libcdata_range_list_value_t *range_list_value       = NULL;
-	static char *function                               = "libcdata_range_list_empty";
-	int element_index                                   = 0;
-	int number_of_elements                              = 0;
-	int result                                          = 1;
+	libcdata_list_element_t *list_element         = NULL;
+	libcdata_list_element_t *next_element         = NULL;
+	libcdata_range_list_value_t *range_list_value = NULL;
+	static char *function                         = "libcdata_internal_range_list_empty";
+	int element_index                             = 0;
+	int number_of_elements                        = 0;
+	int result                                    = 1;
 
-	if( range_list == NULL )
+	if( internal_range_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -184,8 +219,6 @@ int libcdata_range_list_empty(
 
 		return( -1 );
 	}
-	internal_range_list = (libcdata_internal_range_list_t *) range_list;
-
 	if( internal_range_list->number_of_elements > 0 )
 	{
 		number_of_elements = internal_range_list->number_of_elements;
@@ -305,6 +338,81 @@ int libcdata_range_list_empty(
 	return( result );
 }
 
+/* Empties a range list and frees the elements
+ * Uses the value_free_function to free the element value
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_range_list_empty(
+     libcdata_range_list_t *range_list,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error )
+{
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	static char *function                               = "libcdata_range_list_empty";
+	int result                                          = 1;
+
+	if( range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_range_list = (libcdata_internal_range_list_t *) range_list;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	if( libcdata_internal_range_list_empty(
+	     internal_range_list,
+	     value_free_function,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to empty range list.",
+		 function );
+
+		result = -1;
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( result );
+}
+
 /* Clones the range list
  *
  * The values are cloned using the value_clone_function
@@ -324,12 +432,11 @@ int libcdata_range_list_clone(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_internal_range_list_t *source_internal_range_list = NULL;
-	libcdata_list_element_t *source_list_element               = NULL;
-	libcdata_range_list_value_t *destination_range_list_value  = NULL;
-	libcdata_range_list_value_t *source_range_list_value       = NULL;
-	static char *function                                      = "libcdata_range_list_clone";
-	int element_index                                          = 0;
+	libcdata_internal_list_element_t *internal_source_list_element = NULL;
+	libcdata_internal_range_list_t *internal_source_range_list     = NULL;
+	libcdata_range_list_value_t *destination_range_list_value      = NULL;
+	static char *function                                          = "libcdata_range_list_clone";
+	int element_index                                              = 0;
 
 	if( destination_range_list == NULL )
 	{
@@ -359,7 +466,7 @@ int libcdata_range_list_clone(
 
 		return( 1 );
 	}
-	source_internal_range_list = (libcdata_internal_range_list_t *) source_range_list;
+	internal_source_range_list = (libcdata_internal_range_list_t *) source_range_list;
 
 	if( libcdata_range_list_initialize(
 	     destination_range_list,
@@ -385,80 +492,101 @@ int libcdata_range_list_clone(
 
 		goto on_error;
 	}
-	source_list_element = source_internal_range_list->first_element;
-
-	for( element_index = 0;
-	     element_index < source_internal_range_list->number_of_elements;
-	     element_index++ )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_source_range_list->read_write_lock,
+	     error ) != 1 )
 	{
-		if( libcdata_list_element_get_value(
-		     source_list_element,
-		     (intptr_t **) &source_range_list_value,
-		     error ) != 1 )
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		goto on_error;
+	}
+#endif
+	if( internal_source_range_list->first_element != NULL )
+	{
+		internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_range_list->first_element;
+
+		for( element_index = 0;
+		     element_index < internal_source_range_list->number_of_elements;
+		     element_index++ )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve value from source list element: %d.",
-			 function,
-			 element_index );
+			if( internal_source_list_element == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+				 "%s: missing source list element: %d.",
+				 function,
+				 element_index );
 
-			goto on_error;
-		}
-		if( libcdata_range_list_value_clone(
-		     &destination_range_list_value,
-		     source_range_list_value,
-		     value_free_function,
-		     value_clone_function,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-			 "%s: unable to create destination range list value: %d.",
-			 function,
-			 element_index );
+				goto on_error;
+			}
+			if( libcdata_range_list_value_clone(
+			     &destination_range_list_value,
+			     (libcdata_range_list_value_t *) internal_source_list_element->value,
+			     value_free_function,
+			     value_clone_function,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to create destination range list value: %d.",
+				 function,
+				 element_index );
 
-			goto on_error;
-		}
-		if( libcdata_range_list_append_value(
-		     *destination_range_list,
-		     destination_range_list_value,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to set value of destination element: %d.",
-			 function,
-			 element_index );
+				goto on_error;
+			}
+			if( libcdata_range_list_append_value(
+			     *destination_range_list,
+			     destination_range_list_value,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to append value: %d to destination range list.",
+				 function,
+				 element_index );
 
-			goto on_error;
-		}
-		destination_range_list_value = NULL;
+				goto on_error;
+			}
+			destination_range_list_value = NULL;
 
-		if( libcdata_list_element_get_next_element(
-		     source_list_element,
-		     &source_list_element,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve next element from list element: %d.",
-			 function,
-			 element_index );
-
-			goto on_error;
+			internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list_element->next_element;
 		}
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_source_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
 
 on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_read(
+	 internal_source_range_list->read_write_lock,
+	 NULL );
+#endif
 	if( destination_range_list_value != NULL )
 	{
 		libcdata_range_list_value_free(
@@ -511,23 +639,52 @@ int libcdata_range_list_get_number_of_elements(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	*number_of_elements = internal_range_list->number_of_elements;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
 }
 
 /* Sets the first element in the range list
  * Returns 1 if successful or -1 on error
  */
-int libcdata_range_list_set_first_element(
-     libcdata_range_list_t *range_list,
+int libcdata_internal_range_list_set_first_element(
+     libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error )
 {
-	libcdata_internal_range_list_t *internal_range_list = NULL;
-	static char *function                               = "libcdata_range_list_set_first_element";
+	static char *function = "libcdata_internal_range_list_set_first_element";
 
-	if( range_list == NULL )
+	if( internal_range_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -538,8 +695,6 @@ int libcdata_range_list_set_first_element(
 
 		return( -1 );
 	}
-	internal_range_list = (libcdata_internal_range_list_t *) range_list;
-
 	if( element != NULL )
 	{
 		if( libcdata_list_element_set_next_element(
@@ -579,16 +734,17 @@ int libcdata_range_list_set_first_element(
 	return( 1 );
 }
 
-/* Sets the last element in the list
+/* Sets the first element in the range list
  * Returns 1 if successful or -1 on error
  */
-int libcdata_range_list_set_last_element(
+int libcdata_range_list_set_first_element(
      libcdata_range_list_t *range_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error )
 {
 	libcdata_internal_range_list_t *internal_range_list = NULL;
-	static char *function                               = "libcdata_list_set_last_element";
+	static char *function                               = "libcdata_list_set_first_element";
+	int result                                          = 1;
 
 	if( range_list == NULL )
 	{
@@ -603,6 +759,74 @@ int libcdata_range_list_set_last_element(
 	}
 	internal_range_list = (libcdata_internal_range_list_t *) range_list;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	if( libcdata_internal_range_list_set_first_element(
+	     internal_range_list,
+	     element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set first element.",
+		 function );
+
+		result = -1;
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( result );
+}
+
+/* Sets the last element in the list
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_range_list_set_last_element(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error )
+{
+	static char *function = "libcdata_internal_range_list_set_last_element";
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
 	if( element != NULL )
 	{
 		if( libcdata_list_element_set_previous_element(
@@ -642,6 +866,78 @@ int libcdata_range_list_set_last_element(
 	return( 1 );
 }
 
+/* Sets the last element in the range list
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_range_list_set_last_element(
+     libcdata_range_list_t *range_list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error )
+{
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	static char *function                               = "libcdata_list_set_last_element";
+	int result                                          = 1;
+
+	if( range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_range_list = (libcdata_internal_range_list_t *) range_list;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	if( libcdata_internal_range_list_set_last_element(
+	     internal_range_list,
+	     element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set last element.",
+		 function );
+
+		result = -1;
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( result );
+}
+
 /* Append a list element to the list
  * Returns 1 if successful or -1 on error
  */
@@ -677,12 +973,27 @@ int libcdata_range_list_append_element(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	if( internal_range_list->first_element == NULL )
 	{
 		internal_range_list->first_element = element;
 	}
-	if( libcdata_range_list_set_last_element(
-	     range_list,
+	if( libcdata_internal_range_list_set_last_element(
+	     internal_range_list,
 	     element,
 	     error ) != 1 )
 	{
@@ -693,11 +1004,34 @@ int libcdata_range_list_append_element(
 		 "%s: unable to set last element.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 	internal_range_list->number_of_elements++;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_range_list->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
 }
 
 /* Append a value to the list
@@ -854,6 +1188,21 @@ int libcdata_range_list_insert_range(
 
 		goto on_error;
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	create_element = 1;
 
 	if( internal_range_list->number_of_elements > 0 )
@@ -1238,6 +1587,8 @@ int libcdata_range_list_insert_range(
 						 "%s: unable to merge range list value with previous.",
 						 function );
 
+						previous_range_list_value = NULL;
+
 						goto on_error;
 					}
 					/* Remove previous list element
@@ -1255,6 +1606,8 @@ int libcdata_range_list_insert_range(
 						 function,
 						 element_index - 1 );
 
+						previous_range_list_value = NULL;
+
 						goto on_error;
 					}
 					if( libcdata_list_element_free(
@@ -1269,11 +1622,6 @@ int libcdata_range_list_insert_range(
 						 "%s: unable to free list element: %d.",
 						 function,
 						 element_index - 1 );
-
-						libcdata_range_list_value_free(
-						 &previous_range_list_value,
-						 value_free_function,
-						 NULL );
 
 						goto on_error;
 					}
@@ -1293,6 +1641,7 @@ int libcdata_range_list_insert_range(
 						goto on_error;
 					}
 				}
+				previous_range_list_value = NULL;
 			}
 		}
 		/* Check if the current range should be merged with the next range
@@ -1360,6 +1709,8 @@ int libcdata_range_list_insert_range(
 						 "%s: unable to merge range list value with next.",
 						 function );
 
+						next_range_list_value = NULL;
+
 						goto on_error;
 					}
 					/* Remove next list element
@@ -1377,6 +1728,8 @@ int libcdata_range_list_insert_range(
 						 function,
 						 element_index + 1 );
 
+						next_range_list_value = NULL;
+
 						goto on_error;
 					}
 					if( libcdata_list_element_free(
@@ -1391,11 +1744,6 @@ int libcdata_range_list_insert_range(
 						 "%s: unable to free list element: %d.",
 						 function,
 						 element_index + 1 );
-
-						libcdata_range_list_value_free(
-						 &next_range_list_value,
-						 value_free_function,
-						 NULL );
 
 						goto on_error;
 					}
@@ -1415,6 +1763,7 @@ int libcdata_range_list_insert_range(
 						goto on_error;
 					}
 				}
+				next_range_list_value = NULL;
 			}
 		}
 	}
@@ -1483,7 +1832,7 @@ int libcdata_range_list_insert_range(
 				 "%s: invalid value free function.",
 				 function );
 
-				return( -1 );
+				goto on_error;
 			}
 			if( value_merge_function == NULL )
 			{
@@ -1494,7 +1843,7 @@ int libcdata_range_list_insert_range(
 				 "%s: invalid value merge function.",
 				 function );
 
-				return( -1 );
+				goto on_error;
 			}
 			if( value_merge_function(
 			     range_list_value->value,
@@ -1508,7 +1857,7 @@ int libcdata_range_list_insert_range(
 				 "%s: unable to merge value.",
 				 function );
 
-				return( -1 );
+				goto on_error;
 			}
 			if( value_free_function(
 			     &value,
@@ -1521,13 +1870,47 @@ int libcdata_range_list_insert_range(
 				 "%s: unable to free value.",
 				 function );
 
-				return( -1 );
+				goto on_error;
 			}
 		}
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
 
 on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_range_list->read_write_lock,
+	 NULL );
+#endif
+	if( next_range_list_value != NULL )
+	{
+		libcdata_range_list_value_free(
+		 &next_range_list_value,
+		 value_free_function,
+		 NULL );
+	}
+	if( previous_range_list_value != NULL )
+	{
+		libcdata_range_list_value_free(
+		 &previous_range_list_value,
+		 value_free_function,
+		 NULL );
+	}
 	if( new_range_list_value != NULL )
 	{
 		libcdata_range_list_value_free(
@@ -1537,6 +1920,8 @@ on_error:
 	}
 	return( -1 );
 }
+
+/* TODO continue implementing HAVE_MULTI_THREAD_SUPPORT */
 
 /* Inserts a range list
  *
@@ -1562,7 +1947,7 @@ int libcdata_range_list_insert_range_list(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_internal_range_list_t *source_internal_range_list = NULL;
+	libcdata_internal_range_list_t *internal_source_range_list = NULL;
 	libcdata_list_element_t *source_list_element               = NULL;
 	libcdata_range_list_value_t *source_range_list_value       = NULL;
 	static char *function                                      = "libcdata_range_list_insert_range_list";
@@ -1590,12 +1975,12 @@ int libcdata_range_list_insert_range_list(
 
 		return( -1 );
 	}
-	source_internal_range_list = (libcdata_internal_range_list_t *) source_range_list;
+	internal_source_range_list = (libcdata_internal_range_list_t *) source_range_list;
 
-	source_list_element = source_internal_range_list->first_element;
+	source_list_element = internal_source_range_list->first_element;
 
 	for( element_index = 0;
-	     element_index < source_internal_range_list->number_of_elements;
+	     element_index < internal_source_range_list->number_of_elements;
 	     element_index++ )
 	{
 		if( libcdata_list_element_get_value(

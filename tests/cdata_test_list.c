@@ -1015,7 +1015,7 @@ int cdata_test_list_clone(
 	/* Test libcdata_list_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
 	 * WARNING: after this test the lock is still active
 	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 5;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
 	result = libcdata_list_clone(
 	          &destination_list,
@@ -1059,17 +1059,10 @@ int cdata_test_list_clone(
 	          &cdata_test_list_value_free_function,
 	          &error );
 
-/* TODO this fails on MacOS and CygWin with "Resource busy"
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
-*/
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "source_list",
@@ -2948,6 +2941,8 @@ int cdata_test_list_prepend_element(
 	 "error",
 	 error );
 
+	element1 = NULL;
+
 	result = libcdata_list_prepend_element(
 	          list,
 	          element2,
@@ -2961,6 +2956,8 @@ int cdata_test_list_prepend_element(
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
+
+	element2 = NULL;
 
 	/* Test error cases
 	 */
@@ -3055,31 +3052,32 @@ int cdata_test_list_prepend_element(
 		libcerror_error_free(
 		 &error );
 	}
-#else
-	/* Clean up
-	 */
-	result = libcdata_list_element_free(
-	          &element3,
-	          &cdata_test_list_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "element3",
-	 element3 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
+	element3 = NULL;
 
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
 	 */
+	if( element3 != NULL )
+	{
+		result = libcdata_list_element_free(
+		          &element3,
+		          &cdata_test_list_value_free_function,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "element3",
+		 element3 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
 	result = libcdata_list_free(
 	          &list,
 	          &cdata_test_list_value_free_function,
@@ -3417,6 +3415,8 @@ int cdata_test_list_append_element(
 	 "error",
 	 error );
 
+	element1 = NULL;
+
 	result = libcdata_list_append_element(
 	          list,
 	          element2,
@@ -3430,6 +3430,8 @@ int cdata_test_list_append_element(
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
 	 error );
+
+	element2 = NULL;
 
 	/* Test error cases
 	 */
@@ -3524,31 +3526,32 @@ int cdata_test_list_append_element(
 		libcerror_error_free(
 		 &error );
 	}
-#else
-	/* Clean up
-	 */
-	result = libcdata_list_element_free(
-	          &element3,
-	          &cdata_test_list_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "element3",
-	 element3 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
+	element3 = NULL;
 
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
 	 */
+	if( element3 != NULL )
+	{
+		result = libcdata_list_element_free(
+		          &element3,
+		          &cdata_test_list_value_free_function,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "element3",
+		 element3 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
 	result = libcdata_list_free(
 	          &list,
 	          &cdata_test_list_value_free_function,
