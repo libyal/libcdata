@@ -179,6 +179,8 @@ int cdata_test_btree_initialize(
 	          0,
 	          &error );
 
+	btree = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -190,8 +192,6 @@ int cdata_test_btree_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	btree = NULL;
 
 	result = libcdata_btree_initialize(
 	          &btree,

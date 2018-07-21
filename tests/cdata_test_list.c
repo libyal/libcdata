@@ -166,6 +166,8 @@ int cdata_test_list_initialize(
 	          &list,
 	          &error );
 
+	list = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -177,8 +179,6 @@ int cdata_test_list_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	list = NULL;
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 

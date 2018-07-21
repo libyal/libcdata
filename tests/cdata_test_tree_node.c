@@ -179,6 +179,8 @@ int cdata_test_tree_node_initialize(
 	          &tree_node,
 	          &error );
 
+	tree_node = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -190,8 +192,6 @@ int cdata_test_tree_node_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	tree_node = NULL;
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
@@ -721,6 +721,8 @@ int cdata_test_tree_node_clone(
 	          &cdata_test_tree_node_value_clone_function,
 	          &error );
 
+	destination_tree_node = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -732,8 +734,6 @@ int cdata_test_tree_node_clone(
 
 	libcerror_error_free(
 	 &error );
-
-	destination_tree_node = NULL;
 
 	result = libcdata_tree_node_clone(
 	          &destination_tree_node,

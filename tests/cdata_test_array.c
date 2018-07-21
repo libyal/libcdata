@@ -236,6 +236,8 @@ int cdata_test_array_initialize(
 	          0,
 	          &error );
 
+	array = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -247,8 +249,6 @@ int cdata_test_array_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	array = NULL;
 
 	result = libcdata_array_initialize(
 	          &array,
@@ -1250,6 +1250,8 @@ int cdata_test_array_clone(
 	          &cdata_test_array_entry_clone_function,
 	          &error );
 
+	destination_array = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -1261,8 +1263,6 @@ int cdata_test_array_clone(
 
 	libcerror_error_free(
 	 &error );
-
-	destination_array = NULL;
 
 	result = libcdata_array_clone(
 	          &destination_array,
@@ -1499,9 +1499,15 @@ on_error:
 int cdata_test_internal_array_resize(
      void )
 {
-	libcdata_internal_array_t *internal_array  = NULL;
-	libcerror_error_t *error = NULL;
-	int result               = 0;
+	libcdata_internal_array_t *internal_array = NULL;
+	libcerror_error_t *error                  = NULL;
+	int result                                = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+	int number_of_malloc_fail_tests           = 2;
+	int number_of_memset_fail_tests           = 2;
+	int test_number                           = 0;
+#endif
 
 	/* Initialize test
 	 */
@@ -1598,7 +1604,7 @@ int cdata_test_internal_array_resize(
 #if INT_MAX == SSIZE_MAX
 
 	result = libcdata_internal_array_resize(
-	          NULL,
+	          internal_array,
 	          INT_MAX,
 	          &cdata_test_array_entry_free_function,
 	          &error );
@@ -1616,6 +1622,82 @@ int cdata_test_internal_array_resize(
 	 &error );
 
 #endif /* INT_MAX == SSIZE_MAX */
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* 1 fail in memset after memory_allocate_structure
+	 * 2 fail in memset after memory_allocate of entries
+	 */
+	for( test_number = 0;
+	     test_number < number_of_malloc_fail_tests;
+	     test_number++ )
+	{
+		/* Test libcdata_internal_array_resize with malloc failing
+		 */
+		cdata_test_malloc_attempts_before_fail = test_number;
+
+		result = libcdata_internal_array_resize(
+		          internal_array,
+		          99,
+		          &cdata_test_array_entry_free_function,
+		          &error );
+
+		if( cdata_test_malloc_attempts_before_fail != -1 )
+		{
+			cdata_test_malloc_attempts_before_fail = -1;
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+		}
+	}
+	/* 1 fail in memset after memory_allocate_structure
+	 * 2 fail in memset after memory_allocate of entries
+	 */
+	for( test_number = 0;
+	     test_number < number_of_memset_fail_tests;
+	     test_number++ )
+	{
+		/* Test libcdata_internal_array_resize with memset failing
+		 */
+		cdata_test_memset_attempts_before_fail = test_number;
+
+		result = libcdata_internal_array_resize(
+		          internal_array,
+		          99,
+		          &cdata_test_array_entry_free_function,
+		          &error );
+
+		if( cdata_test_memset_attempts_before_fail != -1 )
+		{
+			cdata_test_memset_attempts_before_fail = -1;
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+		}
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 	/* Clean up
 	 */
@@ -1724,7 +1806,37 @@ int cdata_test_array_resize(
 	libcerror_error_free(
 	 &error );
 
-/* TODO test failing libcdata_internal_array_resize */
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_array_resize with malloc failing in libcdata_internal_array_resize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_resize(
+		  array,
+		  99,
+		  &cdata_test_array_entry_free_function,
+		  &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
@@ -1833,6 +1945,7 @@ int cdata_test_array_reserve(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
+	intptr_t **entries       = NULL;
 	int entry_value2         = 2;
 	int entry_value3         = 3;
 	int entry_value4         = 4;
@@ -1923,6 +2036,28 @@ int cdata_test_array_reserve(
 	result = libcdata_array_reverse(
 	          NULL,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	entries = ( (libcdata_internal_array_t *) array )->entries;
+
+	( (libcdata_internal_array_t *) array )->entries = NULL;
+
+	result = libcdata_array_reverse(
+	          array,
+	          &error );
+
+	( (libcdata_internal_array_t *) array )->entries = entries;
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -2294,6 +2429,7 @@ int cdata_test_array_get_entry_by_index(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
+	intptr_t **entries       = NULL;
 	int *entry_value_test    = NULL;
 	int entry_index          = 0;
 	int entry_value2         = 2;
@@ -2392,11 +2528,11 @@ int cdata_test_array_get_entry_by_index(
 	 "error",
 	 error );
 
-	/* Test to retrieve an entry that is out of bounds
+	/* Test error cases
 	 */
 	result = libcdata_array_get_entry_by_index(
-	          array,
-	          9,
+	          NULL,
+	          0,
 	          (intptr_t **) &entry_value_test,
 	          &error );
 
@@ -2405,11 +2541,29 @@ int cdata_test_array_get_entry_by_index(
 	 result,
 	 -1 );
 
-	/* TODO: should this be NULL ?
-	 * CDATA_TEST_ASSERT_IS_NULL(
-	 *  "entry_value_test",
-	 *   entry_value_test )
-	 */
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	entries = ( (libcdata_internal_array_t *) array )->entries;
+
+	( (libcdata_internal_array_t *) array )->entries = NULL;
+
+	result = libcdata_array_get_entry_by_index(
+	          array,
+	          0,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	( (libcdata_internal_array_t *) array )->entries = entries;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -2418,11 +2572,9 @@ int cdata_test_array_get_entry_by_index(
 	libcerror_error_free(
 	 &error );
 
-	/* Test error cases
-	 */
 	result = libcdata_array_get_entry_by_index(
-	          NULL,
-	          0,
+	          array,
+	          -1,
 	          (intptr_t **) &entry_value_test,
 	          &error );
 
@@ -2873,6 +3025,7 @@ int cdata_test_array_set_entry_by_index(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
+	intptr_t **entries       = NULL;
 	int entry_value2         = 2;
 	int entry_value3         = 3;
 	int entry_value4         = 4;
@@ -2957,6 +3110,30 @@ int cdata_test_array_set_entry_by_index(
 	          0,
 	          (intptr_t *) &entry_value4,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	entries = ( (libcdata_internal_array_t *) array )->entries;
+
+	( (libcdata_internal_array_t *) array )->entries = NULL;
+
+	result = libcdata_array_set_entry_by_index(
+	          array,
+	          0,
+	          (intptr_t *) &entry_value4,
+	          &error );
+
+	( (libcdata_internal_array_t *) array )->entries = entries;
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
@@ -3192,7 +3369,36 @@ int cdata_test_array_prepend_entry(
 	libcerror_error_free(
 	 &error );
 
-/* TODO test failing libcdata_internal_array_resize */
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_array_prepend_entry with malloc failing in libcdata_internal_array_resize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_prepend_entry(
+	          array,
+	          (intptr_t *) &entry_value6,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
@@ -3406,7 +3612,37 @@ int cdata_test_array_append_entry(
 	libcerror_error_free(
 	 &error );
 
-/* TODO test failing libcdata_internal_array_resize */
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_array_append_entry with malloc failing in libcdata_internal_array_resize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_append_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value6,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
@@ -3763,9 +3999,42 @@ int cdata_test_array_insert_entry(
 	libcerror_error_free(
 	 &error );
 
-/* TODO test with libcdata_internal_array_resize function failing */
 /* TODO test with entry_compare function failing */
 /* TODO test with entry_compare function returning unsupported value */
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_array_insert_entry with malloc failing in libcdata_internal_array_resize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_insert_entry(
+	          array,
+	          &entry_index,
+	          (intptr_t *) &entry_value2,
+	          &cdata_test_array_entry_compare_function,
+	          0,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
@@ -4046,7 +4315,37 @@ int cdata_test_array_remove_entry(
 	libcerror_error_free(
 	 &error );
 
-/* TODO test with libcdata_internal_array_resize function failing */
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_array_remove_entry with malloc failing in libcdata_internal_array_resize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_array_remove_entry(
+	          array,
+	          0,
+	          (intptr_t **) &entry_value_test,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 

@@ -161,6 +161,8 @@ int cdata_test_range_list_value_initialize(
 	          &range_list_value,
 	          &error );
 
+	range_list_value = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -172,8 +174,6 @@ int cdata_test_range_list_value_initialize(
 
 	libcerror_error_free(
 	 &error );
-
-	range_list_value = NULL;
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
@@ -448,6 +448,8 @@ int cdata_test_range_list_value_clone(
 	          &cdata_test_range_list_value_value_clone_function,
 	          &error );
 
+	destination_range_list_value = NULL;
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
@@ -459,8 +461,6 @@ int cdata_test_range_list_value_clone(
 
 	libcerror_error_free(
 	 &error );
-
-	destination_range_list_value = NULL;
 
 	result = libcdata_range_list_value_clone(
 	          &destination_range_list_value,
