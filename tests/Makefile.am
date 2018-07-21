@@ -67,6 +67,7 @@ cdata_test_list_SOURCES = \
 	cdata_test_list.c \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
+	cdata_test_rwlock.c cdata_test_rwlock.h \
 	cdata_test_unused.h
 
 cdata_test_list_LDADD = \

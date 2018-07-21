@@ -791,7 +791,7 @@ int cdata_test_internal_array_clear(
 	 "error",
 	 error );
 
-	/* Test libcdata_internal_array_clear
+	/* Test regular cases
 	 */
 	result = libcdata_internal_array_clear(
 	          internal_array,
@@ -936,7 +936,7 @@ int cdata_test_array_clear(
 	 "error",
 	 error );
 
-	/* Test libcdata_array_clear
+	/* Test regular cases
 	 */
 	result = libcdata_array_clear(
 	          array,
@@ -1769,7 +1769,7 @@ int cdata_test_array_resize(
 	 "error",
 	 error );
 
-	/* Test libcdata_array_resize
+	/* Test regular cases
 	 */
 	result = libcdata_array_resize(
 	          array,
@@ -2016,7 +2016,7 @@ int cdata_test_array_reserve(
 	 "error",
 	 error );
 
-	/* Test libcdata_array_reverse
+	/* Test regular cases
 	 */
 	result = libcdata_array_reverse(
 	          array,
