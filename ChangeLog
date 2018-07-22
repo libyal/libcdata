@@ -13,7 +13,6 @@ Types:
   - add current list element tracking like offset list ?
 * range list
   - add get/set range list value functions ?
-  - add thread lock - continue with libcdata_range_list_remove_range
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !
