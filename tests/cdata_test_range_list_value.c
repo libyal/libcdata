@@ -289,8 +289,50 @@ on_error:
 int cdata_test_range_list_value_free(
      void )
 {
-	libcerror_error_t *error = NULL;
-	int result               = 0;
+	libcdata_range_list_value_t *range_list_value = NULL;
+	libcerror_error_t *error                      = NULL;
+	int result                                    = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_range_list_value_initialize(
+	          &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	range_list_value->value = (intptr_t *) 0x12345678;
+
+	/* Test regular cases
+	 */
+	result = libcdata_range_list_value_free(
+	          &range_list_value,
+	          &cdata_test_range_list_value_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -311,6 +353,54 @@ int cdata_test_range_list_value_free(
 	libcerror_error_free(
 	 &error );
 
+	/* Initialize test
+	 */
+	result = libcdata_range_list_value_initialize(
+	          &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	range_list_value->value = (intptr_t *) 0x12345678;
+
+	/* Test libcdata_range_list_value_free with free_function failing
+	 */
+	cdata_test_range_list_value_value_free_function_return_value = -1;
+
+	result = libcdata_range_list_value_free(
+	          &range_list_value,
+	          &cdata_test_range_list_value_value_free_function,
+	          &error );
+
+	cdata_test_range_list_value_value_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 	return( 1 );
 
 on_error:
@@ -318,6 +408,13 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	if( range_list_value != NULL )
+	{
+		libcdata_range_list_value_free(
+		 &range_list_value,
+		 &cdata_test_range_list_value_value_free_function,
+		 NULL );
 	}
 	return( 0 );
 }
@@ -543,7 +640,6 @@ int cdata_test_range_list_value_clone(
 		libcerror_error_free(
 		 &error );
 	}
-
 	/* Test libcdata_range_list_value_clone with memcpy failing
 	 */
 	cdata_test_memcpy_attempts_before_fail = 0;
@@ -586,6 +682,31 @@ int cdata_test_range_list_value_clone(
 		 &error );
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
+	/* Test libcdata_range_list_clone with value_clone_function failing
+	 */
+	cdata_test_range_list_value_value_clone_function_return_value = -1;
+
+	result = libcdata_range_list_value_clone(
+	          &destination_range_list_value,
+	          source_range_list_value,
+	          &cdata_test_range_list_value_value_free_function,
+	          &cdata_test_range_list_value_value_clone_function,
+	          &error );
+
+	cdata_test_range_list_value_value_clone_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
 
 	/* Clean up
 	 */
@@ -681,6 +802,51 @@ int cdata_test_range_list_value_merge(
 
 	/* Test regular cases
 	 */
+	destination_range_list_value->start = 0;
+	destination_range_list_value->end   = 32;
+	destination_range_list_value->value = NULL;
+
+	source_range_list_value->start      = 16;
+	source_range_list_value->end        = 32;
+	source_range_list_value->value      = (intptr_t *) 0x12345678;
+
+	result = libcdata_range_list_value_merge(
+	          destination_range_list_value,
+	          source_range_list_value,
+	          &cdata_test_range_list_value_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	destination_range_list_value->start = 16;
+	destination_range_list_value->end   = 32;
+	destination_range_list_value->value = (intptr_t *) 0x87654321;
+
+	source_range_list_value->start      = 0;
+	source_range_list_value->end        = 32;
+	source_range_list_value->value      = (intptr_t *) 0x12345678;
+
+	result = libcdata_range_list_value_merge(
+	          destination_range_list_value,
+	          source_range_list_value,
+	          &cdata_test_range_list_value_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -707,6 +873,51 @@ int cdata_test_range_list_value_merge(
 	          NULL,
 	          &cdata_test_range_list_value_value_merge_function,
 	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	destination_range_list_value->value = (intptr_t *) 0x87654321;
+	source_range_list_value->value      = (intptr_t *) 0x12345678;
+
+	result = libcdata_range_list_value_merge(
+	          destination_range_list_value,
+	          source_range_list_value,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test libcdata_range_list_value_merge with merge_function failing
+	 */
+	cdata_test_range_list_value_value_merge_function_return_value = -1;
+
+	result = libcdata_range_list_value_merge(
+	          destination_range_list_value,
+	          source_range_list_value,
+	          &cdata_test_range_list_value_value_merge_function,
+	          &error );
+
+	cdata_test_range_list_value_value_merge_function_return_value = 1;
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",

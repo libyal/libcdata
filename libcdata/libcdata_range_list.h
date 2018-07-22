@@ -113,6 +113,11 @@ int libcdata_range_list_get_number_of_elements(
      int *number_of_elements,
      libcerror_error_t **error );
 
+int libcdata_range_list_get_first_element(
+     libcdata_range_list_t *range_list,
+     libcdata_list_element_t **element,
+     libcerror_error_t **error );
+
 int libcdata_internal_range_list_set_first_element(
      libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *element,
@@ -128,6 +133,11 @@ int libcdata_internal_range_list_set_last_element(
      libcdata_list_element_t *element,
      libcerror_error_t **error );
 
+int libcdata_range_list_get_last_element(
+     libcdata_range_list_t *range_list,
+     libcdata_list_element_t **element,
+     libcerror_error_t **error );
+
 int libcdata_range_list_set_last_element(
      libcdata_range_list_t *range_list,
      libcdata_list_element_t *element,
@@ -141,6 +151,20 @@ int libcdata_range_list_append_element(
 int libcdata_range_list_append_value(
      libcdata_range_list_t *range_list,
      libcdata_range_list_value_t *value,
+     libcerror_error_t **error );
+
+int libcdata_internal_range_list_insert_range(
+     libcdata_internal_range_list_t *internal_range_list,
+     uint64_t range_start,
+     uint64_t range_size,
+     intptr_t *value,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     int (*value_merge_function)(
+            intptr_t *destination_value,
+            intptr_t *source_value,
+            libcerror_error_t **error ),
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
@@ -171,16 +195,33 @@ int libcdata_range_list_insert_range_list(
             libcerror_error_t **error ),
      libcerror_error_t **error );
 
+int libcdata_internal_range_list_insert_element(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error );
+
 int libcdata_range_list_insert_element(
      libcdata_range_list_t *range_list,
      libcdata_list_element_t *range_list_element,
      libcdata_list_element_t *element,
      libcerror_error_t **error );
 
+int libcdata_internal_range_list_insert_value(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_range_list_value_t *value,
+     libcerror_error_t **error );
+
 int libcdata_range_list_insert_value(
      libcdata_range_list_t *range_list,
      libcdata_list_element_t *range_list_element,
      libcdata_range_list_value_t *value,
+     libcerror_error_t **error );
+
+int libcdata_internal_range_list_remove_element(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *element,
      libcerror_error_t **error );
 
 int libcdata_range_list_remove_element(
