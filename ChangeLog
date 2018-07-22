@@ -7,11 +7,13 @@ TODO
 Types:
 * array
   - allocate in larger blocks
+* list element
+  - track parent list
 * list
   - add current list element tracking like offset list ?
 * range list
   - add get/set range list value functions ?
-  - add thread lock - continue with libcdata_range_list_insert_range_list
+  - add thread lock - continue with libcdata_range_list_remove_range
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !
