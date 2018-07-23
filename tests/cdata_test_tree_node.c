@@ -493,8 +493,8 @@ int cdata_test_internal_tree_node_empty(
 	 "error",
 	 error );
 
-	result = libcdata_tree_node_append_node(
-	          tree_node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) tree_node,
 	          sub_node1,
 	          &error );
 
@@ -509,8 +509,8 @@ int cdata_test_internal_tree_node_empty(
 
 	sub_node1 = NULL;
 
-	result = libcdata_tree_node_append_node(
-	          tree_node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) tree_node,
 	          sub_node2,
 	          &error );
 
@@ -1136,7 +1136,7 @@ int cdata_test_tree_node_clone(
 	 * WARNING: after this test the lock is still active
 	 */
 /* TODO fix flaky test
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 1;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
 
 	result = libcdata_tree_node_clone(
 	          &destination_tree_node,
@@ -3082,10 +3082,12 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libcdata_tree_node_append_node function
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+/* Tests the libcdata_internal_tree_node_append_node function
  * Returns 1 if successful or 0 if not
  */
-int cdata_test_tree_node_append_node(
+int cdata_test_internal_tree_node_append_node(
      void )
 {
 	libcdata_tree_node_t *first_sub_node = NULL;
@@ -3176,8 +3178,8 @@ int cdata_test_tree_node_append_node(
 
 	( (libcdata_internal_tree_node_t *) node )->first_sub_node = (libcdata_tree_node_t *) 0x12345678;
 
-	result = libcdata_tree_node_append_node(
-	          node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node3,
 	          &error );
 
@@ -3201,8 +3203,8 @@ int cdata_test_tree_node_append_node(
 
 	( (libcdata_internal_tree_node_t *) node )->last_sub_node = (libcdata_tree_node_t *) 0x12345678;
 
-	result = libcdata_tree_node_append_node(
-	          node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node3,
 	          &error );
 
@@ -3222,8 +3224,8 @@ int cdata_test_tree_node_append_node(
 
 	/* Test regular cases
 	 */
-	result = libcdata_tree_node_append_node(
-	          node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node1,
 	          &error );
 
@@ -3238,8 +3240,8 @@ int cdata_test_tree_node_append_node(
 
 	sub_node1 = NULL;
 
-	result = libcdata_tree_node_append_node(
-	          node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node2,
 	          &error );
 
@@ -3256,7 +3258,7 @@ int cdata_test_tree_node_append_node(
 
 	/* Test error cases
 	 */
-	result = libcdata_tree_node_append_node(
+	result = libcdata_internal_tree_node_append_node(
 	          NULL,
 	          sub_node3,
 	          &error );
@@ -3273,8 +3275,8 @@ int cdata_test_tree_node_append_node(
 	libcerror_error_free(
 	 &error );
 
-	result = libcdata_tree_node_append_node(
-	          node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          NULL,
 	          &error );
 
@@ -3292,8 +3294,8 @@ int cdata_test_tree_node_append_node(
 
 	/* Test node already part of tree
 	 */
-	result = libcdata_tree_node_append_node(
-	          node,
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node1,
 	          &error );
 
@@ -3317,89 +3319,26 @@ int cdata_test_tree_node_append_node(
 	 */
 /* TODO implement */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
-
-	/* Test libcdata_tree_node_append_node with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
-	 */
-	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
-
-	result = libcdata_tree_node_append_node(
-	          node,
-	          sub_node3,
-	          &error );
-
-	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
-	{
-		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libcdata_tree_node_append_node with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
-	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 3;
-
-	result = libcdata_tree_node_append_node(
-	          node,
-	          sub_node3,
-	          &error );
-
-	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
-	{
-		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	sub_node3 = NULL;
-
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
-
 	/* Clean up
 	 */
-	if( sub_node3 != NULL )
-	{
-		result = libcdata_tree_node_free(
-		          &sub_node3,
-		          &cdata_test_tree_node_value_free_function,
-		          &error );
+	result = libcdata_tree_node_free(
+	          &sub_node3,
+	          &cdata_test_tree_node_value_free_function,
+	          &error );
 
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 1 );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "sub_node3",
-		 sub_node3 );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "sub_node3",
+	 sub_node3 );
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "error",
-		 error );
-	}
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	result = libcdata_tree_node_free(
 	          &node,
 	          &cdata_test_tree_node_value_free_function,
@@ -3457,6 +3396,260 @@ on_error:
 	return( 0 );
 }
 
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
+/* Tests the libcdata_tree_node_append_node function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_tree_node_append_node(
+     void )
+{
+	libcdata_tree_node_t *node      = NULL;
+	libcdata_tree_node_t *sub_node1 = NULL;
+	libcdata_tree_node_t *sub_node2 = NULL;
+	libcerror_error_t *error        = NULL;
+	int result                      = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_tree_node_initialize(
+	          &node,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "node",
+	 node );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_tree_node_initialize(
+	          &sub_node1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "sub_node1",
+	 sub_node1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_tree_node_initialize(
+	          &sub_node2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "sub_node2",
+	 sub_node2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libcdata_tree_node_append_node(
+	          node,
+	          sub_node1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	sub_node1 = NULL;
+
+	/* Test error cases
+	 */
+	result = libcdata_tree_node_append_node(
+	          NULL,
+	          sub_node2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_tree_node_append_node(
+	          node,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_CDATA_TEST_RWLOCK )
+
+	/* Test libcdata_tree_node_append_node with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_tree_node_append_node(
+	          node,
+	          sub_node2,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_tree_node_append_node with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 3;
+
+	result = libcdata_tree_node_append_node(
+	          node,
+	          sub_node2,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	sub_node2 = NULL;
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+
+	/* Clean up
+	 */
+	if( sub_node2 != NULL )
+	{
+		result = libcdata_tree_node_free(
+		          &sub_node2,
+		          &cdata_test_tree_node_value_free_function,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "sub_node2",
+		 sub_node2 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	result = libcdata_tree_node_free(
+	          &node,
+	          &cdata_test_tree_node_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "node",
+	 node );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( sub_node2 != NULL )
+	{
+		libcdata_tree_node_free(
+		 &sub_node2,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	if( sub_node1 != NULL )
+	{
+		libcdata_tree_node_free(
+		 &sub_node1,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	if( node != NULL )
+	{
+		libcdata_tree_node_free(
+		 &node,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
 /* Tests the libcdata_tree_node_append_value function
  * Returns 1 if successful or 0 if not
  */
@@ -3467,6 +3660,7 @@ int cdata_test_tree_node_append_value(
 	libcerror_error_t *error   = NULL;
 	int result                 = 0;
 	int tree_node_value1       = 1;
+	int tree_node_value2       = 2;
 
 	/* Initialize test
 	 */
@@ -3530,7 +3724,7 @@ int cdata_test_tree_node_append_value(
 
 	result = libcdata_tree_node_append_value(
 	          node,
-	          (intptr_t *) &tree_node_value1,
+	          (intptr_t *) &tree_node_value2,
 	          &error );
 
 	if( cdata_test_malloc_attempts_before_fail != -1 )
@@ -3552,6 +3746,65 @@ int cdata_test_tree_node_append_value(
 		 &error );
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
+#if defined( HAVE_CDATA_TEST_RWLOCK )
+
+	/* Test libcdata_tree_node_append_value with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_tree_node_append_value(
+	          node,
+	          (intptr_t *) &tree_node_value2,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_tree_node_append_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 4;
+
+	result = libcdata_tree_node_append_value(
+	          node,
+	          (intptr_t *) &tree_node_value2,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
 	 */
@@ -3591,26 +3844,28 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libcdata_tree_node_insert_node function
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+/* Tests the libcdata_internal_tree_node_insert_node function
  * Returns 1 if successful or 0 if not
  */
-int cdata_test_tree_node_insert_node(
+int cdata_test_internal_tree_node_insert_node(
      void )
 {
-	libcdata_tree_node_t *parent_node = NULL;
-	libcdata_tree_node_t *sub_node1   = NULL;
-	libcdata_tree_node_t *sub_node2   = NULL;
-	libcdata_tree_node_t *sub_node3   = NULL;
-	libcerror_error_t *error          = NULL;
-	int result                        = 0;
-	int tree_node_value1              = 1;
-	int tree_node_value2              = 2;
-	int tree_node_value3              = 3;
+	libcdata_tree_node_t *node      = NULL;
+	libcdata_tree_node_t *sub_node1 = NULL;
+	libcdata_tree_node_t *sub_node2 = NULL;
+	libcdata_tree_node_t *sub_node3 = NULL;
+	libcerror_error_t *error        = NULL;
+	int result                      = 0;
+	int tree_node_value1            = 1;
+	int tree_node_value2            = 2;
+	int tree_node_value3            = 3;
 
 	/* Initialize test
 	 */
 	result = libcdata_tree_node_initialize(
-	          &parent_node,
+	          &node,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3619,8 +3874,8 @@ int cdata_test_tree_node_insert_node(
 	 1 );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "parent_node",
-	 parent_node );
+	 "node",
+	 node );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -3721,8 +3976,8 @@ int cdata_test_tree_node_insert_node(
 
 	/* Test regular cases
 	 */
-	result = libcdata_tree_node_insert_node(
-	          parent_node,
+	result = libcdata_internal_tree_node_insert_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node1,
 	          &cdata_test_tree_node_value_compare_function,
 	          0,
@@ -3739,8 +3994,8 @@ int cdata_test_tree_node_insert_node(
 
 	sub_node1 = NULL;
 
-	result = libcdata_tree_node_insert_node(
-	          parent_node,
+	result = libcdata_internal_tree_node_insert_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node2,
 	          &cdata_test_tree_node_value_compare_function,
 	          0,
@@ -3759,7 +4014,7 @@ int cdata_test_tree_node_insert_node(
 
 	/* Test error cases
 	 */
-	result = libcdata_tree_node_insert_node(
+	result = libcdata_internal_tree_node_insert_node(
 	          NULL,
 	          sub_node3,
 	          &cdata_test_tree_node_value_compare_function,
@@ -3778,8 +4033,8 @@ int cdata_test_tree_node_insert_node(
 	libcerror_error_free(
 	 &error );
 
-	result = libcdata_tree_node_insert_node(
-	          parent_node,
+	result = libcdata_internal_tree_node_insert_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          NULL,
 	          &cdata_test_tree_node_value_compare_function,
 	          0,
@@ -3797,8 +4052,8 @@ int cdata_test_tree_node_insert_node(
 	libcerror_error_free(
 	 &error );
 
-	result = libcdata_tree_node_insert_node(
-	          parent_node,
+	result = libcdata_internal_tree_node_insert_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node3,
 	          NULL,
 	          0,
@@ -3816,8 +4071,8 @@ int cdata_test_tree_node_insert_node(
 	libcerror_error_free(
 	 &error );
 
-	result = libcdata_tree_node_insert_node(
-	          parent_node,
+	result = libcdata_internal_tree_node_insert_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node3,
 	          &cdata_test_tree_node_value_compare_function,
 	          0xff,
@@ -3837,8 +4092,8 @@ int cdata_test_tree_node_insert_node(
 
 	/* Test node already part of tree
 	 */
-	result = libcdata_tree_node_insert_node(
-	          parent_node,
+	result = libcdata_internal_tree_node_insert_node(
+	          (libcdata_internal_tree_node_t *) node,
 	          sub_node1,
 	          &cdata_test_tree_node_value_compare_function,
 	          0,
@@ -3877,7 +4132,7 @@ int cdata_test_tree_node_insert_node(
 	 error );
 
 	result = libcdata_tree_node_free(
-	          &parent_node,
+	          &node,
 	          &cdata_test_tree_node_value_free_function,
 	          &error );
 
@@ -3887,8 +4142,8 @@ int cdata_test_tree_node_insert_node(
 	 1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
-	 "parent_node",
-	 parent_node );
+	 "node",
+	 node );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -3923,10 +4178,304 @@ on_error:
 		 &cdata_test_tree_node_value_free_function,
 		 NULL );
 	}
-	if( parent_node != NULL )
+	if( node != NULL )
 	{
 		libcdata_tree_node_free(
-		 &parent_node,
+		 &node,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
+/* Tests the libcdata_tree_node_insert_node function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_tree_node_insert_node(
+     void )
+{
+	libcdata_tree_node_t *node      = NULL;
+	libcdata_tree_node_t *sub_node1 = NULL;
+	libcdata_tree_node_t *sub_node2 = NULL;
+	libcerror_error_t *error        = NULL;
+	int result                      = 0;
+	int tree_node_value1            = 1;
+	int tree_node_value2            = 2;
+
+	/* Initialize test
+	 */
+	result = libcdata_tree_node_initialize(
+	          &node,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "node",
+	 node );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_tree_node_initialize(
+	          &sub_node1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "sub_node1",
+	 sub_node1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_tree_node_set_value(
+	          sub_node1,
+	          (intptr_t *) &tree_node_value1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_tree_node_initialize(
+	          &sub_node2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "sub_node2",
+	 sub_node2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_tree_node_set_value(
+	          sub_node2,
+	          (intptr_t *) &tree_node_value2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libcdata_tree_node_insert_node(
+	          node,
+	          sub_node1,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	sub_node1 = NULL;
+
+	/* Test error cases
+	 */
+	result = libcdata_tree_node_insert_node(
+	          NULL,
+	          sub_node2,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_tree_node_insert_node(
+	          node,
+	          NULL,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_CDATA_TEST_RWLOCK )
+
+	/* Test libcdata_tree_node_insert_node with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_tree_node_insert_node(
+	          node,
+	          sub_node2,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_tree_node_insert_node with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 5;
+
+	result = libcdata_tree_node_insert_node(
+	          node,
+	          sub_node2,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	sub_node2 = NULL;
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+
+	/* Clean up
+	 */
+	if( sub_node2 != NULL )
+	{
+		result = libcdata_tree_node_free(
+		          &sub_node2,
+		          &cdata_test_tree_node_value_free_function,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "sub_node2",
+		 sub_node2 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	result = libcdata_tree_node_free(
+	          &node,
+	          &cdata_test_tree_node_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "node",
+	 node );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( sub_node2 != NULL )
+	{
+		libcdata_tree_node_free(
+		 &sub_node2,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	if( sub_node1 != NULL )
+	{
+		libcdata_tree_node_free(
+		 &sub_node1,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	if( node != NULL )
+	{
+		libcdata_tree_node_free(
+		 &node,
 		 &cdata_test_tree_node_value_free_function,
 		 NULL );
 	}
@@ -3943,6 +4492,7 @@ int cdata_test_tree_node_insert_value(
 	libcerror_error_t *error        = NULL;
 	int result                      = 0;
 	int tree_node_value1            = 1;
+	int tree_node_value2            = 2;
 
 	/* Initialize test
 	 */
@@ -4001,6 +4551,106 @@ int cdata_test_tree_node_insert_value(
 
 	libcerror_error_free(
 	 &error );
+
+#if defined( HAVE_CDATA_TEST_MEMORY )
+
+	/* Test libcdata_tree_node_insert_value with malloc failing in libcdata_tree_node_initialize
+	 */
+	cdata_test_malloc_attempts_before_fail = 0;
+
+	result = libcdata_tree_node_insert_value(
+	          tree_node,
+	          (intptr_t *) &tree_node_value2,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	if( cdata_test_malloc_attempts_before_fail != -1 )
+	{
+		cdata_test_malloc_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
+
+#if defined( HAVE_CDATA_TEST_RWLOCK )
+
+	/* Test libcdata_tree_node_insert_value with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_tree_node_insert_value(
+	          tree_node,
+	          (intptr_t *) &tree_node_value2,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_tree_node_insert_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * WARNING: after this test the lock is still active
+	 */
+/* TODO fix flaky test
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 6;
+
+	result = libcdata_tree_node_insert_value(
+	          tree_node,
+	          (intptr_t *) &tree_node_value2,
+	          &cdata_test_tree_node_value_compare_function,
+	          0,
+	          &error );
+
+fprintf( stdout, "X: %d\n", 100 - cdata_test_pthread_rwlock_unlock_attempts_before_fail );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+*/
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
 	 */
@@ -5136,6 +5786,14 @@ int main(
 	 "libcdata_tree_node_set_nodes",
 	 cdata_test_tree_node_set_nodes );
 
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	CDATA_TEST_RUN(
+	 "libcdata_internal_tree_node_append_node",
+	 cdata_test_internal_tree_node_append_node );
+
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 	CDATA_TEST_RUN(
 	 "libcdata_tree_node_append_node",
 	 cdata_test_tree_node_append_node );
@@ -5143,6 +5801,14 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_tree_node_append_value",
 	 cdata_test_tree_node_append_value );
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	CDATA_TEST_RUN(
+	 "libcdata_internal_tree_node_insert_node",
+	 cdata_test_internal_tree_node_insert_node );
+
+#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_tree_node_insert_node",

@@ -1031,11 +1031,11 @@ int libcdata_tree_node_set_nodes(
 LIBCDATA_EXTERN \
 int libcdata_tree_node_append_node(
      libcdata_tree_node_t *node,
-     libcdata_tree_node_t *sub_node,
+     libcdata_tree_node_t *node_to_append,
      libcdata_error_t **error );
 
 /* Appends a value to the node
- * Creates a new tree node
+ * Creates a new sub tree node
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -1044,7 +1044,7 @@ int libcdata_tree_node_append_value(
      intptr_t *value,
      libcdata_error_t **error );
 
-/* Inserts a tree node in the parent node
+/* Inserts a sub tree node in the node
  *
  * Uses the entry_compare_function to determine the order of the entries
  * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
@@ -1057,8 +1057,8 @@ int libcdata_tree_node_append_value(
  */
 LIBCDATA_EXTERN \
 int libcdata_tree_node_insert_node(
-     libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
+     libcdata_tree_node_t *node_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,
@@ -1066,9 +1066,9 @@ int libcdata_tree_node_insert_node(
      uint8_t insert_flags,
      libcdata_error_t **error );
 
-/* Inserts a value in the parent node
+/* Inserts a value in the node
  *
- * Creates a new tree node
+ * Creates a new sub tree node
  *
  * Uses the entry_compare_function to determine the order of the entries
  * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
@@ -1081,7 +1081,7 @@ int libcdata_tree_node_insert_node(
  */
 LIBCDATA_EXTERN \
 int libcdata_tree_node_insert_value(
-     libcdata_tree_node_t *parent_node,
+     libcdata_tree_node_t *node,
      intptr_t *value,
      int (*value_compare_function)(
             intptr_t *first_value,

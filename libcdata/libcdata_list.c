@@ -399,6 +399,7 @@ int libcdata_list_clone(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
+	libcdata_internal_list_t *internal_destination_list            = NULL;
 	libcdata_internal_list_t *internal_source_list                 = NULL;
 	libcdata_internal_list_element_t *internal_source_list_element = NULL;
 	intptr_t *destination_value                                    = NULL;
@@ -458,7 +459,7 @@ int libcdata_list_clone(
 	internal_source_list = (libcdata_internal_list_t *) source_list;
 
 	if( libcdata_list_initialize(
-	     destination_list,
+	     (libcdata_list_t **) &internal_destination_list,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -470,7 +471,7 @@ int libcdata_list_clone(
 
 		return( -1 );
 	}
-	if( *destination_list == NULL )
+	if( internal_destination_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -532,7 +533,7 @@ int libcdata_list_clone(
 				goto on_error;
 			}
 			if( libcdata_list_append_value(
-			     *destination_list,
+			     (libcdata_list_t *) internal_destination_list,
 			     destination_value,
 			     error ) != 1 )
 			{
@@ -551,6 +552,8 @@ int libcdata_list_clone(
 			internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list_element->next_element;
 		}
 	}
+	*destination_list = (libcdata_list_t *) internal_destination_list;
+
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_source_list->read_write_lock,
@@ -580,10 +583,10 @@ on_error:
 		 &destination_value,
 		 NULL );
 	}
-	if( *destination_list != NULL )
+	if( internal_destination_list != NULL )
 	{
 		libcdata_list_free(
-		 destination_list,
+		 (libcdata_list_t **) &internal_destination_list,
 		 value_free_function,
 		 error );
 	}

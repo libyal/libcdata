@@ -431,11 +431,12 @@ int libcdata_range_list_clone(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_internal_list_element_t *internal_source_list_element = NULL;
-	libcdata_internal_range_list_t *internal_source_range_list     = NULL;
-	libcdata_range_list_value_t *destination_range_list_value      = NULL;
-	static char *function                                          = "libcdata_range_list_clone";
-	int element_index                                              = 0;
+	libcdata_internal_list_element_t *internal_source_list_element  = NULL;
+	libcdata_internal_range_list_t *internal_destination_range_list = NULL;
+	libcdata_internal_range_list_t *internal_source_range_list      = NULL;
+	libcdata_range_list_value_t *destination_range_list_value       = NULL;
+	static char *function                                           = "libcdata_range_list_clone";
+	int element_index                                               = 0;
 
 	if( destination_range_list == NULL )
 	{
@@ -468,7 +469,7 @@ int libcdata_range_list_clone(
 	internal_source_range_list = (libcdata_internal_range_list_t *) source_range_list;
 
 	if( libcdata_range_list_initialize(
-	     destination_range_list,
+	     (libcdata_range_list_t **) &internal_destination_range_list,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -480,7 +481,7 @@ int libcdata_range_list_clone(
 
 		return( -1 );
 	}
-	if( *destination_range_list == NULL )
+	if( internal_destination_range_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -544,7 +545,7 @@ int libcdata_range_list_clone(
 				goto on_error;
 			}
 			if( libcdata_internal_range_list_append_value(
-			     (libcdata_internal_range_list_t *) *destination_range_list,
+			     internal_destination_range_list,
 			     destination_range_list_value,
 			     error ) != 1 )
 			{
@@ -563,6 +564,8 @@ int libcdata_range_list_clone(
 			internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list_element->next_element;
 		}
 	}
+	*destination_range_list = (libcdata_range_list_t *) internal_destination_range_list;
+
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_source_range_list->read_write_lock,
@@ -593,10 +596,10 @@ on_error:
 		 value_free_function,
 		 NULL );
 	}
-	if( *destination_range_list != NULL )
+	if( internal_destination_range_list != NULL )
 	{
 		libcdata_range_list_free(
-		 destination_range_list,
+		 (libcdata_range_list_t **) &internal_destination_range_list,
 		 value_free_function,
 		 NULL );
 	}
