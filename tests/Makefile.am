@@ -126,6 +126,7 @@ cdata_test_tree_node_SOURCES = \
 	cdata_test_libcerror.h \
 	cdata_test_macros.h \
 	cdata_test_memory.c cdata_test_memory.h \
+	cdata_test_rwlock.c cdata_test_rwlock.h \
 	cdata_test_tree_node.c \
 	cdata_test_unused.h
 

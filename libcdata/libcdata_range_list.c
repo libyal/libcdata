@@ -478,7 +478,7 @@ int libcdata_range_list_clone(
 		 "%s: unable to create destination range list.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 	if( *destination_range_list == NULL )
 	{
@@ -489,7 +489,7 @@ int libcdata_range_list_clone(
 		 "%s: missing destination range list.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(

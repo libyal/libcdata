@@ -1,4 +1,4 @@
-.Dd January  2, 2017
+.Dd July 23, 2018
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -187,9 +187,9 @@ Tree node functions
 .Ft int
 .Fn libcdata_tree_node_set_nodes "libcdata_tree_node_t *node, libcdata_tree_node_t *parent_node, libcdata_tree_node_t *previous_node, libcdata_tree_node_t *next_node, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_tree_node_append_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, libcdata_error_t **error"
+.Fn libcdata_tree_node_append_node "libcdata_tree_node_t *node, libcdata_tree_node_t *sub_node, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_tree_node_append_value "libcdata_tree_node_t *parent_node, intptr_t *value, libcdata_error_t **error"
+.Fn libcdata_tree_node_append_value "libcdata_tree_node_t *node, intptr_t *value, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_insert_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, int (*value_compare_function)( intptr_t *first_value, intptr_t *second_value, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
 .Ft int

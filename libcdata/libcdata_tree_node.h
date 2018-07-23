@@ -27,6 +27,7 @@
 
 #include "libcdata_extern.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_types.h"
 
 #if defined( __cplusplus )
@@ -64,6 +65,12 @@ struct libcdata_internal_tree_node
 	/* The node value
 	 */
 	intptr_t *value;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	/* The read/write lock
+	 */
+	libcthreads_read_write_lock_t *read_write_lock;
+#endif
 };
 
 LIBCDATA_EXTERN \
@@ -74,6 +81,13 @@ int libcdata_tree_node_initialize(
 LIBCDATA_EXTERN \
 int libcdata_tree_node_free(
      libcdata_tree_node_t **node,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
+
+int libcdata_internal_tree_node_empty(
+     libcdata_internal_tree_node_t *node,
      int (*value_free_function)(
             intptr_t **value,
             libcerror_error_t **error ),
@@ -166,8 +180,8 @@ int libcdata_tree_node_set_nodes(
 
 LIBCDATA_EXTERN \
 int libcdata_tree_node_append_node(
-     libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
+     libcdata_tree_node_t *sub_node,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

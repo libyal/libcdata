@@ -1025,22 +1025,22 @@ int libcdata_tree_node_set_nodes(
      libcdata_tree_node_t *next_node,
      libcdata_error_t **error );
 
-/* Appends a tree node to the parent node
+/* Appends a sub tree node to the node
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
 int libcdata_tree_node_append_node(
-     libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
+     libcdata_tree_node_t *sub_node,
      libcdata_error_t **error );
 
-/* Appends a value to the parent node
+/* Appends a value to the node
  * Creates a new tree node
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
 int libcdata_tree_node_append_value(
-     libcdata_tree_node_t *parent_node,
+     libcdata_tree_node_t *node,
      intptr_t *value,
      libcdata_error_t **error );
 
