@@ -133,13 +133,13 @@ int libcdata_range_list_get_last_element(
      libcdata_list_element_t **element,
      libcerror_error_t **error );
 
-int libcdata_range_list_append_element(
-     libcdata_range_list_t *range_list,
+int libcdata_internal_range_list_append_element(
+     libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error );
 
-int libcdata_range_list_append_value(
-     libcdata_range_list_t *range_list,
+int libcdata_internal_range_list_append_value(
+     libcdata_internal_range_list_t *internal_range_list,
      libcdata_range_list_value_t *value,
      libcerror_error_t **error );
 

@@ -11,10 +11,8 @@ Types:
   - track parent list
 * list
   - add current list element tracking like offset list ?
-  - add thread lock - append value?
 * range list
   - add get/set range list value functions ?
-  - add thread lock - append value?
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !

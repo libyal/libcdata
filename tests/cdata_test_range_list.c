@@ -1795,10 +1795,10 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libcdata_range_list_append_element function
+/* Tests the libcdata_internal_range_list_append_element function
  * Returns 1 if successful or 0 if not
  */
-int cdata_test_range_list_append_element(
+int cdata_test_internal_range_list_append_element(
      void )
 {
 	libcdata_list_element_t *element1 = NULL;
@@ -1880,8 +1880,8 @@ int cdata_test_range_list_append_element(
 
 	/* Test regular cases
 	 */
-	result = libcdata_range_list_append_element(
-	          range_list,
+	result = libcdata_internal_range_list_append_element(
+	          (libcdata_internal_range_list_t *) range_list,
 	          element1,
 	          &error );
 
@@ -1896,8 +1896,8 @@ int cdata_test_range_list_append_element(
 
 	element1 = NULL;
 
-	result = libcdata_range_list_append_element(
-	          range_list,
+	result = libcdata_internal_range_list_append_element(
+	          (libcdata_internal_range_list_t *) range_list,
 	          element2,
 	          &error );
 
@@ -1914,7 +1914,7 @@ int cdata_test_range_list_append_element(
 
 	/* Test error cases
 	 */
-	result = libcdata_range_list_append_element(
+	result = libcdata_internal_range_list_append_element(
 	          NULL,
 	          element3,
 	          &error );
@@ -1931,8 +1931,8 @@ int cdata_test_range_list_append_element(
 	libcerror_error_free(
 	 &error );
 
-	result = libcdata_range_list_append_element(
-	          range_list,
+	result = libcdata_internal_range_list_append_element(
+	          (libcdata_internal_range_list_t *) range_list,
 	          NULL,
 	          &error );
 
@@ -1947,90 +1947,27 @@ int cdata_test_range_list_append_element(
 
 	libcerror_error_free(
 	 &error );
-
-#if defined( HAVE_CDATA_TEST_RWLOCK )
-
-	/* Test libcdata_range_list_append_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
-	 */
-	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
-
-	result = libcdata_range_list_append_element(
-	          range_list,
-	          element3,
-	          &error );
-
-	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
-	{
-		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	/* Test libcdata_range_list_append_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
-	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
-
-	result = libcdata_range_list_append_element(
-	          range_list,
-	          element3,
-	          &error );
-
-	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
-	{
-		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	element3 = NULL;
-
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
 	 */
-	if( element3 != NULL )
-	{
-		result = libcdata_list_element_free(
-		          &element3,
-		          &cdata_test_range_list_value_free_function,
-		          &error );
+	result = libcdata_list_element_free(
+	          &element3,
+	          &cdata_test_range_list_value_free_function,
+	          &error );
 
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 1 );
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "element3",
-		 element3 );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element3",
+	 element3 );
 
-		CDATA_TEST_ASSERT_IS_NULL(
-		 "error",
-		 error );
-	}
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	result = libcdata_range_list_free(
 	          &range_list,
 	          &cdata_test_range_list_value_free_function,
@@ -2088,10 +2025,10 @@ on_error:
 	return( 0 );
 }
 
-/* Tests the libcdata_range_list_append_value function
+/* Tests the libcdata_internal_range_list_append_value function
  * Returns 1 if successful or 0 if not
  */
-int cdata_test_range_list_append_value(
+int cdata_test_internal_range_list_append_value(
      void )
 {
 	libcdata_range_list_t *range_list              = NULL;
@@ -2155,8 +2092,8 @@ int cdata_test_range_list_append_value(
 
 	/* Test regular cases
 	 */
-	result = libcdata_range_list_append_value(
-	          range_list,
+	result = libcdata_internal_range_list_append_value(
+	          (libcdata_internal_range_list_t *) range_list,
 	          range_list_value1,
 	          &error );
 
@@ -2173,7 +2110,7 @@ int cdata_test_range_list_append_value(
 
 	/* Test error cases
 	 */
-	result = libcdata_range_list_append_value(
+	result = libcdata_internal_range_list_append_value(
 	          NULL,
 	          range_list_value2,
 	          &error );
@@ -2196,14 +2133,16 @@ int cdata_test_range_list_append_value(
 	 */
 	cdata_test_malloc_attempts_before_fail = 0;
 
-	result = libcdata_range_list_append_value(
-	          range_list,
+	result = libcdata_internal_range_list_append_value(
+	          (libcdata_internal_range_list_t *) range_list,
 	          range_list_value2,
 	          &error );
 
 	if( cdata_test_malloc_attempts_before_fail != -1 )
 	{
 		cdata_test_malloc_attempts_before_fail = -1;
+
+		range_list_value2 = NULL;
 	}
 	else
 	{
@@ -2220,39 +2159,6 @@ int cdata_test_range_list_append_value(
 		 &error );
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
-
-#if defined( HAVE_CDATA_TEST_RWLOCK )
-
-	/* Test libcdata_range_list_append_value with pthread_rwlock_wrlock failing in libcdata_range_list_append_element
-	 */
-	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
-
-	result = libcdata_range_list_append_value(
-	          range_list,
-	          range_list_value2,
-	          &error );
-
-	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
-	{
-		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
-	}
-	else
-	{
-		CDATA_TEST_ASSERT_EQUAL_INT(
-		 "result",
-		 result,
-		 -1 );
-
-		CDATA_TEST_ASSERT_IS_NOT_NULL(
-		 "error",
-		 error );
-
-		libcerror_error_free(
-		 &error );
-	}
-	range_list_value2 = NULL;
-
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
 	 */
@@ -3440,8 +3346,8 @@ int cdata_test_internal_range_list_remove_element(
 	 "error",
 	 error );
 
-	result = libcdata_range_list_append_element(
-	          range_list,
+	result = libcdata_internal_range_list_append_element(
+	          (libcdata_internal_range_list_t *) range_list,
 	          element1,
 	          &error );
 
@@ -5773,12 +5679,12 @@ int main(
 	 cdata_test_internal_range_list_set_last_element );
 
 	CDATA_TEST_RUN(
-	 "libcdata_range_list_append_element",
-	 cdata_test_range_list_append_element );
+	 "libcdata_internal_range_list_append_element",
+	 cdata_test_internal_range_list_append_element );
 
 	CDATA_TEST_RUN(
-	 "libcdata_range_list_append_value",
-	 cdata_test_range_list_append_value );
+	 "libcdata_internal_range_list_append_value",
+	 cdata_test_internal_range_list_append_value );
 
 	CDATA_TEST_RUN(
 	 "libcdata_internal_range_list_insert_range",

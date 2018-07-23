@@ -162,6 +162,11 @@ int libcdata_list_prepend_value(
      intptr_t *value,
      libcerror_error_t **error );
 
+int libcdata_internal_list_append_element(
+     libcdata_internal_list_t *internal_list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error );
+
 LIBCDATA_EXTERN \
 int libcdata_list_append_element(
      libcdata_list_t *list,
@@ -172,6 +177,16 @@ LIBCDATA_EXTERN \
 int libcdata_list_append_value(
      libcdata_list_t *list,
      intptr_t *value,
+     libcerror_error_t **error );
+
+int libcdata_internal_list_insert_element(
+     libcdata_internal_list_t *internal_list,
+     libcdata_list_element_t *element,
+     int (*value_compare_function)(
+            intptr_t *first,
+            intptr_t *second,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

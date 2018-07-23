@@ -1455,15 +1455,14 @@ on_error:
 /* Appends a list element to the list
  * Returns 1 if successful or -1 on error
  */
-int libcdata_list_append_element(
-     libcdata_list_t *list,
+int libcdata_internal_list_append_element(
+     libcdata_internal_list_t *internal_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error )
 {
-	libcdata_internal_list_t *internal_list = NULL;
-	static char *function                   = "libcdata_list_append_element";
+	static char *function = "libcdata_internal_list_append_element";
 
-	if( list == NULL )
+	if( internal_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -1474,8 +1473,6 @@ int libcdata_list_append_element(
 
 		return( -1 );
 	}
-	internal_list = (libcdata_internal_list_t *) list;
-
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -1487,21 +1484,6 @@ int libcdata_list_append_element(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_grab_for_write(
-	     internal_list->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to grab read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	if( internal_list->first_element == NULL )
 	{
 		internal_list->first_element = element;
@@ -1518,10 +1500,167 @@ int libcdata_list_append_element(
 		 "%s: unable to set last element.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 	internal_list->number_of_elements++;
 
+	return( 1 );
+}
+
+/* Appends a list element to the list
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_list_append_element(
+     libcdata_list_t *list,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error )
+{
+	libcdata_internal_list_t *internal_list = NULL;
+	static char *function                   = "libcdata_list_append_element";
+	int result                              = 1;
+
+	if( list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_list = (libcdata_internal_list_t *) list;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	if( libcdata_internal_list_append_element(
+	     internal_list,
+	     element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append element to list.",
+		 function );
+
+		result = -1;
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( result );
+}
+
+/* Appends a value to the list
+ * Creates a new list element
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_list_append_value(
+     libcdata_list_t *list,
+     intptr_t *value,
+     libcerror_error_t **error )
+{
+	libcdata_internal_list_t *internal_list = NULL;
+	libcdata_list_element_t *element        = NULL;
+	static char *function                   = "libcdata_list_append_value";
+
+	if( list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_list = (libcdata_internal_list_t *) list;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	if( libcdata_list_element_initialize(
+	     &element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_list_element_set_value(
+	     element,
+	     value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to set value of list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_internal_list_append_element(
+	     internal_list,
+	     element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append element to list.",
+		 function );
+
+		goto on_error;
+	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
 	     internal_list->read_write_lock,
@@ -1545,69 +1684,10 @@ on_error:
 	 internal_list->read_write_lock,
 	 NULL );
 #endif
-	return( -1 );
-}
-
-/* Appends a value to the list
- * Creates a new list element
- * Returns 1 if successful or -1 on error
- */
-int libcdata_list_append_value(
-     libcdata_list_t *list,
-     intptr_t *value,
-     libcerror_error_t **error )
-{
-	libcdata_list_element_t *list_element = NULL;
-	static char *function                 = "libcdata_list_append_value";
-
-	if( libcdata_list_element_initialize(
-	     &list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create list element.",
-		 function );
-
-		goto on_error;
-	}
-	if( libcdata_list_append_element(
-	     list,
-	     list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to append element to list.",
-		 function );
-
-		goto on_error;
-	}
-	if( libcdata_list_element_set_value(
-	     list_element,
-	     value,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to set value of list element.",
-		 function );
-
-		goto on_error;
-	}
-	return( 1 );
-
-on_error:
-	if( list_element != NULL )
+	if( element != NULL )
 	{
 		libcdata_list_element_free(
-		 &list_element,
+		 &element,
 		 NULL,
 		 NULL );
 	}
@@ -1625,8 +1705,8 @@ on_error:
  *
  * Returns 1 if successful, 0 if the list element already exists or -1 on error
  */
-int libcdata_list_insert_element(
-     libcdata_list_t *list,
+int libcdata_internal_list_insert_element(
+     libcdata_internal_list_t *internal_list,
      libcdata_list_element_t *element,
      int (*value_compare_function)(
             intptr_t *first_value,
@@ -1635,18 +1715,17 @@ int libcdata_list_insert_element(
      uint8_t insert_flags,
      libcerror_error_t **error )
 {
-	libcdata_internal_list_t *internal_list   = NULL;
 	libcdata_list_element_t *list_element     = NULL;
 	libcdata_list_element_t *next_element     = NULL;
 	libcdata_list_element_t *previous_element = NULL;
 	intptr_t *element_value                   = NULL;
 	intptr_t *list_element_value              = NULL;
-	static char *function                     = "libcdata_list_insert_element";
+	static char *function                     = "libcdata_internal_list_insert_element";
 	int compare_result                        = 0;
 	int element_index                         = 0;
 	int result                                = 1;
 
-	if( list == NULL )
+	if( internal_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -1657,8 +1736,6 @@ int libcdata_list_insert_element(
 
 		return( -1 );
 	}
-	internal_list = (libcdata_internal_list_t *) list;
-
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -1734,21 +1811,6 @@ int libcdata_list_insert_element(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_grab_for_write(
-	     internal_list->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to grab read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	if( internal_list->number_of_elements == 0 )
 	{
 		if( internal_list->first_element != NULL )
@@ -1760,7 +1822,7 @@ int libcdata_list_insert_element(
 			 "%s: corruption detected - first element already set.",
 			 function );
 
-			goto on_error;
+			return( -1 );
 		}
 		if( internal_list->last_element != NULL )
 		{
@@ -1771,7 +1833,7 @@ int libcdata_list_insert_element(
 			 "%s: corruption detected - last element already set.",
 			 function );
 
-			goto on_error;
+			return( -1 );
 		}
 		internal_list->first_element = element;
 		internal_list->last_element  = element;
@@ -1789,7 +1851,7 @@ int libcdata_list_insert_element(
 			 "%s: corruption detected - missing first.",
 			 function );
 
-			goto on_error;
+			return( -1 );
 		}
 		if( internal_list->last_element == NULL )
 		{
@@ -1800,7 +1862,7 @@ int libcdata_list_insert_element(
 			 "%s: corruption detected - missing last.",
 			 function );
 
-			goto on_error;
+			return( -1 );
 		}
 		list_element = internal_list->first_element;
 
@@ -1821,7 +1883,7 @@ int libcdata_list_insert_element(
 				 function,
 				 element_index );
 
-				goto on_error;
+				return( -1 );
 			}
 			compare_result = value_compare_function(
 			                  element_value,
@@ -1838,7 +1900,7 @@ int libcdata_list_insert_element(
 				 function,
 				 element_index );
 
-				goto on_error;
+				return( -1 );
 			}
 			else if( compare_result == LIBCDATA_COMPARE_EQUAL )
 			{
@@ -1865,7 +1927,7 @@ int libcdata_list_insert_element(
 				 function,
 				 compare_result );
 
-				goto on_error;
+				return( -1 );
 			}
 			if( libcdata_list_element_get_next_element(
 			     list_element,
@@ -1880,7 +1942,7 @@ int libcdata_list_insert_element(
 				 function,
 				 element_index );
 
-				goto on_error;
+				return( -1 );
 			}
 		}
 		if( result != 0 )
@@ -1900,7 +1962,7 @@ int libcdata_list_insert_element(
 					 function,
 					 element_index );
 
-					goto on_error;
+					return( -1 );
 				}
 				if( libcdata_list_element_set_elements(
 				     element,
@@ -1915,7 +1977,7 @@ int libcdata_list_insert_element(
 					 "%s: unable to set previous and next element of list element.",
 					 function );
 
-					goto on_error;
+					return( -1 );
 				}
 				if( list_element == internal_list->first_element )
 				{
@@ -1936,7 +1998,7 @@ int libcdata_list_insert_element(
 						 function,
 						 element_index - 1 );
 
-						goto on_error;
+						return( -1 );
 					}
 				}
 				if( libcdata_list_element_set_previous_element(
@@ -1952,7 +2014,7 @@ int libcdata_list_insert_element(
 					 function,
 					 element_index );
 
-					goto on_error;
+					return( -1 );
 				}
 			}
 			else
@@ -1969,11 +2031,85 @@ int libcdata_list_insert_element(
 					 "%s: unable to set last element.",
 					 function );
 
-					goto on_error;
+					return( -1 );
 				}
 			}
 			internal_list->number_of_elements++;
 		}
+	}
+	return( result );
+}
+
+/* Inserts a list element into the list
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * Returns 1 if successful, 0 if the list element already exists or -1 on error
+ */
+int libcdata_list_insert_element(
+     libcdata_list_t *list,
+     libcdata_list_element_t *element,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     libcerror_error_t **error )
+{
+	libcdata_internal_list_t *internal_list = NULL;
+	static char *function                   = "libcdata_list_insert_element";
+	int result                              = 1;
+
+	if( list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_list = (libcdata_internal_list_t *) list;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	result = libcdata_internal_list_insert_element(
+	          internal_list,
+	          element,
+	          value_compare_function,
+	          insert_flags,
+	          error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert element to list.",
+		 function );
+
+		result = -1;
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -1991,14 +2127,6 @@ int libcdata_list_insert_element(
 	}
 #endif
 	return( result );
-
-on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcthreads_read_write_lock_release_for_write(
-	 internal_list->read_write_lock,
-	 NULL );
-#endif
-	return( -1 );
 }
 
 /* Inserts a value to the list
@@ -2024,12 +2152,41 @@ int libcdata_list_insert_value(
      uint8_t insert_flags,
      libcerror_error_t **error )
 {
-	libcdata_list_element_t *list_element = NULL;
-	static char *function                 = "libcdata_list_insert_value";
-	int result                            = 0;
+	libcdata_internal_list_t *internal_list = NULL;
+	libcdata_list_element_t *element        = NULL;
+	static char *function                   = "libcdata_list_insert_value";
+	int result                              = 1;
 
+	if( list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_list = (libcdata_internal_list_t *) list;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	if( libcdata_list_element_initialize(
-	     &list_element,
+	     &element,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -2042,7 +2199,7 @@ int libcdata_list_insert_value(
 		return( -1 );
 	}
 	if( libcdata_list_element_set_value(
-	     list_element,
+	     element,
 	     value,
 	     error ) != 1 )
 	{
@@ -2055,9 +2212,9 @@ int libcdata_list_insert_value(
 
 		goto on_error;
 	}
-	result = libcdata_list_insert_element(
-	          list,
-	          list_element,
+	result = libcdata_internal_list_insert_element(
+	          internal_list,
+	          element,
 	          value_compare_function,
 	          insert_flags,
 	          error );
@@ -2076,7 +2233,7 @@ int libcdata_list_insert_value(
 	else if( result == 0 )
 	{
 		if( libcdata_list_element_free(
-		     &list_element,
+		     &element,
 		     NULL,
 		     error ) != 1 )
 		{
@@ -2090,13 +2247,33 @@ int libcdata_list_insert_value(
 			goto on_error;
 		}
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( result );
 
 on_error:
-	if( list_element != NULL )
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_list->read_write_lock,
+	 NULL );
+#endif
+	if( element != NULL )
 	{
 		libcdata_list_element_free(
-		 &list_element,
+		 &element,
 		 NULL,
 		 NULL );
 	}

@@ -543,8 +543,8 @@ int libcdata_range_list_clone(
 
 				goto on_error;
 			}
-			if( libcdata_range_list_append_value(
-			     *destination_range_list,
+			if( libcdata_internal_range_list_append_value(
+			     (libcdata_internal_range_list_t *) *destination_range_list,
 			     destination_range_list_value,
 			     error ) != 1 )
 			{
@@ -936,15 +936,14 @@ int libcdata_internal_range_list_set_last_element(
 /* Append a list element to the list
  * Returns 1 if successful or -1 on error
  */
-int libcdata_range_list_append_element(
-     libcdata_range_list_t *range_list,
+int libcdata_internal_range_list_append_element(
+     libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error )
 {
-	libcdata_internal_range_list_t *internal_range_list = NULL;
-	static char *function                               = "libcdata_range_list_append_element";
+	static char *function = "libcdata_internal_range_list_append_element";
 
-	if( range_list == NULL )
+	if( internal_range_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -955,8 +954,6 @@ int libcdata_range_list_append_element(
 
 		return( -1 );
 	}
-	internal_range_list = (libcdata_internal_range_list_t *) range_list;
-
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -968,21 +965,6 @@ int libcdata_range_list_append_element(
 
 		return( -1 );
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_grab_for_write(
-	     internal_range_list->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to grab read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	if( internal_range_list->first_element == NULL )
 	{
 		internal_range_list->first_element = element;
@@ -999,47 +981,24 @@ int libcdata_range_list_append_element(
 		 "%s: unable to set last element.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 	internal_range_list->number_of_elements++;
 
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_release_for_write(
-	     internal_range_list->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to release read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	return( 1 );
-
-on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcthreads_read_write_lock_release_for_write(
-	 internal_range_list->read_write_lock,
-	 NULL );
-#endif
-	return( -1 );
 }
 
 /* Append a value to the list
  * Creates a new list element
  * Returns 1 if successful or -1 on error
  */
-int libcdata_range_list_append_value(
-     libcdata_range_list_t *range_list,
+int libcdata_internal_range_list_append_value(
+     libcdata_internal_range_list_t *internal_range_list,
      libcdata_range_list_value_t *value,
      libcerror_error_t **error )
 {
 	libcdata_list_element_t *list_element = NULL;
-	static char *function                 = "libcdata_range_list_append_value";
+	static char *function                 = "libcdata_internal_range_list_append_value";
 
 	if( libcdata_list_element_initialize(
 	     &list_element,
@@ -1054,20 +1013,6 @@ int libcdata_range_list_append_value(
 
 		goto on_error;
 	}
-	if( libcdata_range_list_append_element(
-	     range_list,
-	     list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to append element to list.",
-		 function );
-
-		goto on_error;
-	}
 	if( libcdata_list_element_set_value(
 	     list_element,
 	     (intptr_t *) value,
@@ -1078,6 +1023,20 @@ int libcdata_range_list_append_value(
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 		 "%s: unable to set value of list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_internal_range_list_append_element(
+	     internal_range_list,
+	     list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to append element to range list.",
 		 function );
 
 		goto on_error;

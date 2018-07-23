@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\tests\cdata_test_rwlock.c"
+				>
+			</File>
+			<File
 				RelativePath="..\..\tests\cdata_test_tree_node.c"
 				>
 			</File>
@@ -203,6 +207,10 @@
 			</File>
 			<File
 				RelativePath="..\..\tests\cdata_test_memory.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\tests\cdata_test_rwlock.h"
 				>
 			</File>
 			<File
