@@ -645,6 +645,11 @@ int libcdata_array_clone(
 		 "%s: unable to release read/write lock for reading.",
 		 function );
 
+		libcdata_array_free(
+		 (libcdata_array_t **) &internal_destination_array,
+		 entry_free_function,
+		 NULL );
+
 		return( -1 );
 	}
 #endif

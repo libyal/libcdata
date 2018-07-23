@@ -615,8 +615,6 @@ int libcdata_tree_node_clone(
 
 		internal_source_sub_node = (libcdata_internal_tree_node_t *) internal_source_sub_node->next_node;
 	}
-	*destination_node = (libcdata_tree_node_t *) internal_destination_node;
-
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_source_node->read_write_lock,
@@ -629,9 +627,16 @@ int libcdata_tree_node_clone(
 		 "%s: unable to release read/write lock for reading.",
 		 function );
 
+		libcdata_tree_node_free(
+		 &destination_sub_node,
+		 value_free_function,
+		 NULL );
+
 		return( -1 );
 	}
 #endif
+	*destination_node = (libcdata_tree_node_t *) internal_destination_node;
+
 	return( 1 );
 
 on_error:
@@ -2518,8 +2523,38 @@ int libcdata_tree_node_get_number_of_sub_nodes(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	*number_of_sub_nodes = internal_node->number_of_sub_nodes;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
 }
 
@@ -2574,6 +2609,21 @@ int libcdata_tree_node_get_sub_node_by_index(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	/* Check if the sub nodes should be searched front to back
 	 * or back to front
 	 */
@@ -2604,7 +2654,7 @@ int libcdata_tree_node_get_sub_node_by_index(
 				 function,
 				 sub_node_iterator );
 
-				return( -1 );
+				goto on_error;
 			}
 		}
 	}
@@ -2635,13 +2685,36 @@ int libcdata_tree_node_get_sub_node_by_index(
 				 function,
 				 sub_node_iterator );
 
-				return( -1 );
+				goto on_error;
 			}
 		}
 	}
 	*sub_node = safe_sub_node;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( result );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_read(
+	 internal_node->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
 }
 
 /* Retrieves a list of all the leaf nodes
@@ -2681,6 +2754,21 @@ int libcdata_tree_node_get_leaf_node_list(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	if( *leaf_node_list == NULL )
 	{
 		if( libcdata_list_initialize(
@@ -2694,12 +2782,40 @@ int libcdata_tree_node_get_leaf_node_list(
 			 "%s: unable to create leaf node list.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	/* Traverse the sub nodes
 	 */
-	if( internal_node->number_of_sub_nodes > 0 )
+	if( internal_node->number_of_sub_nodes == 0 )
+	{
+		if( internal_node->value == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: invalid node - missing value.",
+			 function );
+
+			goto on_error;
+		}
+		if( libcdata_list_append_value(
+		     *leaf_node_list,
+		     internal_node->value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to append tree node to leaf node list.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	else
 	{
 		sub_node = internal_node->first_sub_node;
 
@@ -2717,7 +2833,7 @@ int libcdata_tree_node_get_leaf_node_list(
 				 function,
 				 sub_node_index );
 
-				return( -1 );
+				goto on_error;
 			}
 			if( libcdata_tree_node_get_leaf_node_list(
 			     sub_node,
@@ -2732,7 +2848,7 @@ int libcdata_tree_node_get_leaf_node_list(
 				 function,
 				 sub_node_index );
 
-				return( -1 );
+				goto on_error;
 			}
 			if( libcdata_tree_node_get_next_node(
 			     sub_node,
@@ -2747,38 +2863,33 @@ int libcdata_tree_node_get_leaf_node_list(
 				 function,
 				 sub_node_index );
 
-				return( -1 );
+				goto on_error;
 			}
 		}
 	}
-	else
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
 	{
-		if( internal_node->value == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: invalid node - missing value.",
-			 function );
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
 
-			return( -1 );
-		}
-		if( libcdata_list_append_value(
-		     *leaf_node_list,
-		     internal_node->value,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to append tree node to leaf node list.",
-			 function );
-
-			return( -1 );
-		}
+		return( -1 );
 	}
+#endif
 	return( 1 );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_read(
+	 internal_node->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
 }
 

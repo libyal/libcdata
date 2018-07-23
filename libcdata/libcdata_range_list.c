@@ -564,8 +564,6 @@ int libcdata_range_list_clone(
 			internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list_element->next_element;
 		}
 	}
-	*destination_range_list = (libcdata_range_list_t *) internal_destination_range_list;
-
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_read(
 	     internal_source_range_list->read_write_lock,
@@ -578,9 +576,16 @@ int libcdata_range_list_clone(
 		 "%s: unable to release read/write lock for reading.",
 		 function );
 
+		libcdata_range_list_free(
+		 (libcdata_range_list_t **) &internal_destination_range_list,
+		 value_free_function,
+		 NULL );
+
 		return( -1 );
 	}
 #endif
+	*destination_range_list = (libcdata_range_list_t *) internal_destination_range_list;
+
 	return( 1 );
 
 on_error:

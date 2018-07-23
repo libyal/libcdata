@@ -544,7 +544,6 @@ int cdata_test_range_list_empty(
 		 &error );
 	}
 	/* Test libcdata_range_list_empty with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -763,6 +762,10 @@ int cdata_test_range_list_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_range_list",
+	 destination_range_list );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -875,6 +878,10 @@ int cdata_test_range_list_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_range_list",
+	 destination_range_list );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -914,6 +921,10 @@ int cdata_test_range_list_clone(
 		 result,
 		 -1 );
 
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_range_list",
+		 destination_range_list );
+
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
 		 error );
@@ -922,7 +933,6 @@ int cdata_test_range_list_clone(
 		 &error );
 	}
 	/* Test libcdata_range_list_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -951,6 +961,10 @@ int cdata_test_range_list_clone(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_range_list",
+		 destination_range_list );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -1116,7 +1130,6 @@ int cdata_test_range_list_get_number_of_elements(
 		 &error );
 	}
 	/* Test libcdata_range_list_get_number_of_elements with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1320,7 +1333,6 @@ int cdata_test_range_list_get_first_element(
 		 &error );
 	}
 	/* Test libcdata_range_list_get_first_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1625,7 +1637,6 @@ int cdata_test_range_list_get_last_element(
 		 &error );
 	}
 	/* Test libcdata_range_list_get_last_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2573,7 +2584,6 @@ int cdata_test_range_list_insert_range(
 		 &error );
 	}
 	/* Test libcdata_range_list_insert_range with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 6;
 
@@ -2800,7 +2810,6 @@ int cdata_test_range_list_insert_range_list(
 		 &error );
 	}
 	/* Test libcdata_range_list_insert_range_list with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 6;
 
@@ -3791,7 +3800,6 @@ int cdata_test_range_list_remove_range(
 		 &error );
 	}
 	/* Test libcdata_range_list_remove_range with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 4;
 
@@ -4906,7 +4914,6 @@ int cdata_test_range_list_get_range_by_index(
 		 &error );
 	}
 	/* Test libcdata_range_list_get_range_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 5;
 
@@ -5111,7 +5118,6 @@ int cdata_test_range_list_get_range_at_offset(
 		 &error );
 	}
 	/* Test libcdata_range_list_get_range_at_offset with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
 
@@ -5334,7 +5340,6 @@ int cdata_test_range_list_range_is_present(
 		 &error );
 	}
 	/* Test libcdata_range_list_range_is_present with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 1;
 
@@ -5549,7 +5554,6 @@ int cdata_test_range_list_spanning_range(
 		 &error );
 	}
 	/* Test libcdata_range_list_get_spanning_range with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
 

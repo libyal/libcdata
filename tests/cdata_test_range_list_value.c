@@ -552,6 +552,10 @@ int cdata_test_range_list_value_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_range_list_value",
+	 destination_range_list_value );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -571,6 +575,10 @@ int cdata_test_range_list_value_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_range_list_value",
+	 destination_range_list_value );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -589,6 +597,10 @@ int cdata_test_range_list_value_clone(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_range_list_value",
+	 destination_range_list_value );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -700,6 +712,10 @@ int cdata_test_range_list_value_clone(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_range_list_value",
+	 destination_range_list_value );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",

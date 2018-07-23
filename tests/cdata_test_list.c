@@ -641,7 +641,6 @@ int cdata_test_list_empty(
 		 &error );
 	}
 	/* Test libcdata_list_empty with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -856,6 +855,10 @@ int cdata_test_list_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_list",
+	 destination_list );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -875,6 +878,10 @@ int cdata_test_list_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_list",
+	 destination_list );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -893,6 +900,10 @@ int cdata_test_list_clone(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_list",
+	 destination_list );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -966,6 +977,10 @@ int cdata_test_list_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_list",
+	 destination_list );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -1005,6 +1020,10 @@ int cdata_test_list_clone(
 		 result,
 		 -1 );
 
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_list",
+		 destination_list );
+
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
 		 error );
@@ -1013,7 +1032,6 @@ int cdata_test_list_clone(
 		 &error );
 	}
 	/* Test libcdata_list_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1042,6 +1060,10 @@ int cdata_test_list_clone(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_list",
+		 destination_list );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -1211,7 +1233,6 @@ int cdata_test_list_get_number_of_elements(
 		 &error );
 	}
 	/* Test libcdata_list_get_number_of_elements with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1409,7 +1430,6 @@ int cdata_test_list_get_first_element(
 		 &error );
 	}
 	/* Test libcdata_list_get_first_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1763,7 +1783,6 @@ int cdata_test_list_set_first_element(
 		 &error );
 	}
 	/* Test libcdata_list_set_first_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 1;
 
@@ -1988,7 +2007,6 @@ int cdata_test_list_get_last_element(
 		 &error );
 	}
 	/* Test libcdata_list_get_last_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2342,7 +2360,6 @@ int cdata_test_list_set_last_element(
 		 &error );
 	}
 	/* Test libcdata_list_set_last_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 1;
 
@@ -2589,7 +2606,6 @@ int cdata_test_list_get_element_by_index(
 		 &error );
 	}
 	/* Test libcdata_list_get_element_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2774,7 +2790,6 @@ int cdata_test_list_get_value_by_index(
 		 &error );
 	}
 	/* Test cdata_test_list_get_value_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3025,7 +3040,6 @@ int cdata_test_list_prepend_element(
 		 &error );
 	}
 	/* Test libcdata_list_prepend_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
 
@@ -3699,7 +3713,6 @@ int cdata_test_list_append_element(
 		 &error );
 	}
 	/* Test libcdata_list_append_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
 
@@ -3929,7 +3942,6 @@ int cdata_test_list_append_value(
 		 &error );
 	}
 	/* Test libcdata_list_append_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 3;
 
@@ -4531,7 +4543,6 @@ int cdata_test_list_insert_element(
 		 &error );
 	}
 	/* Test libcdata_list_insert_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 6;
 
@@ -4738,7 +4749,6 @@ int cdata_test_list_insert_value(
 		 &error );
 	}
 	/* Test libcdata_list_insert_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 7;
 
@@ -5125,7 +5135,6 @@ int cdata_test_list_remove_element(
 		 &error );
 	}
 	/* Test libcdata_list_remove_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 3;
 

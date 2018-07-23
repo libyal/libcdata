@@ -675,7 +675,6 @@ int cdata_test_array_empty(
 		 &error );
 	}
 	/* Test libcdata_array_empty with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1039,7 +1038,6 @@ int cdata_test_array_clear(
 		 &error );
 	}
 	/* Test libcdata_array_clear with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1257,6 +1255,10 @@ int cdata_test_array_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_array",
+	 destination_array );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -1276,6 +1278,10 @@ int cdata_test_array_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_array",
+	 destination_array );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -1294,6 +1300,10 @@ int cdata_test_array_clone(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_array",
+	 destination_array );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -1367,6 +1377,10 @@ int cdata_test_array_clone(
 	 result,
 	 -1 );
 
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_array",
+	 destination_array );
+
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
 	 error );
@@ -1406,6 +1420,10 @@ int cdata_test_array_clone(
 		 result,
 		 -1 );
 
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_array",
+		 destination_array );
+
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
 		 error );
@@ -1414,7 +1432,6 @@ int cdata_test_array_clone(
 		 &error );
 	}
 	/* Test libcdata_array_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1443,6 +1460,10 @@ int cdata_test_array_clone(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_array",
+		 destination_array );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -1869,7 +1890,6 @@ int cdata_test_array_resize(
 		 &error );
 	}
 	/* Test libcdata_array_resize with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2100,7 +2120,6 @@ int cdata_test_array_reserve(
 		 &error );
 	}
 	/* Test libcdata_array_reverse with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2354,7 +2373,6 @@ int cdata_test_array_get_number_of_entries(
 		 &error );
 	}
 	/* Test libcdata_array_get_number_of_entries with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2639,7 +2657,6 @@ int cdata_test_array_get_entry_by_index(
 		 &error );
 	}
 	/* Test libcdata_array_get_entry_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -2948,7 +2965,6 @@ int cdata_test_array_get_entry_by_value(
 		 &error );
 	}
 	/* Test libcdata_array_get_entry_by_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3218,7 +3234,6 @@ int cdata_test_array_set_entry_by_index(
 		 &error );
 	}
 	/* Test libcdata_array_set_entry_by_index with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3430,7 +3445,6 @@ int cdata_test_array_prepend_entry(
 		 &error );
 	}
 	/* Test libcdata_array_prepend_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -3675,7 +3689,6 @@ int cdata_test_array_append_entry(
 		 &error );
 	}
 	/* Test libcdata_array_append_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -4069,7 +4082,6 @@ int cdata_test_array_insert_entry(
 		 &error );
 	}
 	/* Test libcdata_array_insert_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -4378,7 +4390,6 @@ int cdata_test_array_remove_entry(
 		 &error );
 	}
 	/* Test libcdata_array_remove_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 

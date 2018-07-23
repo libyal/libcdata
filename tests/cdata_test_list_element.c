@@ -561,7 +561,6 @@ int cdata_test_list_element_get_value(
 		 &error );
 	}
 	/* Test libcdata_list_element_get_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -723,7 +722,6 @@ int cdata_test_list_element_set_value(
 		 &error );
 	}
 	/* Test libcdata_list_element_set_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -885,7 +883,6 @@ int cdata_test_list_element_get_previous_element(
 		 &error );
 	}
 	/* Test libcdata_list_element_get_previous_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1047,7 +1044,6 @@ int cdata_test_list_element_set_previous_element(
 		 &error );
 	}
 	/* Test libcdata_list_element_set_previous_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1209,7 +1205,6 @@ int cdata_test_list_element_get_next_element(
 		 &error );
 	}
 	/* Test libcdata_list_element_get_next_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1371,7 +1366,6 @@ int cdata_test_list_element_set_next_element(
 		 &error );
 	}
 	/* Test libcdata_list_element_set_next_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1537,7 +1531,6 @@ int cdata_test_list_element_get_elements(
 		 &error );
 	}
 	/* Test libcdata_list_element_get_elements with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 
@@ -1704,7 +1697,6 @@ int cdata_test_list_element_set_elements(
 		 &error );
 	}
 	/* Test libcdata_list_element_set_elements with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
-	 * WARNING: after this test the lock is still active
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
 

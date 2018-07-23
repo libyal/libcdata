@@ -194,6 +194,11 @@ int pthread_rwlock_unlock(
 	}
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail == 0 )
 	{
+		/* Unlock the lock otherwise it can enter a nondeterministic state
+		 */
+		cdata_test_real_pthread_rwlock_unlock(
+		 rwlock );
+
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
 
 		return( EBUSY );
