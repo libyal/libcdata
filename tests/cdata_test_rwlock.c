@@ -37,22 +37,23 @@
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
-static int (*cdata_test_real_pthread_rwlock_init)(pthread_rwlock_t *, const pthread_rwlockattr_t *) = NULL;
-static int (*cdata_test_real_pthread_rwlock_destroy)(pthread_rwlock_t *)                            = NULL;
-static int (*cdata_test_real_pthread_rwlock_rdlock)(pthread_rwlock_t *)                             = NULL;
-static int (*cdata_test_real_pthread_rwlock_wrlock)(pthread_rwlock_t *)                             = NULL;
-static int (*cdata_test_real_pthread_rwlock_unlock)(pthread_rwlock_t *)                             = NULL;
+static int (*cdata_test_real_pthread_rwlock_destroy)(pthread_rwlock_t *) = NULL;
+static int (*cdata_test_real_pthread_rwlock_rdlock)(pthread_rwlock_t *)  = NULL;
+static int (*cdata_test_real_pthread_rwlock_wrlock)(pthread_rwlock_t *)  = NULL;
+static int (*cdata_test_real_pthread_rwlock_unlock)(pthread_rwlock_t *)  = NULL;
 
-int cdata_test_pthread_rwlock_init_attempts_before_fail                                             = -1;
-int cdata_test_pthread_rwlock_destroy_attempts_before_fail                                          = -1;
-int cdata_test_pthread_rwlock_rdlock_attempts_before_fail                                           = -1;
-int cdata_test_pthread_rwlock_wrlock_attempts_before_fail                                           = -1;
-int cdata_test_pthread_rwlock_unlock_attempts_before_fail                                           = -1;
+int cdata_test_pthread_rwlock_destroy_attempts_before_fail               = -1;
+int cdata_test_pthread_rwlock_rdlock_attempts_before_fail                = -1;
+int cdata_test_pthread_rwlock_wrlock_attempts_before_fail                = -1;
+int cdata_test_pthread_rwlock_unlock_attempts_before_fail                = -1;
 
 #if defined( TODO )
 
 /* TODO currently disabled since this causes the tests to segfault on Ubuntu 14.04
  */
+static int (*cdata_test_real_pthread_rwlock_init)(pthread_rwlock_t *, const pthread_rwlockattr_t *) = NULL;
+
+int cdata_test_pthread_rwlock_init_attempts_before_fail                                             = -1;
 
 /* Custom pthread_rwlock_init for testing error cases
  * Returns 0 if successful or an error value otherwise

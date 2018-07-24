@@ -16,8 +16,8 @@ Types:
 * tree node
   - add comment to replace tree node, that it does not switch the node itself
     or change this behavior !
-  - add thread lock - libcdata_tree_node_replace_node
   - add thread lock - libcdata_tree_node_remove_node
+  - fix flaky test
 * btree
   - add thread lock
   - rebalance the tree on insert and remove (add tests first)

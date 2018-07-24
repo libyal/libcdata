@@ -178,6 +178,18 @@ int libcdata_tree_node_set_nodes(
      libcdata_tree_node_t *next_node,
      libcerror_error_t **error );
 
+int libcdata_tree_node_get_sub_nodes(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **first_sub_node,
+     libcdata_tree_node_t **last_sub_node,
+     libcerror_error_t **error );
+
+int libcdata_tree_node_set_sub_nodes(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *first_sub_node,
+     libcdata_tree_node_t *last_sub_node,
+     libcerror_error_t **error );
+
 int libcdata_internal_tree_node_append_node(
      libcdata_internal_tree_node_t *internal_node,
      libcdata_tree_node_t *sub_node,
