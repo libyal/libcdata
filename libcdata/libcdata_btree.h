@@ -27,6 +27,7 @@
 
 #include "libcdata_extern.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_types.h"
 
 #if defined( __cplusplus )
@@ -52,6 +53,12 @@ struct libcdata_internal_btree
 	/* The maximum number of values
 	 */
 	int maximum_number_of_values;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	/* The read/write lock
+	 */
+	libcthreads_read_write_lock_t *read_write_lock;
+#endif
 };
 
 LIBCDATA_EXTERN \

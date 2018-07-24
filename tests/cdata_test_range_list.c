@@ -375,8 +375,8 @@ int cdata_test_range_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_range_list_insert_range(
-	          (libcdata_internal_range_list_t *) range_list,
+	result = libcdata_range_list_insert_range(
+	          range_list,
 	          0,
 	          32,
 	          (intptr_t *) &value1,
@@ -393,8 +393,8 @@ int cdata_test_range_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_range_list_insert_range(
-	          (libcdata_internal_range_list_t *) range_list,
+	result = libcdata_range_list_insert_range(
+	          range_list,
 	          64,
 	          32,
 	          (intptr_t *) &value2,
@@ -429,8 +429,8 @@ int cdata_test_range_list_empty(
 
 	/* Initialize test
 	 */
-	result = libcdata_internal_range_list_insert_range(
-	          (libcdata_internal_range_list_t *) range_list,
+	result = libcdata_range_list_insert_range(
+	          range_list,
 	          0,
 	          32,
 	          (intptr_t *) &value1,
@@ -447,8 +447,8 @@ int cdata_test_range_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_range_list_insert_range(
-	          (libcdata_internal_range_list_t *) range_list,
+	result = libcdata_range_list_insert_range(
+	          range_list,
 	          64,
 	          32,
 	          (intptr_t *) &value2,

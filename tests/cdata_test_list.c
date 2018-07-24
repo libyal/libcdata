@@ -489,8 +489,8 @@ int cdata_test_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_list_append_element(
-	          (libcdata_internal_list_t *) list,
+	result = libcdata_list_append_element(
+	          list,
 	          element1,
 	          &error );
 
@@ -522,8 +522,8 @@ int cdata_test_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_list_append_element(
-	          (libcdata_internal_list_t *) list,
+	result = libcdata_list_append_element(
+	          list,
 	          element2,
 	          &error );
 
@@ -573,8 +573,8 @@ int cdata_test_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_list_append_element(
-	          (libcdata_internal_list_t *) list,
+	result = libcdata_list_append_element(
+	          list,
 	          element1,
 	          &error );
 
@@ -606,8 +606,8 @@ int cdata_test_list_empty(
 	 "error",
 	 error );
 
-	result = libcdata_internal_list_append_element(
-	          (libcdata_internal_list_t *) list,
+	result = libcdata_list_append_element(
+	          list,
 	          element2,
 	          &error );
 

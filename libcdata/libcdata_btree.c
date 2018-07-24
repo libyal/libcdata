@@ -27,6 +27,7 @@
 #include "libcdata_btree.h"
 #include "libcdata_definitions.h"
 #include "libcdata_libcerror.h"
+#include "libcdata_libcthreads.h"
 #include "libcdata_list.h"
 #include "libcdata_list_element.h"
 #include "libcdata_tree_node.h"
@@ -137,6 +138,21 @@ int libcdata_btree_initialize(
 	}
 	internal_tree->maximum_number_of_values = maximum_number_of_values;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_initialize(
+	     &( internal_tree->read_write_lock ),
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to intialize read/write lock.",
+		 function );
+
+		goto on_error;
+	}
+#endif
 	*tree = (libcdata_btree_t *) internal_tree;
 
 	return( 1 );
@@ -188,6 +204,21 @@ int libcdata_btree_free(
 		internal_tree = (libcdata_internal_btree_t *) *tree;
 		*tree         = NULL;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+		if( libcthreads_read_write_lock_free(
+		     &( internal_tree->read_write_lock ),
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free read/write lock.",
+			 function );
+
+			result = -1;
+		}
+#endif
 		if( libcdata_tree_node_free(
 		     &( internal_tree->root_node ),
 		     (int (*)(intptr_t **, libcerror_error_t **)) &libcdata_btree_free_values_list,
@@ -286,14 +317,16 @@ int libcdata_btree_node_get_sub_node_by_value(
      libcdata_list_element_t **values_list_element,
      libcerror_error_t **error )
 {
-	libcdata_list_t *values_list       = NULL;
-	intptr_t *values_list_value        = NULL;
-	static char *function              = "libcdata_btree_node_get_sub_node_by_value";
-	int number_of_sub_nodes            = 0;
-	int number_of_values_list_elements = 0;
-	int result                         = 0;
-	int sub_node_index                 = 0;
-	int values_list_element_index      = 0;
+	libcdata_list_t *values_list                      = NULL;
+	libcdata_list_element_t *safe_values_list_element = NULL;
+	libcdata_tree_node_t *safe_sub_node               = NULL;
+	intptr_t *values_list_value                       = NULL;
+	static char *function                             = "libcdata_btree_node_get_sub_node_by_value";
+	int number_of_sub_nodes                           = 0;
+	int number_of_values_list_elements                = 0;
+	int result                                        = 0;
+	int sub_node_index                                = 0;
+	int values_list_element_index                     = 0;
 
 	if( value == NULL )
 	{
@@ -328,7 +361,8 @@ int libcdata_btree_node_get_sub_node_by_value(
 
 		return( -1 );
 	}
-	*sub_node = NULL;
+	*sub_node            = NULL;
+	*values_list_element = NULL;
 
 	if( libcdata_tree_node_get_value(
 	     node,
@@ -375,23 +409,42 @@ int libcdata_btree_node_get_sub_node_by_value(
 
 		return( -1 );
 	}
+	if( ( number_of_sub_nodes != 0 )
+	 && ( ( number_of_values_list_elements + 1 ) != number_of_sub_nodes ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid number of values list elements value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( number_of_values_list_elements == 0 )
+	{
+		return( 0 );
+	}
+	if( libcdata_list_get_first_element(
+	     values_list,
+	     &safe_values_list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve first values list element.",
+		 function );
+
+		return( -1 );
+	}
 	if( number_of_sub_nodes != 0 )
 	{
-		if( ( number_of_values_list_elements + 1 ) != number_of_sub_nodes )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_VALUE_OUT_OF_BOUNDS,
-			 "%s: invalid number of values list elements value out of bounds.",
-			 function );
-
-			return( -1 );
-		}
 		if( libcdata_tree_node_get_sub_node_by_index(
 		     node,
 		     0,
-		     sub_node,
+		     &safe_sub_node,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -404,32 +457,12 @@ int libcdata_btree_node_get_sub_node_by_value(
 			return( -1 );
 		}
 	}
-	if( number_of_values_list_elements == 0 )
-	{
-		*values_list_element = NULL;
-
-		return( 0 );
-	}
-	if( libcdata_list_get_first_element(
-	     values_list,
-	     values_list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve first values list element.",
-		 function );
-
-		return( -1 );
-	}
 	for( values_list_element_index = 0;
 	     values_list_element_index < number_of_values_list_elements;
 	     values_list_element_index++ )
 	{
 		if( libcdata_list_element_get_value(
-		     *values_list_element,
+		     safe_values_list_element,
 		     &values_list_value,
 		     error ) != 1 )
 		{
@@ -455,56 +488,59 @@ int libcdata_btree_node_get_sub_node_by_value(
 
 			return( -1 );
 		}
-		if( value_compare_function == NULL )
-		{
-			if( value == values_list_value )
-			{
-				return( 1 );
-			}
-		}
-		else
+		if( value_compare_function != NULL )
 		{
 			result = value_compare_function(
 				  value,
 				  values_list_value,
 				  error );
+		}
+		else if( value == values_list_value )
+		{
+			result = LIBCDATA_COMPARE_EQUAL;
+		}
+		else
+		{
+			result = LIBCDATA_COMPARE_GREATER;
+		}
+		if( result == -1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to compare value with values list value: %d.",
+			 function,
+			 values_list_element_index );
 
-			if( result == -1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to compare value with values list value: %d.",
-				 function,
-				 values_list_element_index );
+			return( -1 );
+		}
+		else if( result == LIBCDATA_COMPARE_EQUAL )
+		{
+			*sub_node            = safe_sub_node;
+			*values_list_element = safe_values_list_element;
 
-				return( -1 );
-			}
-			else if( result == LIBCDATA_COMPARE_EQUAL )
-			{
-				return( 1 );
-			}
-			else if( result == LIBCDATA_COMPARE_LESS )
-			{
-				break;
-			}
-			else if( result != LIBCDATA_COMPARE_GREATER )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-				 "%s: unsupported value compare function return value: %d.",
-				 function,
-				 result );
+			return( 1 );
+		}
+		else if( result == LIBCDATA_COMPARE_LESS )
+		{
+			break;
+		}
+		else if( result != LIBCDATA_COMPARE_GREATER )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+			 "%s: unsupported value compare function return value: %d.",
+			 function,
+			 result );
 
-				return( -1 );
-			}
+			return( -1 );
 		}
 		if( libcdata_list_element_get_next_element(
-		     *values_list_element,
-		     values_list_element,
+		     safe_values_list_element,
+		     &safe_values_list_element,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -520,8 +556,8 @@ int libcdata_btree_node_get_sub_node_by_value(
 		if( number_of_sub_nodes != 0 )
 		{
 			if( libcdata_tree_node_get_next_node(
-			     *sub_node,
-			     sub_node,
+			     safe_sub_node,
+			     &safe_sub_node,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
