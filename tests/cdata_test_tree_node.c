@@ -426,12 +426,10 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
-/* Tests the libcdata_internal_tree_node_empty function
+/* Tests the libcdata_tree_node_empty function
  * Returns 1 if successful or 0 if not
  */
-int cdata_test_internal_tree_node_empty(
+int cdata_test_tree_node_empty(
      void )
 {
 	libcdata_tree_node_t *node      = NULL;
@@ -476,6 +474,22 @@ int cdata_test_internal_tree_node_empty(
 	 "error",
 	 error );
 
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
+	          sub_node1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	sub_node1 = NULL;
+
 	result = libcdata_tree_node_initialize(
 	          &sub_node2,
 	          &error );
@@ -488,6 +502,57 @@ int cdata_test_internal_tree_node_empty(
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "sub_node2",
 	 sub_node2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_internal_tree_node_append_node(
+	          (libcdata_internal_tree_node_t *) node,
+	          sub_node2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	sub_node2 = NULL;
+
+	/* Test regular cases
+	 */
+	result = libcdata_tree_node_empty(
+	          node,
+	          &cdata_test_tree_node_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Initialize test
+	 */
+	result = libcdata_tree_node_initialize(
+	          &sub_node1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "sub_node1",
+	 sub_node1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -509,6 +574,23 @@ int cdata_test_internal_tree_node_empty(
 
 	sub_node1 = NULL;
 
+	result = libcdata_tree_node_initialize(
+	          &sub_node2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "sub_node2",
+	 sub_node2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	result = libcdata_internal_tree_node_append_node(
 	          (libcdata_internal_tree_node_t *) node,
 	          sub_node2,
@@ -524,140 +606,6 @@ int cdata_test_internal_tree_node_empty(
 	 error );
 
 	sub_node2 = NULL;
-
-	/* Test regular cases
-	 */
-	result = libcdata_internal_tree_node_empty(
-	          (libcdata_internal_tree_node_t *) node,
-	          &cdata_test_tree_node_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test error cases
-	 */
-	result = libcdata_internal_tree_node_empty(
-	          NULL,
-	          &cdata_test_tree_node_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "error",
-	 error );
-
-	libcerror_error_free(
-	 &error );
-
-	/* Clean up
-	 */
-	result = libcdata_tree_node_free(
-	          &node,
-	          &cdata_test_tree_node_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "node",
-	 node );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	if( sub_node2 != NULL )
-	{
-		libcdata_tree_node_free(
-		 &sub_node2,
-		 &cdata_test_tree_node_value_free_function,
-		 NULL );
-	}
-	if( sub_node1 != NULL )
-	{
-		libcdata_tree_node_free(
-		 &sub_node1,
-		 &cdata_test_tree_node_value_free_function,
-		 NULL );
-	}
-	if( node != NULL )
-	{
-		libcdata_tree_node_free(
-		 &node,
-		 &cdata_test_tree_node_value_free_function,
-		 NULL );
-	}
-	return( 0 );
-}
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
-
-/* Tests the libcdata_tree_node_empty function
- * Returns 1 if successful or 0 if not
- */
-int cdata_test_tree_node_empty(
-     void )
-{
-	libcdata_tree_node_t *node = NULL;
-	libcerror_error_t *error   = NULL;
-	int result                 = 0;
-
-	/* Initialize test
-	 */
-	result = libcdata_tree_node_initialize(
-	          &node,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "node",
-	 node );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test regular cases
-	 */
-	result = libcdata_tree_node_empty(
-	          node,
-	          &cdata_test_tree_node_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
 
 	/* Test error cases
 	 */
@@ -763,6 +711,20 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
+	}
+	if( sub_node2 != NULL )
+	{
+		libcdata_tree_node_free(
+		 &sub_node2,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
+	}
+	if( sub_node1 != NULL )
+	{
+		libcdata_tree_node_free(
+		 &sub_node1,
+		 &cdata_test_tree_node_value_free_function,
+		 NULL );
 	}
 	if( node != NULL )
 	{
@@ -6456,14 +6418,6 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_tree_node_free",
 	 cdata_test_tree_node_free );
-
-#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
-	CDATA_TEST_RUN(
-	 "libcdata_internal_tree_node_empty",
-	 cdata_test_internal_tree_node_empty );
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_tree_node_empty",

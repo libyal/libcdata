@@ -14,7 +14,6 @@ Types:
 * range list
   - add get/set range list value functions ?
 * tree node
-  - fix flaky test
 * btree
   - add thread lock
   - rebalance the tree on insert and remove (add tests first)

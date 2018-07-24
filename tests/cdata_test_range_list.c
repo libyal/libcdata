@@ -344,112 +344,6 @@ on_error:
 	return( 0 );
 }
 
-#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
-/* Tests the libcdata_internal_range_list_empty function
- * Returns 1 if successful or 0 if not
- */
-int cdata_test_internal_range_list_empty(
-     void )
-{
-	libcdata_range_list_t *range_list = NULL;
-	libcerror_error_t *error          = NULL;
-	int result                        = 0;
-
-	/* Initialize test
-	 */
-	result = libcdata_range_list_initialize(
-	          &range_list,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "range_list",
-	 range_list );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test regular cases
-	 */
-	result = libcdata_internal_range_list_empty(
-	          (libcdata_internal_range_list_t *) range_list,
-	          &cdata_test_range_list_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	/* Test error cases
-	 */
-	result = libcdata_internal_range_list_empty(
-	          NULL,
-	          &cdata_test_range_list_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 -1 );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "error",
-	 error );
-
-	libcerror_error_free(
-	 &error );
-
-	/* Clean up
-	 */
-	result = libcdata_range_list_free(
-	          &range_list,
-	          &cdata_test_range_list_value_free_function,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "range_list",
-	 range_list );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	return( 1 );
-
-on_error:
-	if( error != NULL )
-	{
-		libcerror_error_free(
-		 &error );
-	}
-	if( range_list != NULL )
-	{
-		libcdata_range_list_free(
-		 &range_list,
-		 &cdata_test_range_list_value_free_function,
-		 NULL );
-	}
-	return( 0 );
-}
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
-
 /* Tests the libcdata_range_list_empty function
  * Returns 1 if successful or 0 if not
  */
@@ -459,6 +353,8 @@ int cdata_test_range_list_empty(
 	libcdata_range_list_t *range_list = NULL;
 	libcerror_error_t *error          = NULL;
 	int result                        = 0;
+	int value1                        = 1;
+	int value2                        = 2;
 
 	/* Initialize test
 	 */
@@ -474,6 +370,42 @@ int cdata_test_range_list_empty(
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "range_list",
 	 range_list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_internal_range_list_insert_range(
+	          (libcdata_internal_range_list_t *) range_list,
+	          0,
+	          32,
+	          (intptr_t *) &value1,
+	          &cdata_test_range_list_value_free_function,
+	          &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_internal_range_list_insert_range(
+	          (libcdata_internal_range_list_t *) range_list,
+	          64,
+	          32,
+	          (intptr_t *) &value2,
+	          &cdata_test_range_list_value_free_function,
+	          &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -484,6 +416,44 @@ int cdata_test_range_list_empty(
 	result = libcdata_range_list_empty(
 	          range_list,
 	          &cdata_test_range_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Initialize test
+	 */
+	result = libcdata_internal_range_list_insert_range(
+	          (libcdata_internal_range_list_t *) range_list,
+	          0,
+	          32,
+	          (intptr_t *) &value1,
+	          &cdata_test_range_list_value_free_function,
+	          &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_internal_range_list_insert_range(
+	          (libcdata_internal_range_list_t *) range_list,
+	          64,
+	          32,
+	          (intptr_t *) &value2,
+	          &cdata_test_range_list_value_free_function,
+	          &cdata_test_range_list_value_merge_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -5643,14 +5613,6 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_free",
 	 cdata_test_range_list_free );
-
-#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
-	CDATA_TEST_RUN(
-	 "libcdata_internal_range_list_empty",
-	 cdata_test_internal_range_list_empty );
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_empty",

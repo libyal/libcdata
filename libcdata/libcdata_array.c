@@ -604,7 +604,7 @@ int libcdata_array_clone(
 		 "%s: unable to grab read/write lock for reading.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
 #endif
 	if( internal_source_array->entries != NULL )
