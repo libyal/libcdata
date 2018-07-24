@@ -1099,13 +1099,13 @@ int libcdata_tree_node_replace_node(
      libcdata_tree_node_t *replacement_node,
      libcdata_error_t **error );
 
-/* Removes a tree node from the parent node
+/* Removes a sub tree node from the tree node
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
 int libcdata_tree_node_remove_node(
-     libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
+     libcdata_tree_node_t *node_to_remove,
      libcdata_error_t **error );
 
 /* Retrieves the number of sub nodes in the tree node

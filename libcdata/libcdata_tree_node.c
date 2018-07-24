@@ -2679,30 +2679,19 @@ on_error:
 	return( -1 );
 }
 
-/* Removes a tree node from the parent node
+/* Removes a sub tree node from the tree node
  * Returns 1 if successful or -1 on error
  */
 int libcdata_tree_node_remove_node(
-     libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
+     libcdata_tree_node_t *node_to_remove,
      libcerror_error_t **error )
 {
-	libcdata_internal_tree_node_t *internal_node        = NULL;
-	libcdata_internal_tree_node_t *internal_parent_node = NULL;
-	static char *function                               = "libcdata_tree_node_remove_node";
-
-	if( parent_node == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid parent node.",
-		 function );
-
-		return( -1 );
-	}
-	internal_parent_node = (libcdata_internal_tree_node_t *) parent_node;
+	libcdata_internal_tree_node_t *internal_node  = NULL;
+	libcdata_tree_node_t *to_remove_next_node     = NULL;
+	libcdata_tree_node_t *to_remove_parent_node   = NULL;
+	libcdata_tree_node_t *to_remove_previous_node = NULL;
+	static char *function                         = "libcdata_tree_node_remove_node";
 
 	if( node == NULL )
 	{
@@ -2717,63 +2706,121 @@ int libcdata_tree_node_remove_node(
 	}
 	internal_node = (libcdata_internal_tree_node_t *) node;
 
-	if( parent_node != internal_node->parent_node )
+	if( node_to_remove == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node to remove.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_node->number_of_sub_nodes == 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid node - missing number of sub nodes.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_node->first_sub_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid node - missing first sub node.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_node->last_sub_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: invalid node - missing last sub node.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_write(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for writing.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	if( libcdata_tree_node_get_nodes(
+	     node_to_remove,
+	     &to_remove_parent_node,
+	     &to_remove_previous_node,
+	     &to_remove_next_node,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve nodes of node to remove.",
+		 function );
+
+		goto on_error;
+	}
+	if( to_remove_parent_node != node )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid node - parent node mismatch.",
+		 "%s: invalid node to remove - parent node mismatch.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-	if( internal_parent_node->number_of_sub_nodes == 0 )
+	if( libcdata_tree_node_set_nodes(
+	     node_to_remove,
+	     NULL,
+	     NULL,
+	     NULL,
+	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid parent node - missing number of sub nodes.",
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set nodes of node to remove.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
-	if( internal_parent_node->first_sub_node == NULL )
+	if( internal_node->first_sub_node == node_to_remove )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid parent node - missing first sub node.",
-		 function );
-
-		return( -1 );
+		internal_node->first_sub_node = to_remove_next_node;
 	}
-	if( internal_parent_node->last_sub_node == NULL )
+	if( internal_node->last_sub_node == node_to_remove )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid parent node - missing last sub node.",
-		 function );
-
-		return( -1 );
+		internal_node->last_sub_node = to_remove_previous_node;
 	}
-	if( internal_parent_node->first_sub_node == node )
-	{
-		internal_parent_node->first_sub_node = internal_node->next_node;
-	}
-	if( internal_parent_node->last_sub_node == node )
-	{
-		internal_parent_node->last_sub_node = internal_node->previous_node;
-	}
-	if( internal_node->next_node != NULL )
+	if( to_remove_next_node != NULL )
 	{
 		if( libcdata_tree_node_set_previous_node(
-		     internal_node->next_node,
-		     internal_node->previous_node,
+		     to_remove_next_node,
+		     to_remove_previous_node,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -2783,14 +2830,14 @@ int libcdata_tree_node_remove_node(
 			 "%s: unable to set previous node of next node.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
-	if( internal_node->previous_node != NULL )
+	if( to_remove_previous_node != NULL )
 	{
 		if( libcdata_tree_node_set_next_node(
-		     internal_node->previous_node,
-		     internal_node->next_node,
+		     to_remove_previous_node,
+		     to_remove_next_node,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -2800,16 +2847,35 @@ int libcdata_tree_node_remove_node(
 			 "%s: unable to set next node of previous node.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
-	internal_node->parent_node   = NULL;
-	internal_node->previous_node = NULL;
-	internal_node->next_node     = NULL;
+	internal_node->number_of_sub_nodes--;
 
-	internal_parent_node->number_of_sub_nodes--;
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_write(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for writing.",
+		 function );
 
+		return( -1 );
+	}
+#endif
 	return( 1 );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_node->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
 }
 
 /* Retrieves the number of sub nodes in the tree node

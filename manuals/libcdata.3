@@ -1,4 +1,4 @@
-.Dd July 23, 2018
+.Dd July 24, 2018
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -197,7 +197,7 @@ Tree node functions
 .Ft int
 .Fn libcdata_tree_node_replace_node "libcdata_tree_node_t *node, libcdata_tree_node_t *replacement_node, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *parent_node, libcdata_tree_node_t *node, libcdata_error_t **error"
+.Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *node, libcdata_tree_node_t *node_to_remove, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_get_number_of_sub_nodes "libcdata_tree_node_t *node, int *number_of_sub_nodes, libcdata_error_t **error"
 .Ft int

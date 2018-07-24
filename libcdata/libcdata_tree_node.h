@@ -247,8 +247,8 @@ int libcdata_tree_node_replace_node(
 
 LIBCDATA_EXTERN \
 int libcdata_tree_node_remove_node(
-     libcdata_tree_node_t *parent_node,
      libcdata_tree_node_t *node,
+     libcdata_tree_node_t *node_to_remove,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
