@@ -134,6 +134,8 @@ int cdata_test_array_initialize(
 	int test_number                 = 0;
 #endif
 
+	/* Test regular cases
+	 */
 	/* Test libcdata_array_initialize without entries
 	 */
 	result = libcdata_array_initialize(
@@ -549,8 +551,8 @@ int cdata_test_array_empty(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int entry_index          = 0;
-	int entry_value2         = 2;
 	int result               = 0;
+	int value1               = 1;
 
 	/* Initialize test
 	 */
@@ -572,7 +574,25 @@ int cdata_test_array_empty(
 	 "error",
 	 error );
 
+	/* Test regular cases
+	 */
 	/* Test to empty an array without an entry tree function
+	 */
+	result = libcdata_array_empty(
+	          array,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test to empty an array with an entry tree function
 	 */
 	result = libcdata_array_empty(
 	          array,
@@ -612,7 +632,7 @@ int cdata_test_array_empty(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -752,8 +772,8 @@ int cdata_test_internal_array_clear(
 	libcdata_internal_array_t *internal_array = NULL;
 	libcerror_error_t *error                  = NULL;
 	int entry_index                           = 0;
-	int entry_value2                          = 2;
 	int result                                = 0;
+	int value1                                = 1;
 
 	/* Initialize test
 	 */
@@ -778,7 +798,7 @@ int cdata_test_internal_array_clear(
 	result = libcdata_array_append_entry(
 	          (libcdata_array_t *) internal_array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -830,7 +850,7 @@ int cdata_test_internal_array_clear(
 	result = libcdata_array_append_entry(
 	          (libcdata_array_t *) internal_array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -912,8 +932,8 @@ int cdata_test_array_clear(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int entry_index          = 0;
-	int entry_value2         = 2;
 	int result               = 0;
+	int value1               = 1;
 
 	/* Initialize test
 	 */
@@ -975,7 +995,7 @@ int cdata_test_array_clear(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1114,8 +1134,8 @@ int cdata_test_array_clone(
 	libcdata_array_t *source_array      = NULL;
 	libcerror_error_t *error            = NULL;
 	int entry_index                     = 0;
-	int entry_value2                    = 2;
 	int result                          = 0;
+	int value1                          = 1;
 
 	/* Initialize test
 	 */
@@ -1140,7 +1160,7 @@ int cdata_test_array_clone(
 	result = libcdata_array_append_entry(
 	          source_array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1966,10 +1986,10 @@ int cdata_test_array_reserve(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	intptr_t **entries       = NULL;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
 
 	/* Initialize test
 	 */
@@ -1994,7 +2014,7 @@ int cdata_test_array_reserve(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          0,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2009,7 +2029,7 @@ int cdata_test_array_reserve(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2024,7 +2044,7 @@ int cdata_test_array_reserve(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          2,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2194,11 +2214,11 @@ int cdata_test_array_get_number_of_entries(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int entry_index          = 0;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
 	int number_of_entries    = 0;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
 
 	/* Initialize test
 	 */
@@ -2246,7 +2266,7 @@ int cdata_test_array_get_number_of_entries(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2261,7 +2281,7 @@ int cdata_test_array_get_number_of_entries(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2276,7 +2296,7 @@ int cdata_test_array_get_number_of_entries(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2448,12 +2468,12 @@ int cdata_test_array_get_entry_by_index(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	intptr_t **entries       = NULL;
-	int *entry_value_test    = NULL;
+	int *entry_value         = NULL;
 	int entry_index          = 0;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
 
 	/* Initialize test
 	 */
@@ -2478,7 +2498,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2493,7 +2513,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2508,7 +2528,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2525,7 +2545,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_get_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2534,13 +2554,13 @@ int cdata_test_array_get_entry_by_index(
 	 1 );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "entry_value_test",
-	 entry_value_test )
+	 "entry_value",
+	 entry_value )
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "*entry_value_test",
-	 *entry_value_test,
-	 entry_value3 );
+	 "*entry_value",
+	 *entry_value,
+	 2 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -2551,7 +2571,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_get_entry_by_index(
 	          NULL,
 	          0,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2573,7 +2593,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_get_entry_by_index(
 	          array,
 	          0,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	( (libcdata_internal_array_t *) array )->entries = entries;
@@ -2593,7 +2613,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_get_entry_by_index(
 	          array,
 	          -1,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2635,7 +2655,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_get_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
@@ -2663,7 +2683,7 @@ int cdata_test_array_get_entry_by_index(
 	result = libcdata_array_get_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
@@ -2732,13 +2752,13 @@ int cdata_test_array_get_entry_by_value(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
-	int *entry_value_test    = NULL;
+	int *entry_value         = NULL;
 	int entry_index          = 0;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
-	int entry_value9         = 9;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
+	int value4               = 4;
 
 	/* Initialize test
 	 */
@@ -2763,7 +2783,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2778,7 +2798,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2793,7 +2813,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2807,11 +2827,13 @@ int cdata_test_array_get_entry_by_value(
 
 	/* Test to retrieve an entry that exists
 	 */
+	entry_value = NULL;
+
 	result = libcdata_array_get_entry_by_value(
 	          array,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2820,13 +2842,13 @@ int cdata_test_array_get_entry_by_value(
 	 1 );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "entry_value_test",
-	 entry_value_test )
+	 "entry_value",
+	 entry_value )
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "*entry_value_test",
-	 *entry_value_test,
-	 entry_value3 );
+	 "*entry_value",
+	 *entry_value,
+	 2 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -2834,11 +2856,13 @@ int cdata_test_array_get_entry_by_value(
 
 	/* Test to retrieve an entry that not exists
 	 */
+	entry_value = NULL;
+
 	result = libcdata_array_get_entry_by_value(
 	          array,
-	          (intptr_t *) &entry_value9,
+	          (intptr_t *) &value4,
 	          &cdata_test_array_entry_compare_function,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2846,10 +2870,9 @@ int cdata_test_array_get_entry_by_value(
 	 result,
 	 0 );
 
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "*entry_value_test",
-	 *entry_value_test,
-	 entry_value3 );
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "entry_value",
+	 entry_value )
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -2857,11 +2880,13 @@ int cdata_test_array_get_entry_by_value(
 
 	/* Test error cases
 	 */
+	entry_value = NULL;
+
 	result = libcdata_array_get_entry_by_value(
 	          NULL,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2880,7 +2905,7 @@ int cdata_test_array_get_entry_by_value(
 	          array,
 	          NULL,
 	          &cdata_test_array_entry_compare_function,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2897,9 +2922,9 @@ int cdata_test_array_get_entry_by_value(
 
 	result = libcdata_array_get_entry_by_value(
 	          array,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          NULL,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2916,7 +2941,7 @@ int cdata_test_array_get_entry_by_value(
 
 	result = libcdata_array_get_entry_by_value(
 	          array,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          NULL,
 	          &error );
@@ -2941,9 +2966,9 @@ int cdata_test_array_get_entry_by_value(
 
 	result = libcdata_array_get_entry_by_value(
 	          array,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
@@ -2970,9 +2995,9 @@ int cdata_test_array_get_entry_by_value(
 
 	result = libcdata_array_get_entry_by_value(
 	          array,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
@@ -3042,10 +3067,10 @@ int cdata_test_array_set_entry_by_index(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	intptr_t **entries       = NULL;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
 
 	/* Initialize test
 	 */
@@ -3072,7 +3097,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3087,7 +3112,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          0,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3104,7 +3129,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          2,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3124,7 +3149,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          NULL,
 	          0,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3146,7 +3171,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          0,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	( (libcdata_internal_array_t *) array )->entries = entries;
@@ -3166,7 +3191,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          -1,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3186,7 +3211,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          INT_MAX,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3212,7 +3237,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value3,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
@@ -3240,7 +3265,7 @@ int cdata_test_array_set_entry_by_index(
 	result = libcdata_array_set_entry_by_index(
 	          array,
 	          1,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value3,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
@@ -3309,9 +3334,9 @@ int cdata_test_array_prepend_entry(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
-	int entry_value1         = 1;
-	int entry_value6         = 6;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
 
 	/* Initialize test
 	 */
@@ -3337,7 +3362,7 @@ int cdata_test_array_prepend_entry(
 	 */
 	result = libcdata_array_prepend_entry(
 	          array,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3353,7 +3378,7 @@ int cdata_test_array_prepend_entry(
 	 */
 	result = libcdata_array_prepend_entry(
 	          array,
-	          (intptr_t *) &entry_value1,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3369,7 +3394,7 @@ int cdata_test_array_prepend_entry(
 	 */
 	result = libcdata_array_prepend_entry(
 	          NULL,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3392,7 +3417,7 @@ int cdata_test_array_prepend_entry(
 
 	result = libcdata_array_prepend_entry(
 	          array,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	if( cdata_test_malloc_attempts_before_fail != -1 )
@@ -3423,7 +3448,7 @@ int cdata_test_array_prepend_entry(
 
 	result = libcdata_array_prepend_entry(
 	          array,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
@@ -3450,7 +3475,7 @@ int cdata_test_array_prepend_entry(
 
 	result = libcdata_array_prepend_entry(
 	          array,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
@@ -3520,9 +3545,9 @@ int cdata_test_array_append_entry(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int entry_index          = 0;
-	int entry_value1         = 1;
-	int entry_value6         = 6;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
 
 	/* Initialize test
 	 */
@@ -3549,7 +3574,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3571,7 +3596,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value1,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3593,7 +3618,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          NULL,
 	          &entry_index,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3611,7 +3636,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          NULL,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -3635,7 +3660,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	if( cdata_test_malloc_attempts_before_fail != -1 )
@@ -3667,7 +3692,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
@@ -3695,7 +3720,7 @@ int cdata_test_array_append_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value6,
+	          (intptr_t *) &value2,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
@@ -3765,11 +3790,11 @@ int cdata_test_array_insert_entry(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int entry_index          = 0;
-	int entry_value1         = 1;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
+	int value4               = 4;
 
 	/* Initialize test
 	 */
@@ -3796,7 +3821,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value3,
 	          &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
@@ -3820,7 +3845,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value1,
+	          (intptr_t *) &value1,
 	          &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
@@ -3844,7 +3869,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
@@ -3868,7 +3893,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
@@ -3887,7 +3912,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value4,
 	          &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
@@ -3911,7 +3936,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
@@ -3935,7 +3960,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          NULL,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
@@ -3955,7 +3980,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          NULL,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
@@ -3975,7 +4000,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          NULL,
 	          0,
 	          &error );
@@ -3995,7 +4020,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0xff,
 	          &error );
@@ -4024,7 +4049,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
@@ -4058,7 +4083,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
@@ -4088,7 +4113,7 @@ int cdata_test_array_insert_entry(
 	result = libcdata_array_insert_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value2,
 	          &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
@@ -4159,12 +4184,12 @@ int cdata_test_array_remove_entry(
 {
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
-	int *entry_value_test    = 0;
+	int *entry_value         = 0;
 	int entry_index          = 0;
-	int entry_value2         = 2;
-	int entry_value3         = 3;
-	int entry_value4         = 4;
 	int result               = 0;
+	int value1               = 1;
+	int value2               = 2;
+	int value3               = 3;
 
 	/* Initialize test
 	 */
@@ -4189,7 +4214,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value2,
+	          (intptr_t *) &value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4204,7 +4229,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value3,
+	          (intptr_t *) &value2,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4219,7 +4244,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) &entry_value4,
+	          (intptr_t *) &value3,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4233,10 +4258,12 @@ int cdata_test_array_remove_entry(
 
 	/* Test to remove an entry that is in bounds
 	 */
+	entry_value = NULL;
+
 	result = libcdata_array_remove_entry(
 	          array,
-	          0,
-	          (intptr_t **) &entry_value_test,
+	          1,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4244,10 +4271,14 @@ int cdata_test_array_remove_entry(
 	 result,
 	 1 );
 
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry_value",
+	 entry_value );
+
 	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "*entry_value_test",
-	 *entry_value_test,
-	 entry_value2 );
+	 "*entry_value",
+	 *entry_value,
+	 2 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -4255,10 +4286,12 @@ int cdata_test_array_remove_entry(
 
 	/* Test error cases
 	 */
+	entry_value = NULL;
+
 	result = libcdata_array_remove_entry(
 	          NULL,
 	          0,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4294,7 +4327,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_remove_entry(
 	          array,
 	          -1,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4312,7 +4345,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_remove_entry(
 	          array,
 	          1000,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -4336,7 +4369,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_remove_entry(
 	          array,
 	          0,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_malloc_attempts_before_fail != -1 )
@@ -4368,7 +4401,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_remove_entry(
 	          array,
 	          0,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
@@ -4396,7 +4429,7 @@ int cdata_test_array_remove_entry(
 	result = libcdata_array_remove_entry(
 	          array,
 	          0,
-	          (intptr_t **) &entry_value_test,
+	          (intptr_t **) &entry_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
