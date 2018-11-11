@@ -421,12 +421,12 @@ on_error:
 int cdata_test_array_free(
      void )
 {
+	libcerror_error_t *error = NULL;
+	int result               = 0;
+
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 	libcdata_array_t *array  = NULL;
 #endif
-
-	libcerror_error_t *error = NULL;
-	int result               = 0;
 
 	/* Test error cases
 	 */
