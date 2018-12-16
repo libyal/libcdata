@@ -328,6 +328,17 @@ int libcdata_btree_node_get_sub_node_by_value(
 	int sub_node_index                                = 0;
 	int values_list_element_index                     = 0;
 
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
 	if( value == NULL )
 	{
 		libcerror_error_set(
@@ -573,6 +584,9 @@ int libcdata_btree_node_get_sub_node_by_value(
 			sub_node_index++;
 		}
 	}
+	*sub_node            = safe_sub_node;
+	*values_list_element = safe_values_list_element;
+
 	return( 0 );
 }
 
@@ -1523,6 +1537,17 @@ int libcdata_btree_node_split(
 	int sub_node_index                           = 0;
 	int values_list_element_index                = 0;
 
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
 	if( libcdata_tree_node_get_number_of_sub_nodes(
 	     node,
 	     &number_of_sub_nodes,
