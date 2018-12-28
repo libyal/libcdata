@@ -2830,6 +2830,24 @@ int cdata_test_range_list_insert_range_list(
 	 "error",
 	 error );
 
+	result = libcdata_range_list_free(
+	          &source_range_list,
+	          &cdata_test_range_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "source_range_list",
+	 source_range_list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	return( 1 );
 
 on_error:
@@ -2842,6 +2860,13 @@ on_error:
 	{
 		libcdata_range_list_free(
 		 &range_list,
+		 &cdata_test_range_list_value_free_function,
+		 NULL );
+	}
+	if( source_range_list != NULL )
+	{
+		libcdata_range_list_free(
+		 &source_range_list,
 		 &cdata_test_range_list_value_free_function,
 		 NULL );
 	}

@@ -52,13 +52,11 @@ int cdata_test_btree_value_free_function(
  * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  */
 int cdata_test_btree_value_compare_function(
-     intptr_t *first_value,
-     intptr_t *second_value,
+     int *first_value,
+     int *second_value,
      libcdata_error_t **error )
 {
-	static char *function    = "cdata_test_btree_value_compare_function";
-	int first_compare_value  = 0;
-	int second_compare_value = 0;
+	static char *function = "cdata_test_btree_value_compare_function";
 
 	if( first_value == NULL )
 	{
@@ -82,17 +80,11 @@ int cdata_test_btree_value_compare_function(
 
 		return( -1 );
 	}
-	/* This is necessary otherwise the comparision messes up
-	 * as in e.g. 5 > 6 is true.
-	 */
-	first_compare_value  = (int) *first_value;
-	second_compare_value = (int) *second_value;
-
-	if( first_compare_value < second_compare_value )
+	if( *first_value < *second_value )
 	{
 		return( LIBCDATA_COMPARE_LESS );
 	}
-	else if( first_compare_value > second_compare_value )
+	else if( *first_value > *second_value )
 	{
 		return( LIBCDATA_COMPARE_GREATER );
 	}
@@ -455,7 +447,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          &values_list_element,
 	          &error );
@@ -597,7 +589,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          &values_list_element,
 	          &error );
@@ -662,7 +654,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          &values_list_element,
 	          &error );
@@ -687,7 +679,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          (intptr_t *) &value2,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          &values_list_element,
 	          &error );
@@ -766,7 +758,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          NULL,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          &values_list_element,
 	          &error );
@@ -786,7 +778,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          NULL,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          &values_list_element,
 	          &error );
@@ -806,7 +798,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          NULL,
 	          &values_list_element,
 	          &error );
@@ -826,7 +818,7 @@ int cdata_test_btree_node_get_sub_node_by_value(
 	result = libcdata_btree_node_get_sub_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &sub_node,
 	          NULL,
 	          &error );
@@ -1146,7 +1138,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &values_list_element,
 	          &error );
@@ -1211,7 +1203,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &values_list_element,
 	          &error );
@@ -1236,7 +1228,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          node,
 	          (intptr_t *) &value2,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &values_list_element,
 	          &error );
@@ -1264,7 +1256,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          NULL,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &values_list_element,
 	          &error );
@@ -1284,7 +1276,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          node,
 	          NULL,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &values_list_element,
 	          &error );
@@ -1324,7 +1316,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          NULL,
 	          &values_list_element,
 	          &error );
@@ -1344,7 +1336,7 @@ int cdata_test_btree_node_get_upper_node_by_value(
 	result = libcdata_btree_node_get_upper_node_by_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          NULL,
 	          &error );
@@ -1620,7 +1612,7 @@ int cdata_test_btree_node_insert_value(
 	result = libcdata_btree_node_insert_value(
 	          node,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1637,7 +1629,7 @@ int cdata_test_btree_node_insert_value(
 	result = libcdata_btree_node_insert_value(
 	          NULL,
 	          (intptr_t *) &value2,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1655,7 +1647,7 @@ int cdata_test_btree_node_insert_value(
 	result = libcdata_btree_node_insert_value(
 	          node,
 	          NULL,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -1710,7 +1702,7 @@ int cdata_test_btree_node_insert_value(
 	result = libcdata_btree_node_insert_value(
 	          node,
 	          (intptr_t *) &value2,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -2955,7 +2947,7 @@ int cdata_test_btree_get_value_by_value(
 	result = libcdata_btree_get_value_by_value(
 	          NULL,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &existing_value,
 	          &error );
@@ -2975,7 +2967,7 @@ int cdata_test_btree_get_value_by_value(
 	result = libcdata_btree_get_value_by_value(
 	          btree,
 	          NULL,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &existing_value,
 	          &error );
@@ -3015,7 +3007,7 @@ int cdata_test_btree_get_value_by_value(
 	result = libcdata_btree_get_value_by_value(
 	          btree,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          NULL,
 	          &existing_value,
 	          &error );
@@ -3035,7 +3027,7 @@ int cdata_test_btree_get_value_by_value(
 	result = libcdata_btree_get_value_by_value(
 	          btree,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          NULL,
 	          &error );
@@ -3133,7 +3125,7 @@ int cdata_test_btree_insert_value(
 	          NULL,
 	          &value_index,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &existing_value,
 	          &error );
@@ -3154,7 +3146,7 @@ int cdata_test_btree_insert_value(
 	          btree,
 	          NULL,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &existing_value,
 	          &error );
@@ -3175,7 +3167,7 @@ int cdata_test_btree_insert_value(
 	          btree,
 	          &value_index,
 	          NULL,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &existing_value,
 	          &error );
@@ -3217,7 +3209,7 @@ int cdata_test_btree_insert_value(
 	          btree,
 	          &value_index,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          NULL,
 	          &existing_value,
 	          &error );
@@ -3238,7 +3230,7 @@ int cdata_test_btree_insert_value(
 	          btree,
 	          &value_index,
 	          (intptr_t *) &value1,
-	          &cdata_test_btree_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          NULL,
 	          &error );

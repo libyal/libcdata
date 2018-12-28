@@ -9,6 +9,8 @@ Homepage: https://github.com/libyal/libcdata
 Package: libcdata
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Conflicts: libcdata1
+Replaces: libcdata1
 Suggests: libcdata-dbg
 Description: Library to support cross-platform C generic data functions
  libcdata is a library to support cross-platform C generic data functions.

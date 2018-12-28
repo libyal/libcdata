@@ -423,30 +423,6 @@ int libcdata_list_clone(
 	}
 	internal_source_list = (libcdata_internal_list_t *) source_list;
 
-	if( libcdata_list_initialize(
-	     (libcdata_list_t **) &internal_destination_list,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create destination list.",
-		 function );
-
-		return( -1 );
-	}
-	if( internal_destination_list == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: missing destination list.",
-		 function );
-
-		return( -1 );
-	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_source_list->read_write_lock,
@@ -462,6 +438,30 @@ int libcdata_list_clone(
 		return( -1 );
 	}
 #endif
+	if( libcdata_list_initialize(
+	     (libcdata_list_t **) &internal_destination_list,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create destination list.",
+		 function );
+
+		goto on_error;
+	}
+	if( internal_destination_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: missing destination list.",
+		 function );
+
+		goto on_error;
+	}
 	if( internal_source_list->first_element != NULL )
 	{
 		internal_source_list_element = (libcdata_internal_list_element_t *) internal_source_list->first_element;

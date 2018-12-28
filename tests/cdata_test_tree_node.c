@@ -71,8 +71,8 @@ int cdata_test_tree_node_value_clone_function(
  * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  */
 int cdata_test_tree_node_value_compare_function(
-     intptr_t *first_value,
-     intptr_t *second_value,
+     int *first_value,
+     int *second_value,
      libcdata_error_t **error )
 {
 	static char *function = "cdata_test_tree_node_value_compare_function";
@@ -99,11 +99,11 @@ int cdata_test_tree_node_value_compare_function(
 
 		return( -1 );
 	}
-	if( *first_value > *second_value )
+	if( *first_value < *second_value )
 	{
 		return( LIBCDATA_COMPARE_LESS );
 	}
-	else if( *first_value < *second_value )
+	else if( *first_value > *second_value )
 	{
 		return( LIBCDATA_COMPARE_GREATER );
 	}
@@ -3918,7 +3918,7 @@ int cdata_test_tree_node_append_node(
 	}
 	/* Test libcdata_tree_node_append_node with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
 	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 3;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 4;
 
 	result = libcdata_tree_node_append_node(
 	          node,
@@ -3928,6 +3928,11 @@ int cdata_test_tree_node_append_node(
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			sub_node2 = NULL;
+		}
 	}
 	else
 	{
@@ -3942,9 +3947,9 @@ int cdata_test_tree_node_append_node(
 
 		libcerror_error_free(
 		 &error );
-	}
-	sub_node2 = NULL;
 
+		sub_node2 = NULL;
+	}
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
@@ -4147,7 +4152,7 @@ int cdata_test_tree_node_append_value(
 	}
 	/* Test libcdata_tree_node_append_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
 	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 4;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 5;
 
 	result = libcdata_tree_node_append_value(
 	          node,
@@ -4347,7 +4352,7 @@ int cdata_test_internal_tree_node_insert_node(
 	result = libcdata_internal_tree_node_insert_node(
 	          (libcdata_internal_tree_node_t *) node,
 	          sub_node1,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4365,7 +4370,7 @@ int cdata_test_internal_tree_node_insert_node(
 	result = libcdata_internal_tree_node_insert_node(
 	          (libcdata_internal_tree_node_t *) node,
 	          sub_node2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4385,7 +4390,7 @@ int cdata_test_internal_tree_node_insert_node(
 	result = libcdata_internal_tree_node_insert_node(
 	          NULL,
 	          sub_node3,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4404,7 +4409,7 @@ int cdata_test_internal_tree_node_insert_node(
 	result = libcdata_internal_tree_node_insert_node(
 	          (libcdata_internal_tree_node_t *) node,
 	          NULL,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4442,7 +4447,7 @@ int cdata_test_internal_tree_node_insert_node(
 	result = libcdata_internal_tree_node_insert_node(
 	          (libcdata_internal_tree_node_t *) node,
 	          sub_node3,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0xff,
 	          &error );
 
@@ -4463,7 +4468,7 @@ int cdata_test_internal_tree_node_insert_node(
 	result = libcdata_internal_tree_node_insert_node(
 	          (libcdata_internal_tree_node_t *) node,
 	          sub_node1,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4658,7 +4663,7 @@ int cdata_test_tree_node_insert_node(
 	result = libcdata_tree_node_insert_node(
 	          node,
 	          sub_node1,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4678,7 +4683,7 @@ int cdata_test_tree_node_insert_node(
 	result = libcdata_tree_node_insert_node(
 	          NULL,
 	          sub_node2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4697,7 +4702,7 @@ int cdata_test_tree_node_insert_node(
 	result = libcdata_tree_node_insert_node(
 	          node,
 	          NULL,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4722,7 +4727,7 @@ int cdata_test_tree_node_insert_node(
 	result = libcdata_tree_node_insert_node(
 	          node,
 	          sub_node2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4746,18 +4751,23 @@ int cdata_test_tree_node_insert_node(
 	}
 	/* Test libcdata_tree_node_insert_node with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
 	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 5;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 7;
 
 	result = libcdata_tree_node_insert_node(
 	          node,
 	          sub_node2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			sub_node2 = NULL;
+		}
 	}
 	else
 	{
@@ -4772,9 +4782,9 @@ int cdata_test_tree_node_insert_node(
 
 		libcerror_error_free(
 		 &error );
-	}
-	sub_node2 = NULL;
 
+		sub_node2 = NULL;
+	}
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
@@ -4885,7 +4895,7 @@ int cdata_test_tree_node_insert_value(
 	result = libcdata_tree_node_insert_value(
 	          tree_node,
 	          (intptr_t *) &value1,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4903,7 +4913,7 @@ int cdata_test_tree_node_insert_value(
 	result = libcdata_tree_node_insert_value(
 	          NULL,
 	          (intptr_t *) &value2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4928,7 +4938,7 @@ int cdata_test_tree_node_insert_value(
 	result = libcdata_tree_node_insert_value(
 	          tree_node,
 	          (intptr_t *) &value2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4961,7 +4971,7 @@ int cdata_test_tree_node_insert_value(
 	result = libcdata_tree_node_insert_value(
 	          tree_node,
 	          (intptr_t *) &value2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -4985,12 +4995,12 @@ int cdata_test_tree_node_insert_value(
 	}
 	/* Test libcdata_tree_node_insert_value with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
 	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 6;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 8;
 
 	result = libcdata_tree_node_insert_value(
 	          tree_node,
 	          (intptr_t *) &value2,
-	          &cdata_test_tree_node_value_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_tree_node_value_compare_function,
 	          0,
 	          &error );
 
@@ -5343,6 +5353,14 @@ int cdata_test_tree_node_replace_node(
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			sub_node2         = test_node2;
+			test_node2        = replacement_node2;
+			replacement_node2 = sub_node2;
+			sub_node2         = NULL;
+		}
 	}
 	else
 	{
@@ -5357,11 +5375,12 @@ int cdata_test_tree_node_replace_node(
 
 		libcerror_error_free(
 		 &error );
+
+		sub_node2         = test_node2;
+		test_node2        = replacement_node2;
+		replacement_node2 = sub_node2;
+		sub_node2         = NULL;
 	}
-	sub_node2         = test_node2;
-	test_node2        = replacement_node2;
-	replacement_node2 = sub_node2;
-	sub_node2         = NULL;
 
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
@@ -5661,6 +5680,11 @@ int cdata_test_tree_node_remove_node(
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result != 1 )
+		{
+			test_node2 = NULL;
+		}
 	}
 	else
 	{
@@ -5676,24 +5700,26 @@ int cdata_test_tree_node_remove_node(
 		libcerror_error_free(
 		 &error );
 	}
-	result = libcdata_tree_node_free(
-	          &test_node2,
-	          &cdata_test_tree_node_value_free_function,
-	          &error );
+	if( test_node2 != NULL )
+	{
+		result = libcdata_tree_node_free(
+		          &test_node2,
+		          &cdata_test_tree_node_value_free_function,
+		          &error );
 
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
 
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "test_node2",
-	 test_node2 );
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "test_node2",
+		 test_node2 );
 
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
 #endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
 
 	/* Clean up
@@ -6324,7 +6350,7 @@ int cdata_test_tree_node_get_leaf_node_list(
 	}
 	/* Test libcdata_tree_node_get_leaf_node_list with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
 	 */
-	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 3;
 
 	result = libcdata_tree_node_get_leaf_node_list(
 	          tree_node,
@@ -6353,6 +6379,22 @@ int cdata_test_tree_node_get_leaf_node_list(
 
 	/* Clean up
 	 */
+	if( leaf_node_list != NULL )
+	{
+		result = libcdata_list_free(
+		          &leaf_node_list,
+		          NULL,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
 	result = libcdata_tree_node_free(
 	          &tree_node,
 	          &cdata_test_tree_node_value_free_function,

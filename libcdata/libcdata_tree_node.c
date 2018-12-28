@@ -472,30 +472,6 @@ int libcdata_tree_node_clone(
 	}
 	internal_source_node = (libcdata_internal_tree_node_t *) source_node;
 
-	if( libcdata_tree_node_initialize(
-	     (libcdata_tree_node_t **) &internal_destination_node,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create destination tree node.",
-		 function );
-
-		return( -1 );
-	}
-	if( internal_destination_node == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: missing destination tree node.",
-		 function );
-
-		return( -1 );
-	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_source_node->read_write_lock,
@@ -511,6 +487,30 @@ int libcdata_tree_node_clone(
 		return( -1 );
 	}
 #endif
+	if( libcdata_tree_node_initialize(
+	     (libcdata_tree_node_t **) &internal_destination_node,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create destination tree node.",
+		 function );
+
+		goto on_error;
+	}
+	if( internal_destination_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: missing destination tree node.",
+		 function );
+
+		goto on_error;
+	}
 	if( value_clone_function(
 	     &( internal_destination_node->value ),
 	     internal_source_node->value,

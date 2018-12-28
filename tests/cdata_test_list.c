@@ -72,8 +72,8 @@ int cdata_test_list_value_clone_function(
  * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  */
 int cdata_test_list_element_compare_function(
-     intptr_t *first_value,
-     intptr_t *second_value,
+     int *first_value,
+     int *second_value,
      libcdata_error_t **error )
 {
 	static char *function = "cdata_test_list_element_compare_function";
@@ -100,11 +100,11 @@ int cdata_test_list_element_compare_function(
 
 		return( -1 );
 	}
-	if( *first_value > *second_value )
+	if( *first_value < *second_value )
 	{
 		return( LIBCDATA_COMPARE_LESS );
 	}
-	else if( *first_value < *second_value )
+	else if( *first_value > *second_value )
 	{
 		return( LIBCDATA_COMPARE_GREATER );
 	}
@@ -4187,7 +4187,7 @@ int cdata_test_internal_list_insert_element(
 	result = libcdata_internal_list_insert_element(
 	          (libcdata_internal_list_t *) list,
 	          element1,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4205,7 +4205,7 @@ int cdata_test_internal_list_insert_element(
 	result = libcdata_internal_list_insert_element(
 	          (libcdata_internal_list_t *) list,
 	          element2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4225,7 +4225,7 @@ int cdata_test_internal_list_insert_element(
 	result = libcdata_internal_list_insert_element(
 	          NULL,
 	          element3,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4244,7 +4244,7 @@ int cdata_test_internal_list_insert_element(
 	result = libcdata_internal_list_insert_element(
 	          (libcdata_internal_list_t *) list,
 	          NULL,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4282,7 +4282,7 @@ int cdata_test_internal_list_insert_element(
 	result = libcdata_internal_list_insert_element(
 	          (libcdata_internal_list_t *) list,
 	          element3,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0xff,
 	          &error );
 
@@ -4303,7 +4303,7 @@ int cdata_test_internal_list_insert_element(
 	result = libcdata_internal_list_insert_element(
 	          (libcdata_internal_list_t *) list,
 	          element3,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4500,7 +4500,7 @@ int cdata_test_list_insert_element(
 	result = libcdata_list_insert_element(
 	          list,
 	          element1,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4520,7 +4520,7 @@ int cdata_test_list_insert_element(
 	result = libcdata_list_insert_element(
 	          NULL,
 	          element2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4539,7 +4539,7 @@ int cdata_test_list_insert_element(
 	result = libcdata_list_insert_element(
 	          list,
 	          NULL,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4564,7 +4564,7 @@ int cdata_test_list_insert_element(
 	result = libcdata_list_insert_element(
 	          list,
 	          element2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4593,7 +4593,7 @@ int cdata_test_list_insert_element(
 	result = libcdata_list_insert_element(
 	          list,
 	          element2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4727,7 +4727,7 @@ int cdata_test_list_insert_value(
 	result = libcdata_list_insert_value(
 	          list,
 	          (intptr_t *) &element_value1,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4745,7 +4745,7 @@ int cdata_test_list_insert_value(
 	result = libcdata_list_insert_value(
 	          NULL,
 	          (intptr_t *) &element_value2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4770,7 +4770,7 @@ int cdata_test_list_insert_value(
 	result = libcdata_list_insert_value(
 	          list,
 	          (intptr_t *) &element_value2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 
@@ -4799,7 +4799,7 @@ int cdata_test_list_insert_value(
 	result = libcdata_list_insert_value(
 	          list,
 	          (intptr_t *) &element_value2,
-	          &cdata_test_list_element_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
 	          &error );
 

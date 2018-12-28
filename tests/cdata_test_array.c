@@ -71,47 +71,39 @@ int cdata_test_array_entry_clone_function(
  * Returns LIBCDATA_COMPARE_LESS, LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  */
 int cdata_test_array_entry_compare_function(
-     intptr_t *first_entry,
-     intptr_t *second_entry,
+     int *first_value,
+     int *second_value,
      libcdata_error_t **error )
 {
 	static char *function = "cdata_test_array_entry_compare_function";
-	int first_value       = 0;
-	int second_value      = 0;
 
-	if( first_entry == NULL )
+	if( first_value == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid first entry.",
+		 "%s: invalid first value.",
 		 function );
 
 		return( -1 );
 	}
-	if( second_entry == NULL )
+	if( second_value == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid second entry.",
+		 "%s: invalid second value.",
 		 function );
 
 		return( -1 );
 	}
-	/* This is necessary otherwise the comparision messes up
-	 * as in e.g. 5 > 6 is true.
-	 */
-	first_value  = *( (int *) first_entry );
-	second_value = *( (int *) second_entry );
-
-	if( first_value < second_value )
+	if( *first_value < *second_value )
 	{
 		return( LIBCDATA_COMPARE_LESS );
 	}
-	else if( first_value > second_value )
+	else if( *first_value > *second_value )
 	{
 		return( LIBCDATA_COMPARE_GREATER );
 	}
@@ -2832,7 +2824,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          array,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -2861,7 +2853,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          array,
 	          (intptr_t *) &value4,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -2885,7 +2877,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          NULL,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -2904,7 +2896,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          array,
 	          NULL,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -2942,7 +2934,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          array,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          NULL,
 	          &error );
 
@@ -2967,7 +2959,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          array,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -2996,7 +2988,7 @@ int cdata_test_array_get_entry_by_value(
 	result = libcdata_array_get_entry_by_value(
 	          array,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -3822,7 +3814,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value3,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
 
@@ -3846,7 +3838,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value1,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
 
@@ -3870,7 +3862,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
 
@@ -3894,7 +3886,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
 
@@ -3913,7 +3905,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value4,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
 	          &error );
 
@@ -3937,7 +3929,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
 
@@ -3961,7 +3953,7 @@ int cdata_test_array_insert_entry(
 	          NULL,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
 
@@ -3981,7 +3973,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          NULL,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
 
@@ -4021,7 +4013,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0xff,
 	          &error );
 
@@ -4050,7 +4042,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
 
@@ -4084,7 +4076,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
 
@@ -4114,7 +4106,7 @@ int cdata_test_array_insert_entry(
 	          array,
 	          &entry_index,
 	          (intptr_t *) &value2,
-	          &cdata_test_array_entry_compare_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
 	          0,
 	          &error );
 

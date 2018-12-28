@@ -567,31 +567,6 @@ int libcdata_array_clone(
 	}
 	internal_source_array = (libcdata_internal_array_t *) source_array;
 
-	if( libcdata_array_initialize(
-	     (libcdata_array_t **) &internal_destination_array,
-	     internal_source_array->number_of_entries,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create destination array.",
-		 function );
-
-		return( -1 );
-	}
-	if( internal_destination_array == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: missing destination array.",
-		 function );
-
-		return( -1 );
-	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_read(
 	     internal_source_array->read_write_lock,
@@ -607,6 +582,31 @@ int libcdata_array_clone(
 		return( -1 );
 	}
 #endif
+	if( libcdata_array_initialize(
+	     (libcdata_array_t **) &internal_destination_array,
+	     internal_source_array->number_of_entries,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create destination array.",
+		 function );
+
+		goto on_error;
+	}
+	if( internal_destination_array == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: missing destination array.",
+		 function );
+
+		goto on_error;
+	}
 	if( internal_source_array->entries != NULL )
 	{
 		for( entry_iterator = 0;
