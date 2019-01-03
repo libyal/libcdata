@@ -1164,7 +1164,7 @@ int cdata_test_array_clone(
 	 "error",
 	 error );
 
-	/* Test libcdata_array_clone with intialized array
+	/* Test libcdata_array_clone with initialized array
 	 */
 	result = libcdata_array_clone(
 	          &destination_array,
@@ -1204,7 +1204,7 @@ int cdata_test_array_clone(
 	 "error",
 	 error );
 
-	/* Test libcdata_array_clone with non-intialized array
+	/* Test libcdata_array_clone with non-initialized array
 	 */
 	result = libcdata_array_clone(
 	          &destination_array,

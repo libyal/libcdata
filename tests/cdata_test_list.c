@@ -796,7 +796,7 @@ int cdata_test_list_clone(
 	 "error",
 	 error );
 
-	/* Test libcdata_list_clone with intialized list
+	/* Test libcdata_list_clone with initialized list
 	 */
 	result = libcdata_list_clone(
 	          &destination_list,
@@ -836,7 +836,7 @@ int cdata_test_list_clone(
 	 "error",
 	 error );
 
-	/* Test libcdata_list_clone with non-intialized list
+	/* Test libcdata_list_clone with non-initialized list
 	 */
 	result = libcdata_list_clone(
 	          &destination_list,
