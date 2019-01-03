@@ -118,6 +118,8 @@ int libcdata_array_free(
 
 /* Empties an array and frees its entries
  * The entries are freed using the entry_free_function
+ * If the entry_free_function fails for a specific entry it is not freed and kept in the array
+ *
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -130,6 +132,8 @@ int libcdata_array_empty(
 
 /* Clears an array and frees its entries
  * The entries are freed using the entry_free_function
+ * If the entry_free_function fails for a specific entry it is not freed and kept in the array
+ *
  * Returns 1 if successful or -1 on error
  */
 LIBCDATA_EXTERN \
@@ -256,6 +260,8 @@ int libcdata_array_append_entry(
  *
  * Duplicate entries are allowed by default and inserted after the last duplicate entry.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * entry_index is set when the entry was successfully inserted
  *
  * Returns 1 if successful, 0 if the entry already exists or -1 on error
  */

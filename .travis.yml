@@ -45,6 +45,17 @@ matrix:
     dist: xenial
     sudo: required
     group: edge
+  - name: "Linux with gcc without multi-threading support"
+    env:
+    - CONFIGURE_OPTIONS="--with-pthread=no"
+    - CFLAGS="--coverage"
+    - LDFLAGS="--coverage"
+    - TARGET="linux-gcc-no-pthread"
+    compiler: gcc
+    os: linux
+    dist: xenial
+    sudo: required
+    group: edge
   - name: "Linux with gcc without optimization"
     env:
     - CONFIGURE_OPTIONS="--enable-shared=no"
