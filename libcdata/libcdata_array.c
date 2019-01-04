@@ -1406,7 +1406,6 @@ int libcdata_array_set_entry_by_index(
 		return( -1 );
 	}
 	backup_entry = internal_array->entries[ entry_index ];
-
 #endif
 	internal_array->entries[ entry_index ] = entry;
 

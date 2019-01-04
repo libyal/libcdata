@@ -24,6 +24,8 @@
 
 #include <common.h>
 
+#include "cdata_test_libcdata.h"
+
 #if defined( __cplusplus )
 extern "C" {
 #endif

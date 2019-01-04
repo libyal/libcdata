@@ -282,6 +282,10 @@ int libcdata_list_element_set_value(
 	libcdata_internal_list_element_t *internal_element = NULL;
 	static char *function                              = "libcdata_list_element_set_value";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	intptr_t *backup_value                             = NULL;
+#endif
+
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -309,6 +313,7 @@ int libcdata_list_element_set_value(
 
 		return( -1 );
 	}
+	backup_value = internal_element->value;
 #endif
 	internal_element->value = value;
 
@@ -324,10 +329,17 @@ int libcdata_list_element_set_value(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_element->value = backup_value;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the previous element from the list element
@@ -411,6 +423,10 @@ int libcdata_list_element_set_previous_element(
 	libcdata_internal_list_element_t *internal_element = NULL;
 	static char *function                              = "libcdata_list_element_set_previous_element";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_list_element_t *backup_previous_element   = NULL;
+#endif
+
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -438,6 +454,7 @@ int libcdata_list_element_set_previous_element(
 
 		return( -1 );
 	}
+	backup_previous_element = internal_element->previous_element;
 #endif
 	internal_element->previous_element = previous_element;
 
@@ -453,10 +470,17 @@ int libcdata_list_element_set_previous_element(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_element->previous_element = backup_previous_element;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the next element from the list element
@@ -540,6 +564,10 @@ int libcdata_list_element_set_next_element(
 	libcdata_internal_list_element_t *internal_element = NULL;
 	static char *function                              = "libcdata_list_element_set_next_element";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_list_element_t *backup_next_element       = NULL;
+#endif
+
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -567,6 +595,7 @@ int libcdata_list_element_set_next_element(
 
 		return( -1 );
 	}
+	backup_next_element = internal_element->next_element;
 #endif
 	internal_element->next_element = next_element;
 
@@ -582,10 +611,17 @@ int libcdata_list_element_set_next_element(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_element->next_element = backup_next_element;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the previous and next element from the list element
@@ -683,6 +719,11 @@ int libcdata_list_element_set_elements(
 	libcdata_internal_list_element_t *internal_element = NULL;
 	static char *function                              = "libcdata_list_element_set_elements";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_list_element_t *backup_next_element       = NULL;
+	libcdata_list_element_t *backup_previous_element   = NULL;
+#endif
+
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -710,6 +751,8 @@ int libcdata_list_element_set_elements(
 
 		return( -1 );
 	}
+	backup_previous_element = internal_element->previous_element;
+	backup_next_element     = internal_element->next_element;
 #endif
 	internal_element->previous_element = previous_element;
 	internal_element->next_element     = next_element;
@@ -726,9 +769,17 @@ int libcdata_list_element_set_elements(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_element->previous_element = backup_previous_element;
+	internal_element->next_element     = backup_next_element;
+
+	return( -1 );
+#endif
 }
 
