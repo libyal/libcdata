@@ -86,6 +86,12 @@ int libcdata_range_list_value_merge(
             libcerror_error_t **error ),
      libcerror_error_t **error );
 
+int libcdata_range_list_value_check_range_overlap(
+     libcdata_range_list_value_t *range_list_value,
+     uint64_t range_start,
+     uint64_t range_end,
+     libcerror_error_t **error );
+
 #if defined( __cplusplus )
 }
 #endif

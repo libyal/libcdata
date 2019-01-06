@@ -258,7 +258,9 @@ int libcdata_list_empty(
 				 function,
 				 element_index );
 
-				goto on_error;
+				result = -1;
+
+				break;
 			}
 			internal_list->first_element = next_element;
 
@@ -283,7 +285,7 @@ int libcdata_list_empty(
 					 function,
 					 element_index + 1 );
 
-					goto on_error;
+					result = -1;
 				}
 			}
 			if( libcdata_list_element_set_next_element(
@@ -299,7 +301,7 @@ int libcdata_list_empty(
 				 function,
 				 element_index );
 
-				goto on_error;
+				result = -1;
 			}
 			if( libcdata_list_element_free(
 			     &list_element,
@@ -331,18 +333,10 @@ int libcdata_list_empty(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		result = -1;
 	}
 #endif
 	return( result );
-
-on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcthreads_read_write_lock_release_for_write(
-	 internal_list->read_write_lock,
-	 NULL );
-#endif
-	return( -1 );
 }
 
 /* Clones the list and its elements
@@ -1754,6 +1748,176 @@ on_error:
 	return( -1 );
 }
 
+/* Retrieves the element which the element should be inserted before
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * On return element will be set to NULL if the element should be inserted at the end of the list.
+ *
+ * Returns 1 if successful, 0 if a list element containing the element value already exists or -1 on error
+ */
+int libcdata_internal_list_insert_element_find_element(
+     libcdata_internal_list_t *internal_list,
+     intptr_t *element_value,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     libcdata_list_element_t **element,
+     libcerror_error_t **error )
+{
+	libcdata_list_element_t *list_element = NULL;
+	intptr_t *list_element_value          = NULL;
+	static char *function                 = "libcdata_internal_list_insert_element_find_element";
+	int compare_result                    = 0;
+	int element_index                     = 0;
+	int result                            = 1;
+
+	if( internal_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid list.",
+		 function );
+
+		return( -1 );
+	}
+	if( value_compare_function == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid value compare function.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( insert_flags & ~( LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) ) != 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported insert flags: 0x%02" PRIx8 ".",
+		 function,
+		 insert_flags );
+
+		return( -1 );
+	}
+	if( element == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid element.",
+		 function );
+
+		return( -1 );
+	}
+	list_element   = internal_list->first_element;
+	compare_result = LIBCDATA_COMPARE_GREATER;
+
+	for( element_index = 0;
+	     element_index < internal_list->number_of_elements;
+	     element_index++ )
+	{
+		if( libcdata_list_element_get_value(
+		     list_element,
+		     &list_element_value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value from list element: %d.",
+			 function,
+			 element_index );
+
+			return( -1 );
+		}
+		compare_result = value_compare_function(
+		                  element_value,
+		                  list_element_value,
+		                  error );
+
+		if( compare_result == -1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to compare list element: %d.",
+			 function,
+			 element_index );
+
+			return( -1 );
+		}
+		else if( compare_result == LIBCDATA_COMPARE_EQUAL )
+		{
+			if( ( insert_flags & LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) != 0 )
+			{
+				result = 0;
+
+				break;
+			}
+		}
+		else if( compare_result == LIBCDATA_COMPARE_LESS )
+		{
+			result = 1;
+
+			break;
+		}
+		else if( compare_result != LIBCDATA_COMPARE_GREATER )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+			 "%s: unsupported value compare function return value: %d.",
+			 function,
+			 compare_result );
+
+			return( -1 );
+		}
+		if( libcdata_list_element_get_next_element(
+		     list_element,
+		     &list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve next element from list element: %d.",
+			 function,
+			 element_index );
+
+			return( -1 );
+		}
+	}
+	if( ( compare_result == LIBCDATA_COMPARE_EQUAL )
+	 || ( compare_result == LIBCDATA_COMPARE_LESS ) )
+	{
+		*element = list_element;
+	}
+	else
+	{
+		*element = NULL;
+	}
+	return( result );
+}
+
 /* Inserts a list element into the list
  *
  * Uses the value_compare_function to determine the order of the entries
@@ -1780,9 +1944,7 @@ int libcdata_list_insert_element(
 	libcdata_list_element_t *next_element         = NULL;
 	libcdata_list_element_t *previous_element     = NULL;
 	intptr_t *element_value                       = NULL;
-	intptr_t *list_element_value                  = NULL;
 	static char *function                         = "libcdata_list_insert_element";
-	int compare_result                            = 0;
 	int element_index                             = 0;
 	int result                                    = 1;
 
@@ -1897,100 +2059,32 @@ int libcdata_list_insert_element(
 	backup_last_element  = internal_list->last_element;
 
 #endif
-	list_element     = internal_list->first_element;
 	previous_element = NULL;
 	next_element     = NULL;
-	compare_result   = LIBCDATA_COMPARE_GREATER;
 	result           = 1;
 
-	for( element_index = 0;
-	     element_index < internal_list->number_of_elements;
-	     element_index++ )
+	result = libcdata_internal_list_insert_element_find_element(
+	          internal_list,
+	          element_value,
+	          value_compare_function,
+	          insert_flags,
+	          &list_element,
+	          error );
+
+	if( result == -1 )
 	{
-		if( libcdata_list_element_get_value(
-		     list_element,
-		     &list_element_value,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve value from list element: %d.",
-			 function,
-			 element_index );
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to find element in list.",
+		 function );
 
-			result = -1;
-
-			break;
-		}
-		compare_result = value_compare_function(
-		                  element_value,
-		                  list_element_value,
-		                  error );
-
-		if( compare_result == -1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to compare list element: %d.",
-			 function,
-			 element_index );
-
-			result = -1;
-		}
-		else if( compare_result == LIBCDATA_COMPARE_EQUAL )
-		{
-			if( ( insert_flags & LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) != 0 )
-			{
-				result = 0;
-			}
-		}
-		else if( compare_result == LIBCDATA_COMPARE_LESS )
-		{
-			result = 1;
-
-			break;
-		}
-		else if( compare_result != LIBCDATA_COMPARE_GREATER )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-			 "%s: unsupported value compare function return value: %d.",
-			 function,
-			 compare_result );
-
-			result = -1;
-		}
-		if( result != 1 )
-		{
-			break;
-		}
-		if( libcdata_list_element_get_next_element(
-		     list_element,
-		     &list_element,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve next element from list element: %d.",
-			 function,
-			 element_index );
-
-			result = -1;
-
-			break;
-		}
+		result = -1;
 	}
-	if( result == 1 )
+	else if( result == 1 )
 	{
-		if( compare_result == LIBCDATA_COMPARE_LESS )
+		if( list_element != NULL )
 		{
 			if( libcdata_list_element_get_elements(
 			     list_element,
@@ -2113,7 +2207,7 @@ int libcdata_list_insert_element(
 	}
 	if( result == 1 )
 	{
-		if( compare_result == LIBCDATA_COMPARE_LESS )
+		if( list_element != NULL )
 		{
 			if( internal_list->first_element == list_element )
 			{

@@ -767,7 +767,7 @@ int libcdata_range_list_get_number_of_elements(
  * After a merge and on error the values are freed using
  * the value_free_function
  *
- * Returns 1 if successful, or -1 on error
+ * Returns 1 if successful, 0 if the range was merged or -1 on error
  */
 LIBCDATA_EXTERN \
 int libcdata_range_list_insert_range(

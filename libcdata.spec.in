@@ -13,6 +13,14 @@ BuildRequires: gcc @ax_libcerror_spec_build_requires@ @ax_libcthreads_spec_build
 %description -n libcdata
 Library to support cross-platform C generic data functions
 
+%package -n libcdata-static
+Summary: Library to support cross-platform C generic data functions
+Group: Development/Libraries
+Requires: libcdata = %{version}-%{release}
+
+%description -n libcdata-static
+Static library version of libcdata.
+
 %package -n libcdata-devel
 Summary: Header files and libraries for developing applications for libcdata
 Group: Development/Libraries
@@ -45,11 +53,16 @@ rm -rf %{buildroot}
 %doc AUTHORS README
 %attr(755,root,root) %{_libdir}/*.so.*
 
+%files -n libcdata-static
+%defattr(644,root,root,755)
+%license COPYING
+%doc AUTHORS README
+%attr(755,root,root) %{_libdir}/*.a
+
 %files -n libcdata-devel
 %defattr(644,root,root,755)
 %license COPYING
 %doc AUTHORS README
-%{_libdir}/*.a
 %{_libdir}/*.la
 %{_libdir}/*.so
 %{_libdir}/pkgconfig/libcdata.pc

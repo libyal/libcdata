@@ -1045,6 +1045,8 @@ int main(
 	 "libcdata_range_list_value_merge",
 	 cdata_test_range_list_value_merge );
 
+	/* TODO add tests for libcdata_range_list_value_check_range_overlap */
+
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	return( EXIT_SUCCESS );

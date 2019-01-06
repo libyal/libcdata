@@ -381,3 +381,49 @@ int libcdata_range_list_value_merge(
 	return( 1 );
 }
 
+/* Checks if the range overlaps with the range list value
+ * Returns 1 if the range overlaps, 0 if not or -1 on error
+ */
+int libcdata_range_list_value_check_range_overlap(
+     libcdata_range_list_value_t *range_list_value,
+     uint64_t range_start,
+     uint64_t range_end,
+     libcerror_error_t **error )
+{
+	static char *function = "libcdata_range_list_value_check_range_overlap";
+
+	if( range_list_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list value.",
+		 function );
+
+		return( -1 );
+	}
+	/* Check if the range overlaps the existing range entirely
+	 */
+	if( ( range_start < range_list_value->start )
+	 && ( range_end > range_list_value->end ) )
+	{
+		return( 1 );
+	}
+	/* Check if the range overlaps at the end of the existing range
+	 */
+	if( ( range_start >= range_list_value->start )
+	 && ( range_start <= range_list_value->end ) )
+	{
+		return( 1 );
+	}
+	/* Check if the range overlaps at the beginning of the existing range
+	 */
+	if( ( range_end >= range_list_value->start )
+	 && ( range_end <= range_list_value->end ) )
+	{
+		return( 1 );
+	}
+	return( 0 );
+}
+

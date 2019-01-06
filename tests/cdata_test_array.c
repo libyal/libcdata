@@ -616,7 +616,6 @@ int cdata_test_array_empty(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int *value1              = NULL;
-	int *value2              = NULL;
 	int entry_index          = 0;
 	int result               = 0;
 
@@ -731,19 +730,19 @@ int cdata_test_array_empty(
 
 	/* Initialize test
 	 */
-	value2 = (int *) memory_allocate(
+	value1 = (int *) memory_allocate(
 	                  sizeof( int ) );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "value2",
-	 value2 );
+	 "value1",
+	 value1 );
 
-	*value2 = 2;
+	*value1 = 1;
 
 	result = libcdata_array_append_entry(
 	          array,
 	          &entry_index,
-	          (intptr_t *) value2,
+	          (intptr_t *) value1,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -755,7 +754,7 @@ int cdata_test_array_empty(
 	 "error",
 	 error );
 
-	value2 = NULL;
+	value1 = NULL;
 
 	/* Test error cases
 	 */
@@ -813,6 +812,35 @@ int cdata_test_array_empty(
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			value1 = (int *) memory_allocate(
+			                  sizeof( int ) );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "value1",
+			 value1 );
+
+			*value1 = 1;
+
+			result = libcdata_array_append_entry(
+			          array,
+			          &entry_index,
+			          (intptr_t *) value1,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			value1 = NULL;
+		}
 	}
 	else
 	{
@@ -840,6 +868,35 @@ int cdata_test_array_empty(
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			value1 = (int *) memory_allocate(
+			                  sizeof( int ) );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "value1",
+			 value1 );
+
+			*value1 = 1;
+
+			result = libcdata_array_append_entry(
+			          array,
+			          &entry_index,
+			          (intptr_t *) value1,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			value1 = NULL;
+		}
 	}
 	else
 	{
@@ -884,11 +941,6 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
-	}
-	if( value2 != NULL )
-	{
-		memory_free(
-		 value2 );
 	}
 	if( value1 != NULL )
 	{
@@ -1348,6 +1400,35 @@ int cdata_test_array_clear(
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			value1 = (int *) memory_allocate(
+			                  sizeof( int ) );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "value1",
+			 value1 );
+
+			*value1 = 1;
+
+			result = libcdata_array_append_entry(
+			          array,
+			          &entry_index,
+			          (intptr_t *) value1,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			value1 = NULL;
+		}
 	}
 	else
 	{
@@ -1375,6 +1456,35 @@ int cdata_test_array_clear(
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
 	{
 		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			value1 = (int *) memory_allocate(
+			                  sizeof( int ) );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "value1",
+			 value1 );
+
+			*value1 = 1;
+
+			result = libcdata_array_append_entry(
+			          array,
+			          &entry_index,
+			          (intptr_t *) value1,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			value1 = NULL;
+		}
 	}
 	else
 	{
@@ -2745,8 +2855,6 @@ int cdata_test_array_get_number_of_entries(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	int *value1              = NULL;
-	int *value2              = NULL;
-	int *value3              = NULL;
 	int entry_index          = 0;
 	int number_of_entries    = 0;
 	int result               = 0;
@@ -2820,58 +2928,6 @@ int cdata_test_array_get_number_of_entries(
 
 	value1 = NULL;
 
-	value2 = (int *) memory_allocate(
-	                  sizeof( int ) );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "value2",
-	 value2 );
-
-	*value2 = 2;
-
-	result = libcdata_array_append_entry(
-	          array,
-	          &entry_index,
-	          (intptr_t *) value2,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	value2 = NULL;
-
-	value3 = (int *) memory_allocate(
-	                  sizeof( int ) );
-
-	CDATA_TEST_ASSERT_IS_NOT_NULL(
-	 "value3",
-	 value3 );
-
-	*value3 = 3;
-
-	result = libcdata_array_append_entry(
-	          array,
-	          &entry_index,
-	          (intptr_t *) value3,
-	          &error );
-
-	CDATA_TEST_ASSERT_EQUAL_INT(
-	 "result",
-	 result,
-	 1 );
-
-	CDATA_TEST_ASSERT_IS_NULL(
-	 "error",
-	 error );
-
-	value3 = NULL;
-
 	/* Test to retrieve the number of entries on a non-empty array
 	 */
 	result = libcdata_array_get_number_of_entries(
@@ -2887,7 +2943,7 @@ int cdata_test_array_get_number_of_entries(
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "number_of_entries",
 	 number_of_entries,
-	 3 );
+	 1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -3014,16 +3070,6 @@ on_error:
 	{
 		libcerror_error_free(
 		 &error );
-	}
-	if( value3 != NULL )
-	{
-		memory_free(
-		 value3 );
-	}
-	if( value2 != NULL )
-	{
-		memory_free(
-		 value2 );
 	}
 	if( value1 != NULL )
 	{
@@ -3184,7 +3230,7 @@ int cdata_test_array_get_entry_by_index(
 	 */
 	result = libcdata_array_get_entry_by_index(
 	          NULL,
-	          0,
+	          1,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -3206,7 +3252,7 @@ int cdata_test_array_get_entry_by_index(
 
 	result = libcdata_array_get_entry_by_index(
 	          array,
-	          0,
+	          1,
 	          (intptr_t **) &entry_value,
 	          &error );
 
@@ -3244,7 +3290,7 @@ int cdata_test_array_get_entry_by_index(
 
 	result = libcdata_array_get_entry_by_index(
 	          array,
-	          0,
+	          1,
 	          NULL,
 	          &error );
 
@@ -5136,7 +5182,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of new entry on an empty array succeeds
+	/* Test if insert of an entry on an empty array succeeds
 	 */
 	result = libcdata_array_get_number_of_entries(
 	          array,
@@ -5209,7 +5255,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of new entry before the first entry succeeds
+	/* Test if insert of an entry before the first entry succeeds
 	 */
 	value1 = (int *) memory_allocate(
 	                  sizeof( int ) );
@@ -5263,7 +5309,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of new entry after the first entry succeeds
+	/* Test if insert of an entry after the first entry succeeds
 	 */
 	value2 = (int *) memory_allocate(
 	                  sizeof( int ) );
@@ -5317,7 +5363,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of duplicate entry fails
+	/* Test if insert of a duplicate entry fails
 	 */
 	duplicate_value2 = (int *) memory_allocate(
 	                            sizeof( int ) );
@@ -5364,7 +5410,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of new entry after the last entry succeeds
+	/* Test if insert of an entry after the last entry succeeds
 	 */
 	value4 = (int *) memory_allocate(
 	                  sizeof( int ) );
@@ -5418,7 +5464,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of duplicate entry succeeds
+	/* Test if insert of a duplicate entry succeeds
 	 */
 	result = libcdata_array_insert_entry(
 	          array,
