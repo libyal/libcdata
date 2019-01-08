@@ -30,6 +30,7 @@
 #include "libcdata_range_list.h"
 #include "libcdata_range_list_value.h"
 #include "libcdata_types.h"
+#include "libcdata_unused.h"
 
 /* Creates a range list
  * Make sure the value range_list is referencing, is set to NULL
@@ -1107,6 +1108,9 @@ int libcdata_internal_range_list_remove_element(
 
 		return( -1 );
 	}
+	internal_range_list->current_element       = NULL;
+	internal_range_list->current_element_index = 0;
+
 	internal_range_list->number_of_elements -= 1;
 
 	return( 1 );
@@ -1121,15 +1125,19 @@ int libcdata_internal_range_list_remove_element(
 int libcdata_internal_range_list_insert_range_find_element(
      libcdata_internal_range_list_t *internal_range_list,
      uint64_t range_start,
-     uint64_t range_end,
-     libcdata_list_element_t **element,
+     uint64_t range_end LIBCDATA_ATTRIBUTE_UNUSED,
      int *element_index,
+     libcdata_list_element_t **element,
      libcerror_error_t **error )
 {
-	libcdata_list_element_t *list_element         = NULL;
+	libcdata_list_element_t *current_element      = NULL;
+	libcdata_list_element_t *previous_element     = NULL;
 	libcdata_range_list_value_t *range_list_value = NULL;
 	static char *function                         = "libcdata_internal_range_list_insert_range_find_element";
-	int list_element_index                        = 0;
+	int current_element_index                     = 0;
+	int last_element_index                        = 0;
+
+	LIBCDATA_UNREFERENCED_PARAMETER( range_end )
 
 	if( internal_range_list == NULL )
 	{
@@ -1164,15 +1172,17 @@ int libcdata_internal_range_list_insert_range_find_element(
 
 		return( -1 );
 	}
-/* TODO optimize to check last element first */
-	list_element = internal_range_list->first_element;
+	current_element       = internal_range_list->last_element;
+	current_element_index = internal_range_list->number_of_elements;
 
-	for( list_element_index = 0;
-	     list_element_index < internal_range_list->number_of_elements;
-	     list_element_index++ )
+	if( internal_range_list->number_of_elements > 0 )
 	{
+		/* Check the last element first, most often the list will be filled linear
+		 */
+		current_element_index--;
+
 		if( libcdata_list_element_get_value(
-		     list_element,
+		     current_element,
 		     (intptr_t **) &range_list_value,
 		     error ) != 1 )
 		{
@@ -1182,7 +1192,7 @@ int libcdata_internal_range_list_insert_range_find_element(
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 			 "%s: unable to retrieve value from list element: %d.",
 			 function,
-			 list_element_index );
+			 current_element_index );
 
 			return( -1 );
 		}
@@ -1194,35 +1204,179 @@ int libcdata_internal_range_list_insert_range_find_element(
 			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
 			 "%s: missing range list value element: %d.",
 			 function,
-			 list_element_index );
+			 current_element_index );
 
 			return( -1 );
 		}
-		if( range_start <= range_list_value->end )
+		if( range_start > range_list_value->end )
 		{
-			*element       = list_element;
-			*element_index = list_element_index;
+			current_element = NULL;
 
-			return( 1 );
+			current_element_index++;
 		}
-		if( libcdata_list_element_get_next_element(
-		     list_element,
-		     &list_element,
-		     error ) != 1 )
+		else if( internal_range_list->number_of_elements > 1 )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve next element from list element: %d.",
-			 function,
-			 list_element_index );
+			last_element_index = current_element_index;
 
-			return( -1 );
+			if( ( current_element_index != internal_range_list->current_element_index )
+			 && ( internal_range_list->current_element != NULL ) )
+			{
+				/* Check the current element
+				 */
+				current_element       = internal_range_list->current_element;
+				current_element_index = internal_range_list->current_element_index;
+
+				if( libcdata_list_element_get_value(
+				     current_element,
+				     (intptr_t **) &range_list_value,
+				     error ) != 1 )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+					 "%s: unable to retrieve value from list element: %d.",
+					 function,
+					 current_element_index );
+
+					return( -1 );
+				}
+				if( range_list_value == NULL )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+					 "%s: missing range list value element: %d.",
+					 function,
+					 current_element_index );
+
+					return( -1 );
+				}
+			}
+			if( range_start > range_list_value->end )
+			{
+				while( current_element_index < last_element_index )
+				{
+					if( libcdata_list_element_get_next_element(
+					     current_element,
+					     &current_element,
+					     error ) != 1 )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+						 "%s: unable to retrieve next element from list element: %d.",
+						 function,
+						 current_element_index );
+
+						return( -1 );
+					}
+					current_element_index++;
+
+					if( libcdata_list_element_get_value(
+					     current_element,
+					     (intptr_t **) &range_list_value,
+					     error ) != 1 )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+						 "%s: unable to retrieve value from list element: %d.",
+						 function,
+						 current_element_index );
+
+						return( -1 );
+					}
+					if( range_list_value == NULL )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+						 "%s: missing range list value element: %d.",
+						 function,
+						 current_element_index );
+
+						return( -1 );
+					}
+					if( range_start <= range_list_value->end )
+					{
+						break;
+					}
+				}
+			}
+			else
+			{
+				while( current_element_index > 0 )
+				{
+					previous_element = current_element;
+
+					if( libcdata_list_element_get_previous_element(
+					     current_element,
+					     &current_element,
+					     error ) != 1 )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+						 "%s: unable to retrieve previous element from list element: %d.",
+						 function,
+						 current_element_index );
+
+						return( -1 );
+					}
+					current_element_index--;
+
+					if( libcdata_list_element_get_value(
+					     current_element,
+					     (intptr_t **) &range_list_value,
+					     error ) != 1 )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+						 "%s: unable to retrieve value from list element: %d.",
+						 function,
+						 current_element_index );
+
+						return( -1 );
+					}
+					if( range_list_value == NULL )
+					{
+						libcerror_error_set(
+						 error,
+						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+						 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+						 "%s: missing range list value element: %d.",
+						 function,
+						 current_element_index );
+
+						return( -1 );
+					}
+					if( range_start > range_list_value->end )
+					{
+						current_element = previous_element;
+
+						current_element_index++;
+
+						break;
+					}
+				}
+			}
 		}
 	}
-	*element       = NULL;
-	*element_index = list_element_index;
+	if( current_element != NULL )
+	{
+		internal_range_list->current_element       = current_element;
+		internal_range_list->current_element_index = current_element_index;
+	}
+	*element       = current_element;
+	*element_index = current_element_index;
 
 	return( 1 );
 }
@@ -1476,6 +1630,9 @@ int libcdata_internal_range_list_insert_range_before_element(
 			goto on_error;
 		}
 	}
+	internal_range_list->current_element       = NULL;
+	internal_range_list->current_element_index = 0;
+
 	internal_range_list->number_of_elements += 1;
 
 	*new_range_list_element = new_element;
@@ -1775,6 +1932,131 @@ int libcdata_internal_range_list_merge_overlapping_ranges(
 	return( 1 );
 }
 
+/* Inserts a range by merging the range into the range list element and successive overlapping ranges
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_range_list_insert_range_merge(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     uint64_t range_start,
+     uint64_t range_end,
+     intptr_t *value,
+     int (*value_merge_function)(
+            intptr_t *destination_value,
+            intptr_t *source_value,
+            libcerror_error_t **error ),
+     libcdata_range_list_t *backup_range_list,
+     libcerror_error_t **error )
+{
+	libcdata_range_list_value_t *backup_range_list_value = NULL;
+	libcdata_range_list_value_t *range_list_value        = NULL;
+	static char *function                                = "libcdata_internal_range_list_insert_range_merge";
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_get_value(
+	     range_list_element,
+	     (intptr_t **) &range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value from range list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_range_list_value_initialize(
+	     &backup_range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create backup range list value.",
+		 function );
+
+		goto on_error;
+	}
+	backup_range_list_value->start = range_list_value->start;
+	backup_range_list_value->end   = range_list_value->end;
+	backup_range_list_value->size  = range_list_value->size;
+
+	if( libcdata_internal_range_list_append_value(
+	     (libcdata_internal_range_list_t *) backup_range_list,
+	     backup_range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to append value to backup range list.",
+		 function );
+
+		goto on_error;
+	}
+	backup_range_list_value = NULL;
+
+	if( libcdata_internal_range_list_merge_range(
+	     internal_range_list,
+	     range_list_element,
+	     range_start,
+	     range_end,
+	     value,
+	     value_merge_function,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to merge range with range list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_internal_range_list_merge_overlapping_ranges(
+	     internal_range_list,
+	     range_list_element,
+	     value_merge_function,
+	     backup_range_list,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to merge range list element with overlapping ranges.",
+		 function );
+
+		goto on_error;
+	}
+	return( 1 );
+
+on_error:
+	if( backup_range_list_value != NULL )
+	{
+		libcdata_range_list_value_free(
+		 &backup_range_list_value,
+		 NULL,
+		 NULL );
+	}
+	return( -1 );
+}
+
 /* Inserts a range
  *
  * The values are merged using the value_merge_function.
@@ -1893,8 +2175,8 @@ int libcdata_range_list_insert_range(
 	     internal_range_list,
 	     range_start,
 	     range_end,
-	     &list_element,
 	     &element_index,
+	     &list_element,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
@@ -1955,14 +2237,14 @@ int libcdata_range_list_insert_range(
 	{
 		result = 0;
 
-/* TODO backup list element */
-		if( libcdata_internal_range_list_merge_range(
+		if( libcdata_internal_range_list_insert_range_merge(
 		     internal_range_list,
 		     list_element,
 		     range_start,
 		     range_end,
 		     value,
 		     value_merge_function,
+		     backup_range_list,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -1970,23 +2252,6 @@ int libcdata_range_list_insert_range(
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
 			 "%s: unable to merge range with list element: %d.",
-			 function,
-			 element_index );
-
-			result = -1;
-		}
-		else if( libcdata_internal_range_list_merge_overlapping_ranges(
-		          internal_range_list,
-		          list_element,
-		          value_merge_function,
-		          backup_range_list,
-		          error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to merge list element: %d with overlapping ranges.",
 			 function,
 			 element_index );
 
@@ -3021,7 +3286,9 @@ int libcdata_internal_range_list_get_element_by_index(
      libcdata_list_element_t **element,
      libcerror_error_t **error )
 {
-	static char *function = "libcdata_internal_range_list_get_element_by_index";
+	libcdata_list_element_t *current_element = NULL;
+	static char *function                    = "libcdata_internal_range_list_get_element_by_index";
+	int current_element_index                = 0;
 
 	if( internal_range_list == NULL )
 	{
@@ -3057,18 +3324,21 @@ int libcdata_internal_range_list_get_element_by_index(
 
 		return( -1 );
 	}
-	if( ( internal_range_list->current_element != NULL )
-	 && ( internal_range_list->current_element_index != element_index ) )
+	current_element       = internal_range_list->current_element;
+	current_element_index = internal_range_list->current_element_index;
+
+	if( ( current_element != NULL )
+	 && ( current_element_index != element_index ) )
 	{
-		if( element_index < internal_range_list->current_element_index )
+		if( element_index < current_element_index )
 		{
-			if( ( internal_range_list->current_element_index - element_index ) < ( internal_range_list->number_of_elements / 2 ) )
+			if( ( current_element_index - element_index ) < ( internal_range_list->number_of_elements / 2 ) )
 			{
-				while( internal_range_list->current_element_index > element_index )
+				while( current_element_index > element_index )
 				{
 					if( libcdata_list_element_get_previous_element(
-					     internal_range_list->current_element,
-					     &( internal_range_list->current_element ),
+					     current_element,
+					     &current_element,
 					     error ) != 1 )
 					{
 						libcerror_error_set(
@@ -3077,23 +3347,23 @@ int libcdata_internal_range_list_get_element_by_index(
 						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 						 "%s: unable to retrieve previous element from list element: %d.",
 						 function,
-						 internal_range_list->current_element_index );
+						 current_element_index );
 
 						return( -1 );
 					}
-					internal_range_list->current_element_index--;
+					current_element_index--;
 				}
 			}
 		}
 		else
 		{
-			if( ( element_index - internal_range_list->current_element_index ) < ( internal_range_list->number_of_elements / 2 ) )
+			if( ( element_index - current_element_index ) < ( internal_range_list->number_of_elements / 2 ) )
 			{
-				while( internal_range_list->current_element_index < element_index )
+				while( current_element_index < element_index )
 				{
 					if( libcdata_list_element_get_next_element(
-					     internal_range_list->current_element,
-					     &( internal_range_list->current_element ),
+					     current_element,
+					     &current_element,
 					     error ) != 1 )
 					{
 						libcerror_error_set(
@@ -3102,29 +3372,29 @@ int libcdata_internal_range_list_get_element_by_index(
 						 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 						 "%s: unable to retrieve next element from list element: %d.",
 						 function,
-						 internal_range_list->current_element_index );
+						 current_element_index );
 
 						return( -1 );
 					}
-					internal_range_list->current_element_index++;
+					current_element_index++;
 				}
 			}
 		}
 	}
-	if( ( internal_range_list->current_element == NULL )
-	 || ( internal_range_list->current_element_index != element_index ) )
+	if( ( current_element == NULL )
+	 || ( current_element_index != element_index ) )
 	{
 		if( element_index < ( internal_range_list->number_of_elements / 2 ) )
 		{
-			internal_range_list->current_element = internal_range_list->first_element;
+			current_element = internal_range_list->first_element;
 
-			for( internal_range_list->current_element_index = 0;
-			     internal_range_list->current_element_index < element_index;
-			     internal_range_list->current_element_index++ )
+			for( current_element_index = 0;
+			     current_element_index < element_index;
+			     current_element_index++ )
 			{
 				if( libcdata_list_element_get_next_element(
-				     internal_range_list->current_element,
-				     &( internal_range_list->current_element ),
+				     current_element,
+				     &current_element,
 				     error ) != 1 )
 				{
 					libcerror_error_set(
@@ -3133,7 +3403,7 @@ int libcdata_internal_range_list_get_element_by_index(
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 					 "%s: unable to retrieve next element from list element: %d.",
 					 function,
-					 internal_range_list->current_element_index );
+					 current_element_index );
 
 					return( -1 );
 				}
@@ -3141,15 +3411,15 @@ int libcdata_internal_range_list_get_element_by_index(
 		}
 		else
 		{
-			internal_range_list->current_element = internal_range_list->last_element;
+			current_element = internal_range_list->last_element;
 
-			for( internal_range_list->current_element_index = ( internal_range_list->number_of_elements - 1 );
-			     internal_range_list->current_element_index > element_index;
-			     internal_range_list->current_element_index-- )
+			for( current_element_index = ( internal_range_list->number_of_elements - 1 );
+			     current_element_index > element_index;
+			     current_element_index-- )
 			{
 				if( libcdata_list_element_get_previous_element(
-				     internal_range_list->current_element,
-				     &( internal_range_list->current_element ),
+				     current_element,
+				     &current_element,
 				     error ) != 1 )
 				{
 					libcerror_error_set(
@@ -3158,14 +3428,19 @@ int libcdata_internal_range_list_get_element_by_index(
 					 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 					 "%s: unable to retrieve previous element from list element: %d.",
 					 function,
-					 internal_range_list->current_element_index );
+					 current_element_index );
 
 					return( -1 );
 				}
 			}
 		}
 	}
-	*element = internal_range_list->current_element;
+	if( current_element != NULL )
+	{
+		internal_range_list->current_element       = current_element;
+		internal_range_list->current_element_index = current_element_index;
+	}
+	*element = current_element;
 
 	return( 1 );
 }

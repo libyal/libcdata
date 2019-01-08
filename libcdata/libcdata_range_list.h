@@ -153,8 +153,8 @@ int libcdata_internal_range_list_insert_range_find_element(
      libcdata_internal_range_list_t *internal_range_list,
      uint64_t range_start,
      uint64_t range_end,
-     libcdata_list_element_t **element,
      int *element_index,
+     libcdata_list_element_t **element,
      libcerror_error_t **error );
 
 int libcdata_internal_range_list_check_range_overlap(
@@ -188,6 +188,19 @@ int libcdata_internal_range_list_merge_range(
 int libcdata_internal_range_list_merge_overlapping_ranges(
      libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *range_list_element,
+     int (*value_merge_function)(
+            intptr_t *destination_value,
+            intptr_t *source_value,
+            libcerror_error_t **error ),
+     libcdata_range_list_t *backup_range_list,
+     libcerror_error_t **error );
+
+int libcdata_internal_range_list_insert_range_merge(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     uint64_t range_start,
+     uint64_t range_end,
+     intptr_t *value,
      int (*value_merge_function)(
             intptr_t *destination_value,
             intptr_t *source_value,

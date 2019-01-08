@@ -185,7 +185,7 @@ int libcdata_tree_node_set_sub_nodes(
 
 int libcdata_internal_tree_node_append_node(
      libcdata_internal_tree_node_t *internal_node,
-     libcdata_tree_node_t *sub_node,
+     libcdata_tree_node_t *node_to_append,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
@@ -202,7 +202,7 @@ int libcdata_tree_node_append_value(
 
 int libcdata_internal_tree_node_insert_node(
      libcdata_internal_tree_node_t *internal_node,
-     libcdata_tree_node_t *sub_node,
+     libcdata_tree_node_t *node_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,

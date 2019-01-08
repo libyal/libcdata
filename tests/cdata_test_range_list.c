@@ -182,10 +182,12 @@ int cdata_test_range_list_value_merge_function(
 int cdata_test_range_list_value_split_function(
      int **destination_value,
      int *source_value,
-     uint64_t split_range_offset,
+     uint64_t split_range_offset CDATA_TEST_ATTRIBUTE_UNUSED,
      libcerror_error_t **error )
 {
 	static char *function = "cdata_test_range_list_value_split_function";
+
+	CDATA_TEST_UNREFERENCED_PARAMETER( split_range_offset )
 
 	if( destination_value == NULL )
 	{
@@ -2769,6 +2771,778 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libcdata_internal_range_list_insert_range_find_element function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_internal_range_list_insert_range_find_element(
+     void )
+{
+	libcdata_list_element_t *list_element         = NULL;
+	libcdata_range_list_t *range_list             = NULL;
+	libcdata_range_list_value_t *range_list_value = NULL;
+	libcerror_error_t *error                      = NULL;
+	int *value1                                   = NULL;
+	int *value2                                   = NULL;
+	int *value3                                   = NULL;
+	int *value4                                   = NULL;
+	int *value5                                   = NULL;
+	int element_index                             = 0;
+	int result                                    = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_range_list_initialize(
+	          &range_list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list",
+	 range_list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on an empty range list
+	 */
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          16,
+	          32,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Initialize test
+	 */
+	value1 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value1",
+	 value1 );
+
+	*value1 = 1;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          0,
+	          32,
+	          (intptr_t *) value1,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = NULL;
+
+	value2 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value2",
+	 value2 );
+
+	*value2 = 2;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          64,
+	          32,
+	          (intptr_t *) value2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value2 = NULL;
+
+	value3 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value3",
+	 value3 );
+
+	*value3 = 3;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          128,
+	          32,
+	          (intptr_t *) value3,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value3 = NULL;
+
+	value4 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value4",
+	 value4 );
+
+	*value4 = 4;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          192,
+	          32,
+	          (intptr_t *) value4,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value4 = NULL;
+
+	value5 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value5",
+	 value5 );
+
+	*value5 = 5;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          256,
+	          32,
+	          (intptr_t *) value5,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value5 = NULL;
+
+	/* Test find element on a range list with 5 elements where range overlap with the first range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          16,
+	          32,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range is before the second range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          48,
+	          56,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range overlap with the second range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          80,
+	          112,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range is before the third range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          112,
+	          120,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range overlap with the third range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          146,
+	          176,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range is before the fourth range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          176,
+	          184,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 4 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Set the current element
+	 */
+	list_element = NULL;
+
+	result = libcdata_internal_range_list_get_element_by_index(
+	          (libcdata_internal_range_list_t *) range_list,
+	          2,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range is before the fifth range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          240,
+	          248,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 4 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          (intptr_t **) &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "*( range_list_value->value )",
+	 *( (int *) range_list_value->value ),
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test find element on a range list with 5 elements where range is after the fifth range list element
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          304,
+	          312,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "element_index",
+	 element_index,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	element_index = -1;
+	list_element  = NULL;
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          NULL,
+	          0,
+	          32,
+	          &element_index,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          0,
+	          32,
+	          NULL,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_internal_range_list_insert_range_find_element(
+	          (libcdata_internal_range_list_t *) range_list,
+	          0,
+	          32,
+	          &element_index,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_range_list_free(
+	          &range_list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "range_list",
+	 range_list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( value5 != NULL )
+	{
+		memory_free(
+		 value5 );
+	}
+	if( value4 != NULL )
+	{
+		memory_free(
+		 value4 );
+	}
+	if( value3 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( value2 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( value1 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( range_list != NULL )
+	{
+		libcdata_range_list_free(
+		 &range_list,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 /* Tests the libcdata_range_list_insert_range function
@@ -4713,7 +5487,7 @@ int cdata_test_internal_range_list_get_element_at_offset(
 
 	result = libcdata_internal_range_list_get_element_at_offset(
 	          (libcdata_internal_range_list_t *) range_list,
-	          70,
+	          80,
 	          &list_element,
 	          &error );
 
@@ -4757,7 +5531,7 @@ int cdata_test_internal_range_list_get_element_at_offset(
 
 	result = libcdata_internal_range_list_get_element_at_offset(
 	          NULL,
-	          70,
+	          80,
 	          &list_element,
 	          &error );
 
@@ -4801,7 +5575,7 @@ int cdata_test_internal_range_list_get_element_at_offset(
 
 	result = libcdata_internal_range_list_get_element_at_offset(
 	          (libcdata_internal_range_list_t *) range_list,
-	          70,
+	          80,
 	          NULL,
 	          &error );
 
@@ -5268,7 +6042,7 @@ int cdata_test_internal_range_list_get_value_at_offset(
 
 	result = libcdata_internal_range_list_get_value_at_offset(
 	          (libcdata_internal_range_list_t *) range_list,
-	          70,
+	          80,
 	          &range_list_value,
 	          &error );
 
@@ -5314,7 +6088,7 @@ int cdata_test_internal_range_list_get_value_at_offset(
 
 	result = libcdata_internal_range_list_get_value_at_offset(
 	          NULL,
-	          70,
+	          80,
 	          &range_list_value,
 	          &error );
 
@@ -5358,7 +6132,7 @@ int cdata_test_internal_range_list_get_value_at_offset(
 
 	result = libcdata_internal_range_list_get_value_at_offset(
 	          (libcdata_internal_range_list_t *) range_list,
-	          70,
+	          80,
 	          NULL,
 	          &error );
 
@@ -5935,7 +6709,7 @@ int cdata_test_range_list_get_range_at_offset(
 	 */
 	result = libcdata_range_list_get_range_at_offset(
 	          range_list,
-	          70,
+	          80,
 	          &range_start,
 	          &range_size,
 	          &value,
@@ -5991,7 +6765,7 @@ int cdata_test_range_list_get_range_at_offset(
 
 	result = libcdata_range_list_get_range_at_offset(
 	          range_list,
-	          70,
+	          80,
 	          &range_start,
 	          &range_size,
 	          &value,
@@ -6021,7 +6795,7 @@ int cdata_test_range_list_get_range_at_offset(
 
 	result = libcdata_range_list_get_range_at_offset(
 	          range_list,
-	          70,
+	          80,
 	          &range_start,
 	          &range_size,
 	          &value,
@@ -6752,15 +7526,19 @@ int main(
 	 "libcdata_internal_range_list_remove_element",
 	 cdata_test_internal_range_list_remove_element );
 
-	/* TODO add tests for libcdata_internal_range_list_insert_range_find_element */
+	CDATA_TEST_RUN(
+	 "libcdata_internal_range_list_insert_range_find_element",
+	 cdata_test_internal_range_list_insert_range_find_element );
 
 	/* TODO add tests for libcdata_internal_range_list_check_range_overlap */
 
-	/* TODO add tests for libcdata_internal_range_list_insert_element_before_list_element */
+	/* TODO add tests for libcdata_internal_range_list_insert_range_before_element */
 
 	/* TODO add tests for libcdata_internal_range_list_merge_overlapping_ranges */
 
 	/* TODO add tests for libcdata_internal_range_list_merge_range */
+
+	/* TODO add tests for libcdata_internal_range_list_insert_range_merge */
 
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
