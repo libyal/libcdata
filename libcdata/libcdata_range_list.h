@@ -208,6 +208,17 @@ int libcdata_internal_range_list_insert_range_merge(
      libcdata_range_list_t *backup_range_list,
      libcerror_error_t **error );
 
+int libcdata_internal_range_list_insert_range_revert(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcerror_error_t **error );
+
+int libcdata_internal_range_list_insert_range_revert_merge(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_range_list_t *backup_range_list,
+     libcerror_error_t **error );
+
 LIBCDATA_EXTERN \
 int libcdata_range_list_insert_range(
      libcdata_range_list_t *range_list,

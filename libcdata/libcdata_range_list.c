@@ -2057,6 +2057,232 @@ on_error:
 	return( -1 );
 }
 
+/* Reverts a previously merge of the range list element and successive overlapping ranges
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_range_list_insert_range_revert(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcerror_error_t **error )
+{
+	libcdata_range_list_value_t *range_list_value = NULL;
+	static char *function                         = "libcdata_internal_range_list_insert_range_revert";
+	int result                                    = 1;
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_get_value(
+	     range_list_element,
+	     (intptr_t **) &range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value from range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_internal_range_list_remove_element(
+	     internal_range_list,
+	     range_list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
+		 "%s: unable to remove range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_free(
+	     &range_list_element,
+	     NULL,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free range list element.",
+		 function );
+
+		result = -1;
+	}
+	if( libcdata_range_list_value_free(
+	     &range_list_value,
+	     NULL,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free range list value.",
+		 function );
+
+		result = -1;
+	}
+	return( result );
+}
+
+/* Reverts a previously merge of the range list element and successive overlapping ranges
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_range_list_insert_range_revert_merge(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_range_list_t *backup_range_list,
+     libcerror_error_t **error )
+{
+	libcdata_internal_range_list_t *internal_backup_range_list = NULL;
+	libcdata_list_element_t *backup_range_list_element         = NULL;
+	libcdata_list_element_t *first_backup_range_list_element   = NULL;
+	libcdata_range_list_value_t *backup_range_list_value       = NULL;
+	libcdata_range_list_value_t *range_list_value              = NULL;
+	static char *function                                      = "libcdata_internal_range_list_insert_range_revert_merge";
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( backup_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid backup range list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_backup_range_list = (libcdata_internal_range_list_t *) backup_range_list;
+
+	if( libcdata_internal_range_list_get_first_element(
+	     internal_backup_range_list,
+	     &first_backup_range_list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve first element from backup range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( first_backup_range_list_element == NULL )
+	{
+		return( 1 );
+	}
+	if( libcdata_list_element_get_value(
+	     first_backup_range_list_element,
+	     (intptr_t **) &backup_range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value from first backup range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_get_value(
+	     range_list_element,
+	     (intptr_t **) &range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value from range list element.",
+		 function );
+
+		return( -1 );
+	}
+	range_list_value->start = backup_range_list_value->start;
+	range_list_value->end   = backup_range_list_value->end;
+	range_list_value->size  = backup_range_list_value->size;
+
+	while( first_backup_range_list_element != NULL )
+	{
+		if( libcdata_list_element_get_next_element(
+		     first_backup_range_list_element,
+		     &backup_range_list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve next element from first backup range list element.",
+			 function );
+
+			return( -1 );
+		}
+		if( backup_range_list_element == NULL )
+		{
+			break;
+		}
+		if( libcdata_internal_range_list_remove_element(
+		     internal_backup_range_list,
+		     backup_range_list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
+			 "%s: unable to remove backup range list element.",
+			 function );
+
+			return( -1 );
+		}
+		if( libcdata_internal_range_list_insert_element(
+		     internal_range_list,
+		     range_list_element,
+		     backup_range_list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to insert list element in range list.",
+			 function );
+
+			return( -1 );
+		}
+		backup_range_list_element = NULL;
+	}
+	return( 1 );
+}
+
 /* Inserts a range
  *
  * The values are merged using the value_merge_function.
@@ -2283,18 +2509,17 @@ int libcdata_range_list_insert_range(
 on_error:
 	if( result == 0 )
 	{
-/* TODO undo merge changes */
+		libcdata_internal_range_list_insert_range_revert_merge(
+		 internal_range_list,
+		 list_element,
+		 backup_range_list,
+		 NULL );
 	}
 	else if( result == 1 )
 	{
-		libcdata_internal_range_list_remove_element(
+		libcdata_internal_range_list_insert_range_revert(
 		 internal_range_list,
 		 new_element,
-		 NULL );
-
-		libcdata_list_element_free(
-		 &new_element,
-		 NULL,
 		 NULL );
 	}
 	libcdata_range_list_free(
@@ -2446,7 +2671,7 @@ int libcdata_range_list_insert_range_list(
 }
 
 /* Inserts the element in the range list after the range list element
- * If range_list_element is NULL the element is inserted before the first element in the list
+ * If range_list_element is NULL the element is inserted as the first element in the list
  * Returns 1 if successful, or -1 on error
  */
 int libcdata_internal_range_list_insert_element(
