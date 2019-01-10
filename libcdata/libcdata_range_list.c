@@ -701,14 +701,15 @@ int libcdata_range_list_get_number_of_elements(
 /* Retrieves the first elements in the range list
  * Returns 1 if successful or -1 on error
  */
-int libcdata_internal_range_list_get_first_element(
-     libcdata_internal_range_list_t *internal_range_list,
+int libcdata_range_list_get_first_element(
+     libcdata_range_list_t *range_list,
      libcdata_list_element_t **element,
      libcerror_error_t **error )
 {
-	static char *function = "libcdata_internal_range_list_get_first_element";
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	static char *function                               = "libcdata_range_list_get_first_element";
 
-	if( internal_range_list == NULL )
+	if( range_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -719,6 +720,8 @@ int libcdata_internal_range_list_get_first_element(
 
 		return( -1 );
 	}
+	internal_range_list = (libcdata_internal_range_list_t *) range_list;
+
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -730,8 +733,38 @@ int libcdata_internal_range_list_get_first_element(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	*element = internal_range_list->first_element;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
 }
 
@@ -743,7 +776,9 @@ int libcdata_internal_range_list_set_first_element(
      libcdata_list_element_t *element,
      libcerror_error_t **error )
 {
-	static char *function = "libcdata_internal_range_list_set_first_element";
+	libcdata_list_element_t *backup_first_element = NULL;
+	libcdata_list_element_t *backup_next_element  = NULL;
+	static char *function                         = "libcdata_internal_range_list_set_first_element";
 
 	if( internal_range_list == NULL )
 	{
@@ -758,6 +793,25 @@ int libcdata_internal_range_list_set_first_element(
 	}
 	if( element != NULL )
 	{
+		if( libcdata_list_element_get_next_element(
+		     element,
+		     &backup_next_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve next element of element.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	backup_first_element = internal_range_list->first_element;
+
+	if( element != NULL )
+	{
 		if( libcdata_list_element_set_next_element(
 		     element,
 		     internal_range_list->first_element,
@@ -767,10 +821,10 @@ int libcdata_internal_range_list_set_first_element(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set next element of list element.",
+			 "%s: unable to set next element of element.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	if( internal_range_list->first_element != NULL )
@@ -787,25 +841,45 @@ int libcdata_internal_range_list_set_first_element(
 			 "%s: unable to set previous element of first element.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	internal_range_list->first_element = element;
 
 	return( 1 );
+
+on_error:
+	if( element != NULL )
+	{
+		libcdata_list_element_set_next_element(
+		 element,
+		 backup_next_element,
+		 NULL );
+	}
+	if( backup_first_element != NULL )
+	{
+		libcdata_list_element_set_next_element(
+		 backup_first_element,
+		 NULL,
+		 NULL );
+	}
+	internal_range_list->first_element = backup_first_element;
+
+	return( -1 );
 }
 
 /* Retrieves the last elements in the range list
  * Returns 1 if successful or -1 on error
  */
-int libcdata_internal_range_list_get_last_element(
-     libcdata_internal_range_list_t *internal_range_list,
+int libcdata_range_list_get_last_element(
+     libcdata_range_list_t *range_list,
      libcdata_list_element_t **element,
      libcerror_error_t **error )
 {
-	static char *function = "libcdata_internal_range_list_get_last_element";
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	static char *function                               = "libcdata_range_list_get_last_element";
 
-	if( internal_range_list == NULL )
+	if( range_list == NULL )
 	{
 		libcerror_error_set(
 		 error,
@@ -816,6 +890,8 @@ int libcdata_internal_range_list_get_last_element(
 
 		return( -1 );
 	}
+	internal_range_list = (libcdata_internal_range_list_t *) range_list;
+
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -827,8 +903,38 @@ int libcdata_internal_range_list_get_last_element(
 
 		return( -1 );
 	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	*element = internal_range_list->last_element;
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
 	return( 1 );
 }
 
@@ -840,7 +946,9 @@ int libcdata_internal_range_list_set_last_element(
      libcdata_list_element_t *element,
      libcerror_error_t **error )
 {
-	static char *function = "libcdata_internal_range_list_set_last_element";
+	libcdata_list_element_t *backup_last_element     = NULL;
+	libcdata_list_element_t *backup_previous_element = NULL;
+	static char *function                            = "libcdata_internal_range_list_set_last_element";
 
 	if( internal_range_list == NULL )
 	{
@@ -855,6 +963,25 @@ int libcdata_internal_range_list_set_last_element(
 	}
 	if( element != NULL )
 	{
+		if( libcdata_list_element_get_previous_element(
+		     element,
+		     &backup_previous_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve previous element of element.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	backup_last_element = internal_range_list->last_element;
+
+	if( element != NULL )
+	{
 		if( libcdata_list_element_set_previous_element(
 		     element,
 		     internal_range_list->last_element,
@@ -864,10 +991,10 @@ int libcdata_internal_range_list_set_last_element(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set previous element of list element.",
+			 "%s: unable to set previous element of element.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	if( internal_range_list->last_element != NULL )
@@ -884,12 +1011,31 @@ int libcdata_internal_range_list_set_last_element(
 			 "%s: unable to set next element of last element.",
 			 function );
 
-			return( -1 );
+			goto on_error;
 		}
 	}
 	internal_range_list->last_element = element;
 
 	return( 1 );
+
+on_error:
+	if( element != NULL )
+	{
+		libcdata_list_element_set_previous_element(
+		 element,
+		 backup_previous_element,
+		 NULL );
+	}
+	if( backup_last_element != NULL )
+	{
+		libcdata_list_element_set_next_element(
+		 backup_last_element,
+		 NULL,
+		 NULL );
+	}
+	internal_range_list->last_element = backup_last_element;
+
+	return( -1 );
 }
 
 /* Append a list element to the list
@@ -1456,6 +1602,8 @@ int libcdata_internal_range_list_insert_range_before_element(
      libcdata_list_element_t **new_range_list_element,
      libcerror_error_t **error )
 {
+	libcdata_list_element_t *backup_first_element     = NULL;
+	libcdata_list_element_t *backup_last_element      = NULL;
 	libcdata_list_element_t *new_element              = NULL;
 	libcdata_list_element_t *previous_element         = NULL;
 	libcdata_range_list_value_t *new_range_list_value = NULL;
@@ -1483,6 +1631,23 @@ int libcdata_internal_range_list_insert_range_before_element(
 
 		return( -1 );
 	}
+	if( range_list_element != NULL )
+	{
+		if( libcdata_list_element_get_previous_element(
+		     range_list_element,
+		     &previous_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve previous element from range list element.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( libcdata_range_list_value_initialize(
 	     &new_range_list_value,
 	     error ) != 1 )
@@ -1496,6 +1661,9 @@ int libcdata_internal_range_list_insert_range_before_element(
 
 		goto on_error;
 	}
+	backup_first_element = internal_range_list->first_element;
+	backup_last_element  = internal_range_list->last_element;
+
 	if( new_range_list_value == NULL )
 	{
 		libcerror_error_set(
@@ -1539,8 +1707,6 @@ int libcdata_internal_range_list_insert_range_before_element(
 
 		goto on_error;
 	}
-	new_range_list_value = NULL;
-
 	if( internal_range_list->number_of_elements == 0 )
 	{
 		internal_range_list->first_element = new_element;
@@ -1565,20 +1731,6 @@ int libcdata_internal_range_list_insert_range_before_element(
 	}
 	else
 	{
-		if( libcdata_list_element_get_previous_element(
-		     range_list_element,
-		     &previous_element,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve previous element from range list element.",
-			 function );
-
-			goto on_error;
-		}
 		if( libcdata_list_element_set_elements(
 		     new_element,
 		     previous_element,
@@ -1642,6 +1794,12 @@ int libcdata_internal_range_list_insert_range_before_element(
 on_error:
 	if( new_element != NULL )
 	{
+		libcdata_list_element_set_elements(
+		 new_element,
+		 NULL,
+		 NULL,
+		 NULL );
+
 		libcdata_list_element_free(
 		 &new_element,
 		 NULL,
@@ -1654,6 +1812,23 @@ on_error:
 		 NULL,
 		 NULL );
 	}
+	if( previous_element != NULL )
+	{
+		libcdata_list_element_set_next_element(
+		 previous_element,
+		 range_list_element,
+		 NULL );
+	}
+	if( range_list_element != NULL )
+	{
+		libcdata_list_element_set_previous_element(
+		 range_list_element,
+		 previous_element,
+		 NULL );
+	}
+	internal_range_list->first_element = backup_first_element;
+	internal_range_list->last_element  = backup_last_element;
+
 	return( -1 );
 }
 
@@ -2150,7 +2325,6 @@ int libcdata_internal_range_list_insert_range_revert_merge(
 {
 	libcdata_internal_range_list_t *internal_backup_range_list = NULL;
 	libcdata_list_element_t *backup_range_list_element         = NULL;
-	libcdata_list_element_t *first_backup_range_list_element   = NULL;
 	libcdata_range_list_value_t *backup_range_list_value       = NULL;
 	libcdata_range_list_value_t *range_list_value              = NULL;
 	static char *function                                      = "libcdata_internal_range_list_insert_range_revert_merge";
@@ -2179,26 +2353,12 @@ int libcdata_internal_range_list_insert_range_revert_merge(
 	}
 	internal_backup_range_list = (libcdata_internal_range_list_t *) backup_range_list;
 
-	if( libcdata_internal_range_list_get_first_element(
-	     internal_backup_range_list,
-	     &first_backup_range_list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve first element from backup range list.",
-		 function );
-
-		return( -1 );
-	}
-	if( first_backup_range_list_element == NULL )
+	if( internal_backup_range_list->first_element == NULL )
 	{
 		return( 1 );
 	}
 	if( libcdata_list_element_get_value(
-	     first_backup_range_list_element,
+	     internal_backup_range_list->first_element,
 	     (intptr_t **) &backup_range_list_value,
 	     error ) != 1 )
 	{
@@ -2229,10 +2389,10 @@ int libcdata_internal_range_list_insert_range_revert_merge(
 	range_list_value->end   = backup_range_list_value->end;
 	range_list_value->size  = backup_range_list_value->size;
 
-	while( first_backup_range_list_element != NULL )
+	while( internal_backup_range_list->first_element != NULL )
 	{
 		if( libcdata_list_element_get_next_element(
-		     first_backup_range_list_element,
+		     internal_backup_range_list->first_element,
 		     &backup_range_list_element,
 		     error ) != 1 )
 		{
@@ -2453,7 +2613,7 @@ int libcdata_range_list_insert_range(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to insert list element in range list.",
+			 "%s: unable to insert range before range list element.",
 			 function );
 
 			result = -1;
@@ -2597,8 +2757,8 @@ int libcdata_range_list_insert_range_list(
 
 		return( -1 );
 	}
-	if( libcdata_internal_range_list_get_first_element(
-	     (libcdata_internal_range_list_t *) source_range_list,
+	if( libcdata_range_list_get_first_element(
+	     source_range_list,
 	     &source_list_element,
 	     error ) != 1 )
 	{

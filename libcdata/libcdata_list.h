@@ -103,8 +103,8 @@ int libcdata_list_get_first_element(
      libcdata_list_element_t **element,
      libcerror_error_t **error );
 
-int libcdata_list_set_first_element(
-     libcdata_list_t *list,
+int libcdata_internal_list_set_first_element(
+     libcdata_internal_list_t *internal_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error );
 
@@ -114,8 +114,8 @@ int libcdata_list_get_last_element(
      libcdata_list_element_t **element,
      libcerror_error_t **error );
 
-int libcdata_list_set_last_element(
-     libcdata_list_t *list,
+int libcdata_internal_list_set_last_element(
+     libcdata_internal_list_t *internal_list,
      libcdata_list_element_t *element,
      libcerror_error_t **error );
 
@@ -166,6 +166,12 @@ int libcdata_internal_list_insert_element_find_element(
             libcerror_error_t **error ),
      uint8_t insert_flags,
      libcdata_list_element_t **element,
+     libcerror_error_t **error );
+
+int libcdata_internal_list_insert_element_before_element(
+     libcdata_internal_list_t *internal_list,
+     libcdata_list_element_t *list_element,
+     libcdata_list_element_t *element,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

@@ -1,4 +1,4 @@
-.Dd July 24, 2018
+.Dd January 10, 2019
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -142,6 +142,10 @@ Range list functions
 .Fn libcdata_range_list_clone "libcdata_range_list_t **destination_range_list, libcdata_range_list_t *source_range_list, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_clone_function)( intptr_t **destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int
 .Fn libcdata_range_list_get_number_of_elements "libcdata_range_list_t *range_list, int *number_of_elements, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_get_first_element "libcdata_range_list_t *range_list, libcdata_list_element_t **element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_range_list_get_last_element "libcdata_range_list_t *range_list, libcdata_list_element_t **element, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_range_list_insert_range "libcdata_range_list_t *range_list, uint64_t range_start, uint64_t range_size, intptr_t *value, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), int (*value_merge_function)( intptr_t *destination_value, intptr_t *source_value, libcdata_error_t **error ), libcdata_error_t **error"
 .Ft int

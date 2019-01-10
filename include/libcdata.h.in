@@ -759,6 +759,24 @@ int libcdata_range_list_get_number_of_elements(
      int *number_of_elements,
      libcdata_error_t **error );
 
+/* Retrieves the first element in the range list
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_first_element(
+     libcdata_range_list_t *range_list,
+     libcdata_list_element_t **element,
+     libcdata_error_t **error );
+
+/* Retrieves the last element in the range list
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_range_list_get_last_element(
+     libcdata_range_list_t *range_list,
+     libcdata_list_element_t **element,
+     libcdata_error_t **error );
+
 /* Inserts a range
  *
  * The values are merged using the value_merge_function.
