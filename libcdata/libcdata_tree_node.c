@@ -314,7 +314,7 @@ int libcdata_tree_node_empty(
 		{
 			internal_node->last_sub_node = next_node;
 		}
-		internal_node->number_of_sub_nodes--;
+		internal_node->number_of_sub_nodes -= 1;
 
 		if( next_node != NULL )
 		{
@@ -723,6 +723,10 @@ int libcdata_tree_node_set_value(
 	libcdata_internal_tree_node_t *internal_node = NULL;
 	static char *function                        = "libcdata_tree_node_set_value";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	intptr_t *backup_value                       = NULL;
+#endif
+
 	if( node == NULL )
 	{
 		libcerror_error_set(
@@ -750,7 +754,9 @@ int libcdata_tree_node_set_value(
 
 		return( -1 );
 	}
+	backup_value = internal_node->value;
 #endif
+
 	internal_node->value = value;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -765,10 +771,17 @@ int libcdata_tree_node_set_value(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_node->value = backup_value;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the parent node from the tree node
@@ -852,6 +865,10 @@ int libcdata_tree_node_set_parent_node(
 	libcdata_internal_tree_node_t *internal_node = NULL;
 	static char *function                        = "libcdata_tree_node_set_parent_node";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_parent_node     = NULL;
+#endif
+
 	if( node == NULL )
 	{
 		libcerror_error_set(
@@ -879,7 +896,9 @@ int libcdata_tree_node_set_parent_node(
 
 		return( -1 );
 	}
+	backup_parent_node = internal_node->parent_node;
 #endif
+
 	internal_node->parent_node = parent_node;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -894,10 +913,17 @@ int libcdata_tree_node_set_parent_node(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_node->parent_node = backup_parent_node;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the previous node from the tree node
@@ -981,6 +1007,10 @@ int libcdata_tree_node_set_previous_node(
 	libcdata_internal_tree_node_t *internal_node = NULL;
 	static char *function                        = "libcdata_tree_node_set_previous_node";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_previous_node   = NULL;
+#endif
+
 	if( node == NULL )
 	{
 		libcerror_error_set(
@@ -1008,7 +1038,9 @@ int libcdata_tree_node_set_previous_node(
 
 		return( -1 );
 	}
+	backup_previous_node = internal_node->previous_node;
 #endif
+
 	internal_node->previous_node = previous_node;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -1023,10 +1055,17 @@ int libcdata_tree_node_set_previous_node(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_node->previous_node = backup_previous_node;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the next node from the tree node
@@ -1110,6 +1149,10 @@ int libcdata_tree_node_set_next_node(
 	libcdata_internal_tree_node_t *internal_node = NULL;
 	static char *function                        = "libcdata_tree_node_set_next_node";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_next_node       = NULL;
+#endif
+
 	if( node == NULL )
 	{
 		libcerror_error_set(
@@ -1137,7 +1180,9 @@ int libcdata_tree_node_set_next_node(
 
 		return( -1 );
 	}
+	backup_next_node = internal_node->next_node ;
 #endif
+
 	internal_node->next_node = next_node;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -1152,10 +1197,17 @@ int libcdata_tree_node_set_next_node(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_node->next_node = backup_next_node;
+
+	return( -1 );
+#endif
 }
 
 /* Retrieves the nodes from the tree node
@@ -1267,6 +1319,12 @@ int libcdata_tree_node_set_nodes(
 	libcdata_internal_tree_node_t *internal_node = NULL;
 	static char *function                        = "libcdata_tree_node_set_nodes";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_next_node       = NULL;
+	libcdata_tree_node_t *backup_parent_node     = NULL;
+	libcdata_tree_node_t *backup_previous_node   = NULL;
+#endif
+
 	if( node == NULL )
 	{
 		libcerror_error_set(
@@ -1294,7 +1352,11 @@ int libcdata_tree_node_set_nodes(
 
 		return( -1 );
 	}
+	backup_parent_node   = internal_node->parent_node;
+	backup_previous_node = internal_node->previous_node;
+	backup_next_node     = internal_node->next_node;
 #endif
+
 	internal_node->parent_node   = parent_node;
 	internal_node->previous_node = previous_node;
 	internal_node->next_node     = next_node;
@@ -1311,10 +1373,359 @@ int libcdata_tree_node_set_nodes(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
+		goto on_error;
+	}
+#endif
+	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_node->parent_node   = backup_parent_node;
+	internal_node->previous_node = backup_previous_node;
+	internal_node->next_node     = backup_next_node;
+
+	return( -1 );
+#endif
+}
+
+/* Retrieves the first sub node from the tree node
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_tree_node_get_first_sub_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **first_sub_node,
+     libcerror_error_t **error )
+{
+	libcdata_internal_tree_node_t *internal_node = NULL;
+	static char *function                        = "libcdata_tree_node_get_first_sub_node";
+
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	internal_node = (libcdata_internal_tree_node_t *) node;
+
+	if( first_sub_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid first sub node.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	*first_sub_node = internal_node->first_sub_node;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
 		return( -1 );
 	}
 #endif
 	return( 1 );
+}
+
+/* Sets the first sub node in the tree node
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_tree_node_set_first_sub_node(
+     libcdata_internal_tree_node_t *internal_node,
+     libcdata_tree_node_t *sub_node,
+     libcerror_error_t **error )
+{
+	libcdata_tree_node_t *backup_first_sub_node = NULL;
+	libcdata_tree_node_t *backup_previous_node  = NULL;
+	static char *function                       = "libcdata_internal_tree_node_set_first_sub_node";
+
+	if( internal_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	if( sub_node != NULL )
+	{
+		if( libcdata_tree_node_get_previous_node(
+		     sub_node,
+		     &backup_previous_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve previous node of sub node.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	backup_first_sub_node = internal_node->first_sub_node;
+
+	if( sub_node != NULL )
+	{
+		if( libcdata_tree_node_set_previous_node(
+		     sub_node,
+		     internal_node->first_sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set previous node of sub node.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	if( internal_node->first_sub_node != NULL )
+	{
+		if( libcdata_tree_node_set_next_node(
+		     internal_node->first_sub_node,
+		     sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set next node of first sub node.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	internal_node->first_sub_node = sub_node;
+
+	return( 1 );
+
+on_error:
+	if( sub_node != NULL )
+	{
+		libcdata_tree_node_set_previous_node(
+		 sub_node,
+		 backup_previous_node,
+		 NULL );
+	}
+	if( backup_first_sub_node != NULL )
+	{
+		libcdata_tree_node_set_next_node(
+		 backup_first_sub_node,
+		 NULL,
+		 NULL );
+	}
+	internal_node->first_sub_node = backup_first_sub_node;
+
+	return( -1 );
+}
+
+/* Retrieves the last sub node from the tree node
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_tree_node_get_last_sub_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **last_sub_node,
+     libcerror_error_t **error )
+{
+	libcdata_internal_tree_node_t *internal_node = NULL;
+	static char *function                        = "libcdata_tree_node_get_last_sub_node";
+
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	internal_node = (libcdata_internal_tree_node_t *) node;
+
+	if( last_sub_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid last sub node.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	*last_sub_node = internal_node->last_sub_node;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_node->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( 1 );
+}
+
+/* Sets the last sub node in the tree node
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_tree_node_set_last_sub_node(
+     libcdata_internal_tree_node_t *internal_node,
+     libcdata_tree_node_t *sub_node,
+     libcerror_error_t **error )
+{
+	libcdata_tree_node_t *backup_last_sub_node = NULL;
+	libcdata_tree_node_t *backup_previous_node = NULL;
+	static char *function                      = "libcdata_internal_tree_node_set_last_sub_node";
+
+	if( internal_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	if( sub_node != NULL )
+	{
+		if( libcdata_tree_node_get_previous_node(
+		     sub_node,
+		     &backup_previous_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve previous node of sub node.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	backup_last_sub_node = internal_node->last_sub_node;
+
+	if( sub_node != NULL )
+	{
+		if( libcdata_tree_node_set_previous_node(
+		     sub_node,
+		     internal_node->last_sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set previous node of sub node.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	if( internal_node->last_sub_node != NULL )
+	{
+		if( libcdata_tree_node_set_next_node(
+		     internal_node->last_sub_node,
+		     sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set next node of last sub node.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	internal_node->last_sub_node = sub_node;
+
+	return( 1 );
+
+on_error:
+	if( sub_node != NULL )
+	{
+		libcdata_tree_node_set_previous_node(
+		 sub_node,
+		 backup_previous_node,
+		 NULL );
+	}
+	if( backup_last_sub_node != NULL )
+	{
+		libcdata_tree_node_set_next_node(
+		 backup_last_sub_node,
+		 NULL,
+		 NULL );
+	}
+	internal_node->last_sub_node = backup_last_sub_node;
+
+	return( -1 );
 }
 
 /* Retrieves the sub nodes from the tree node
@@ -1412,6 +1823,11 @@ int libcdata_tree_node_set_sub_nodes(
 	libcdata_internal_tree_node_t *internal_node = NULL;
 	static char *function                        = "libcdata_tree_node_set_sub_nodes";
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_first_sub_node  = NULL;
+	libcdata_tree_node_t *backup_last_sub_node   = NULL;
+#endif
+
 	if( node == NULL )
 	{
 		libcerror_error_set(
@@ -1439,7 +1855,10 @@ int libcdata_tree_node_set_sub_nodes(
 
 		return( -1 );
 	}
+	backup_first_sub_node = internal_node->first_sub_node;
+	backup_last_sub_node  = internal_node->last_sub_node;
 #endif
+
 	internal_node->first_sub_node = first_sub_node;
 	internal_node->last_sub_node  = last_sub_node;
 
@@ -1455,10 +1874,18 @@ int libcdata_tree_node_set_sub_nodes(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( 1 );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	internal_node->first_sub_node = backup_first_sub_node;
+	internal_node->last_sub_node  = backup_last_sub_node;
+
+	return( -1 );
+#endif
 }
 
 /* Appends a sub tree node to the node
@@ -1620,7 +2047,7 @@ int libcdata_internal_tree_node_append_node(
 
 		return( -1 );
 	}
-	internal_node->number_of_sub_nodes++;
+	internal_node->number_of_sub_nodes += 1;
 
 	return( 1 );
 }
@@ -1630,12 +2057,20 @@ int libcdata_internal_tree_node_append_node(
  */
 int libcdata_tree_node_append_node(
      libcdata_tree_node_t *node,
-     libcdata_tree_node_t *sub_node,
+     libcdata_tree_node_t *node_to_append,
      libcerror_error_t **error )
 {
-	libcdata_internal_tree_node_t *internal_node = NULL;
-	static char *function                        = "libcdata_tree_node_append_node";
-	int result                                   = 1;
+	libcdata_internal_tree_node_t *internal_node  = NULL;
+	libcdata_tree_node_t *to_append_next_node     = NULL;
+	libcdata_tree_node_t *to_append_parent_node   = NULL;
+	libcdata_tree_node_t *to_append_previous_node = NULL;
+	static char *function                         = "libcdata_tree_node_append_node";
+	int result                                    = 1;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_first_sub_node   = NULL;
+	libcdata_tree_node_t *backup_last_sub_node    = NULL;
+#endif
 
 	if( node == NULL )
 	{
@@ -1650,6 +2085,35 @@ int libcdata_tree_node_append_node(
 	}
 	internal_node = (libcdata_internal_tree_node_t *) node;
 
+	if( libcdata_tree_node_get_nodes(
+	     node_to_append,
+	     &to_append_parent_node,
+	     &to_append_previous_node,
+	     &to_append_next_node,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve nodes of node to append.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( to_append_parent_node != NULL )
+	 || ( to_append_previous_node != NULL )
+	 || ( to_append_next_node != NULL ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid node to append - node is already part of a tree.",
+		 function );
+
+		return( -1 );
+	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_node->read_write_lock,
@@ -1664,20 +2128,91 @@ int libcdata_tree_node_append_node(
 
 		return( -1 );
 	}
+	backup_first_sub_node = internal_node->first_sub_node;
+	backup_last_sub_node  = internal_node->last_sub_node;
 #endif
-	if( libcdata_internal_tree_node_append_node(
-	     internal_node,
-	     sub_node,
-	     error ) != 1 )
+
+	result = libcdata_tree_node_set_parent_node(
+	          node_to_append,
+	          node,
+	          error );
+
+	if( result != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to append node.",
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set parent node of node to append.",
 		 function );
 
 		result = -1;
+	}
+	if( result == 1 )
+	{
+		result = libcdata_tree_node_set_previous_node(
+		          node_to_append,
+		          internal_node->last_sub_node,
+		          error );
+
+		if( result != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set previous node of node to append.",
+			 function );
+
+			libcdata_tree_node_set_parent_node(
+			 node_to_append,
+			 NULL,
+			 NULL );
+
+			result = -1;
+		}
+	}
+	if( result == 1 )
+	{
+		if( internal_node->last_sub_node != NULL )
+		{
+			result = libcdata_tree_node_set_next_node(
+			          internal_node->last_sub_node,
+			          node_to_append,
+			          error );
+
+			if( result != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set next node of last sub node.",
+				 function );
+
+				libcdata_tree_node_set_parent_node(
+				 node_to_append,
+				 NULL,
+				 NULL );
+
+				libcdata_tree_node_set_previous_node(
+				 node_to_append,
+				 NULL,
+				 NULL );
+
+				result = -1;
+			}
+		}
+	}
+	if( result == 1 )
+	{
+		if( internal_node->first_sub_node == NULL )
+		{
+			internal_node->first_sub_node = node_to_append;
+		}
+		internal_node->last_sub_node = node_to_append;
+
+		internal_node->number_of_sub_nodes += 1;
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -1691,10 +2226,30 @@ int libcdata_tree_node_append_node(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( result );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	libcdata_tree_node_set_parent_node(
+	 node_to_append,
+	 NULL,
+	 NULL );
+
+	libcdata_tree_node_set_previous_node(
+	 node_to_append,
+	 NULL,
+	 NULL );
+
+	internal_node->first_sub_node = backup_first_sub_node;
+	internal_node->last_sub_node  = backup_last_sub_node;
+
+	internal_node->number_of_sub_nodes -= 1;
+
+	return( -1 );
+#endif
 }
 
 /* Appends a value to the node
@@ -1706,9 +2261,8 @@ int libcdata_tree_node_append_value(
      intptr_t *value,
      libcerror_error_t **error )
 {
-	libcdata_internal_tree_node_t *internal_node = NULL;
-	libcdata_tree_node_t *sub_node               = NULL;
-	static char *function                        = "libcdata_tree_node_append_value";
+	libcdata_tree_node_t *sub_node = NULL;
+	static char *function          = "libcdata_tree_node_append_value";
 
 	if( node == NULL )
 	{
@@ -1721,23 +2275,6 @@ int libcdata_tree_node_append_value(
 
 		return( -1 );
 	}
-	internal_node = (libcdata_internal_tree_node_t *) node;
-
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_grab_for_write(
-	     internal_node->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to grab read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	if( libcdata_tree_node_initialize(
 	     &sub_node,
 	     error ) != 1 )
@@ -1765,8 +2302,8 @@ int libcdata_tree_node_append_value(
 
 		goto on_error;
 	}
-	if( libcdata_internal_tree_node_append_node(
-	     internal_node,
+	if( libcdata_tree_node_append_node(
+	     node,
 	     sub_node,
 	     error ) != 1 )
 	{
@@ -1779,29 +2316,9 @@ int libcdata_tree_node_append_value(
 
 		goto on_error;
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_release_for_write(
-	     internal_node->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to release read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	return( 1 );
 
 on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcthreads_read_write_lock_release_for_write(
-	 internal_node->read_write_lock,
-	 NULL );
-#endif
 	if( sub_node != NULL )
 	{
 		libcdata_tree_node_free(
@@ -1812,37 +2329,202 @@ on_error:
 	return( -1 );
 }
 
-/* Inserts a sub tree node in the node
+
+/* Retrieves the node which the sub node should be inserted before
  *
- * Uses the entry_compare_function to determine the order of the entries
- * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
  * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  *
- * Duplicate entries are allowed by default and inserted after the last duplicate entry.
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
  *
- * Returns 1 if successful, 0 if the node already exists or -1 on error
+ * On return sub_node will be set to NULL if the sub node should be inserted at the end of the list.
+ *
+ * Returns 1 if successful, 0 if a sub node containing the value already exists or -1 on error
  */
-int libcdata_internal_tree_node_insert_node(
+int libcdata_internal_tree_node_insert_node_find_sub_node(
      libcdata_internal_tree_node_t *internal_node,
-     libcdata_tree_node_t *node_to_insert,
+     intptr_t *value_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,
             libcerror_error_t **error ),
      uint8_t insert_flags,
+     int *sub_node_index,
+     libcdata_tree_node_t **sub_node,
      libcerror_error_t **error )
 {
-	libcdata_tree_node_t *previous_node           = NULL;
-	libcdata_tree_node_t *sub_node                = NULL;
-	libcdata_tree_node_t *to_insert_next_node     = NULL;
-	libcdata_tree_node_t *to_insert_parent_node   = NULL;
-	libcdata_tree_node_t *to_insert_previous_node = NULL;
-	intptr_t *sub_node_value                      = NULL;
-	intptr_t *value_to_insert                     = NULL;
-	static char *function                         = "libcdata_internal_tree_node_insert_node";
-	int result                                    = -1;
-	int sub_node_index                            = 0;
+	libcdata_tree_node_t *sub_tree_node = NULL;
+	intptr_t *sub_node_value            = NULL;
+	static char *function               = "libcdata_internal_tree_node_insert_node_find_sub_node";
+	int compare_result                  = 0;
+	int result                          = 1;
+	int safe_sub_node_index             = 0;
+
+	if( internal_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	if( value_compare_function == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid value compare function.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( insert_flags & ~( LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) ) != 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported insert flags: 0x%02" PRIx8 ".",
+		 function,
+		 insert_flags );
+
+		return( -1 );
+	}
+	if( sub_node_index == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid sub node index.",
+		 function );
+
+		return( -1 );
+	}
+	if( sub_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid sub node.",
+		 function );
+
+		return( -1 );
+	}
+	sub_tree_node = internal_node->first_sub_node;
+
+	for( safe_sub_node_index = 0;
+	     safe_sub_node_index < internal_node->number_of_sub_nodes;
+	     safe_sub_node_index++ )
+	{
+		if( libcdata_tree_node_get_value(
+		     sub_tree_node,
+		     &sub_node_value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value of sub node: %d.",
+			 function,
+			 safe_sub_node_index );
+
+			return( -1 );
+		}
+		compare_result = value_compare_function(
+		                  value_to_insert,
+		                  sub_node_value,
+		                  error );
+
+		if( compare_result == -1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to compare sub node: %d.",
+			 function,
+			 safe_sub_node_index );
+
+			return( -1 );
+		}
+		else if( compare_result == LIBCDATA_COMPARE_EQUAL )
+		{
+			if( ( insert_flags & LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) != 0 )
+			{
+				result = 0;
+
+				break;
+			}
+		}
+		else if( compare_result == LIBCDATA_COMPARE_LESS )
+		{
+			break;
+		}
+		else if( compare_result != LIBCDATA_COMPARE_GREATER )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+			 "%s: unsupported value compare function return value: %d.",
+			 function,
+			 result );
+
+			return( -1 );
+		}
+		if( libcdata_tree_node_get_next_node(
+		     sub_tree_node,
+		     &sub_tree_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve next node of sub node: %d.",
+			 function,
+			 safe_sub_node_index );
+
+			return( -1 );
+		}
+	}
+	if( ( compare_result == LIBCDATA_COMPARE_EQUAL )
+	 || ( compare_result == LIBCDATA_COMPARE_LESS ) )
+	{
+		*sub_node_index = safe_sub_node_index;
+		*sub_node       = sub_tree_node;
+	}
+	else
+	{
+		*sub_node_index = internal_node->number_of_sub_nodes;
+		*sub_node       = NULL;
+	}
+	return( result );
+}
+
+/* Inserts the node before the sub node
+ * If sub_node is NULL the node is inserted before or as the first sub node in the list
+ * Returns 1 if successful, or -1 on error
+ */
+int libcdata_internal_tree_node_insert_node_before_sub_node(
+     libcdata_internal_tree_node_t *internal_node,
+     libcdata_tree_node_t *sub_node,
+     libcdata_tree_node_t *node_to_insert,
+     libcerror_error_t **error )
+{
+	libcdata_tree_node_t *backup_first_sub_node = NULL;
+	libcdata_tree_node_t *backup_last_sub_node  = NULL;
+	libcdata_tree_node_t *previous_node         = NULL;
+	static char *function                       = "libcdata_internal_tree_node_insert_node_before_sub_node";
 
 	if( internal_node == NULL )
 	{
@@ -1863,6 +2545,234 @@ int libcdata_internal_tree_node_insert_node(
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
 		 "%s: invalid node to insert.",
 		 function );
+
+		return( -1 );
+	}
+	backup_first_sub_node = internal_node->first_sub_node;
+	backup_last_sub_node  = internal_node->last_sub_node;
+
+	if( sub_node != NULL )
+	{
+		if( libcdata_tree_node_get_previous_node(
+		     sub_node,
+		     &previous_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve previous node from sub node.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	if( internal_node->number_of_sub_nodes == 0 )
+	{
+		internal_node->first_sub_node = node_to_insert;
+		internal_node->last_sub_node  = node_to_insert;
+	}
+	else if( sub_node == NULL )
+	{
+		if( libcdata_internal_tree_node_set_last_sub_node(
+		     internal_node,
+		     node_to_insert,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set last sub node.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	else
+	{
+		if( libcdata_tree_node_set_nodes(
+		     node_to_insert,
+		     (libcdata_tree_node_t *) internal_node,
+		     previous_node,
+		     sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set parent, previous and next node of node to insert.",
+			 function );
+
+			goto on_error;
+		}
+		if( internal_node->first_sub_node == sub_node )
+		{
+			internal_node->first_sub_node = node_to_insert;
+		}
+		else
+		{
+			if( libcdata_tree_node_set_next_node(
+			     previous_node,
+			     node_to_insert,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set next node of previous node.",
+				 function );
+
+				goto on_error;
+			}
+		}
+		if( libcdata_tree_node_set_previous_node(
+		     sub_node,
+		     node_to_insert,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+			 "%s: unable to set previous node of sub node.",
+			 function );
+
+			goto on_error;
+		}
+	}
+	if( libcdata_tree_node_set_parent_node(
+	     node_to_insert,
+	     (libcdata_tree_node_t *) internal_node,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set parent node of node to insert.",
+		 function );
+
+		goto on_error;
+	}
+	internal_node->number_of_sub_nodes += 1;
+
+	return( 1 );
+
+on_error:
+	if( node_to_insert != NULL )
+	{
+		libcdata_tree_node_set_nodes(
+		 node_to_insert,
+		 NULL,
+		 NULL,
+		 NULL,
+		 NULL );
+	}
+	if( previous_node != NULL )
+	{
+		libcdata_tree_node_set_next_node(
+		 previous_node,
+		 sub_node,
+		 NULL );
+	}
+	if( sub_node != NULL )
+	{
+		libcdata_tree_node_set_previous_node(
+		 sub_node,
+		 previous_node,
+		 NULL );
+	}
+	internal_node->first_sub_node = backup_first_sub_node;
+	internal_node->last_sub_node  = backup_last_sub_node;
+
+	return( -1 );
+}
+
+/* Inserts a sub node in the node
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * Returns 1 if successful, 0 if the node already exists or -1 on error
+ */
+int libcdata_tree_node_insert_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t *node_to_insert,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     libcerror_error_t **error )
+{
+	libcdata_internal_tree_node_t *internal_node  = NULL;
+	libcdata_tree_node_t *previous_node           = NULL;
+	libcdata_tree_node_t *sub_node                = NULL;
+	libcdata_tree_node_t *to_insert_next_node     = NULL;
+	libcdata_tree_node_t *to_insert_parent_node   = NULL;
+	libcdata_tree_node_t *to_insert_previous_node = NULL;
+	intptr_t *value_to_insert                     = NULL;
+	static char *function                         = "libcdata_tree_node_insert_node";
+	int result                                    = 1;
+	int sub_node_index                            = 0;
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcdata_tree_node_t *backup_first_sub_node = NULL;
+	libcdata_tree_node_t *backup_last_sub_node  = NULL;
+#endif
+
+	if( node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	internal_node = (libcdata_internal_tree_node_t *) node;
+
+	if( node_to_insert == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node to insert.",
+		 function );
+
+		return( -1 );
+	}
+	if( value_compare_function == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid value compare function.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( insert_flags & ~( LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) ) != 0 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
+		 "%s: unsupported insert flags: 0x%02" PRIx8 ".",
+		 function,
+		 insert_flags );
 
 		return( -1 );
 	}
@@ -1895,344 +2805,20 @@ int libcdata_internal_tree_node_insert_node(
 
 		return( -1 );
 	}
-	if( value_compare_function == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid value compare function.",
-		 function );
-
-		return( -1 );
-	}
-	if( ( insert_flags & ~( LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) ) != 0 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-		 "%s: unsupported insert flags: 0x%02" PRIx8 ".",
-		 function,
-		 insert_flags );
-
-		return( -1 );
-	}
-	if( internal_node->number_of_sub_nodes == 0 )
-	{
-		if( internal_node->first_sub_node != NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-			 "%s: corruption detected - first sub node already set.",
-			 function );
-
-			return( -1 );
-		}
-		if( internal_node->last_sub_node != NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-			 "%s: corruption detected - last sub node already set.",
-			 function );
-
-			return( -1 );
-		}
-		internal_node->first_sub_node = node_to_insert;
-		internal_node->last_sub_node  = node_to_insert;
-	}
-	else
-	{
-		if( internal_node->first_sub_node == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: corruption detected - missing first sub node.",
-			 function );
-
-			return( -1 );
-		}
-		if( internal_node->last_sub_node == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: corruption detected - missing last sub node.",
-			 function );
-
-			return( -1 );
-		}
-		if( libcdata_tree_node_get_value(
-		     node_to_insert,
-		     &value_to_insert,
-		     error ) != 1 )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve value of node to insert.",
-			 function );
-
-			return( -1 );
-		}
-		sub_node = internal_node->first_sub_node;
-
-		for( sub_node_index = 0;
-		     sub_node_index < internal_node->number_of_sub_nodes;
-		     sub_node_index++ )
-		{
-			if( libcdata_tree_node_get_value(
-			     sub_node,
-			     &sub_node_value,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve value of sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-			result = value_compare_function(
-			          value_to_insert,
-			          sub_node_value,
-			          error );
-
-			if( result == -1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to compare sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-			else if( result == LIBCDATA_COMPARE_EQUAL )
-			{
-				if( ( insert_flags & LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES ) != 0 )
-				{
-					return( 0 );
-				}
-			}
-			else if( result == LIBCDATA_COMPARE_LESS )
-			{
-				break;
-			}
-			else if( result != LIBCDATA_COMPARE_GREATER )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_UNSUPPORTED_VALUE,
-				 "%s: unsupported value compare function return value: %d.",
-				 function,
-				 result );
-
-				return( -1 );
-			}
-			if( libcdata_tree_node_get_next_node(
-			     sub_node,
-			     &sub_node,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve next node of sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-		}
-		if( result == LIBCDATA_COMPARE_LESS )
-		{
-			if( libcdata_tree_node_get_previous_node(
-			     sub_node,
-			     &previous_node,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve previous node of sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-			if( libcdata_tree_node_set_nodes(
-			     node_to_insert,
-			     NULL,
-			     previous_node,
-			     sub_node,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set previous and next node of node to insert.",
-				 function );
-
-				return( -1 );
-			}
-			if( sub_node == internal_node->first_sub_node )
-			{
-				internal_node->first_sub_node = node_to_insert;
-			}
-			else
-			{
-				if( previous_node == NULL )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-					 "%s: corruption detected - missing previous node in sub node: %d.",
-					 function,
-					 sub_node_index );
-
-					return( -1 );
-				}
-				if( libcdata_tree_node_set_next_node(
-				     previous_node,
-				     node_to_insert,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-					 "%s: unable to set next node of sub node: %d.",
-					 function,
-					 sub_node_index - 1 );
-
-					return( -1 );
-				}
-			}
-			if( libcdata_tree_node_set_previous_node(
-			     sub_node,
-			     node_to_insert,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set previous node of sub node: %d.",
-				 function,
-				 sub_node_index );
-
-				return( -1 );
-			}
-		}
-		else
-		{
-			if( libcdata_tree_node_set_next_node(
-			     internal_node->last_sub_node,
-			     node_to_insert,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set next node of last sub node.",
-				 function );
-
-				return( -1 );
-			}
-			if( libcdata_tree_node_set_previous_node(
-			     node_to_insert,
-			     internal_node->last_sub_node,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set previous node of node to insert.",
-				 function );
-
-				return( -1 );
-			}
-			internal_node->last_sub_node = node_to_insert;
-		}
-	}
-	if( libcdata_tree_node_set_parent_node(
+	if( libcdata_tree_node_get_value(
 	     node_to_insert,
-	     (libcdata_tree_node_t *) internal_node,
+	     &value_to_insert,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set parent node of node to insert.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve value from node to insert.",
 		 function );
 
 		return( -1 );
 	}
-	internal_node->number_of_sub_nodes++;
-
-	return( 1 );
-}
-
-/* Inserts a sub tree node in the node
- *
- * Uses the entry_compare_function to determine the order of the entries
- * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
- * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
- *
- * Duplicate entries are allowed by default and inserted after the last duplicate entry.
- * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
- *
- * Returns 1 if successful, 0 if the node already exists or -1 on error
- */
-int libcdata_tree_node_insert_node(
-     libcdata_tree_node_t *node,
-     libcdata_tree_node_t *node_to_insert,
-     int (*value_compare_function)(
-            intptr_t *first_value,
-            intptr_t *second_value,
-            libcerror_error_t **error ),
-     uint8_t insert_flags,
-     libcerror_error_t **error )
-{
-	libcdata_internal_tree_node_t *internal_node = NULL;
-	static char *function                        = "libcdata_tree_node_insert_node";
-	int result                                   = 1;
-
-	if( node == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid node.",
-		 function );
-
-		return( -1 );
-	}
-	internal_node = (libcdata_internal_tree_node_t *) node;
-
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_node->read_write_lock,
@@ -2247,12 +2833,17 @@ int libcdata_tree_node_insert_node(
 
 		return( -1 );
 	}
+	backup_first_sub_node = internal_node->first_sub_node;
+	backup_last_sub_node  = internal_node->last_sub_node;
 #endif
-	result = libcdata_internal_tree_node_insert_node(
+
+	result = libcdata_internal_tree_node_insert_node_find_sub_node(
 	          internal_node,
-	          node_to_insert,
+	          value_to_insert,
 	          value_compare_function,
 	          insert_flags,
+	          &sub_node_index,
+	          &sub_node,
 	          error );
 
 	if( result == -1 )
@@ -2260,11 +2851,29 @@ int libcdata_tree_node_insert_node(
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert node.",
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to find sub node in tree node.",
 		 function );
 
 		result = -1;
+	}
+	else if( result == 1 )
+	{
+		if( libcdata_internal_tree_node_insert_node_before_sub_node(
+		     internal_node,
+		     sub_node,
+		     node_to_insert,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+			 "%s: unable to insert node before tree sub node.",
+			 function );
+
+			result = -1;
+		}
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -2278,21 +2887,56 @@ int libcdata_tree_node_insert_node(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
 	return( result );
+
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+on_error:
+	if( result == 1 )
+	{
+		if( node_to_insert != NULL )
+		{
+			libcdata_tree_node_set_nodes(
+			 node_to_insert,
+			 NULL,
+			 NULL,
+			 NULL,
+			 NULL );
+		}
+		if( previous_node != NULL )
+		{
+			libcdata_tree_node_set_next_node(
+			 previous_node,
+			 sub_node,
+			 NULL );
+		}
+		if( sub_node != NULL )
+		{
+			libcdata_tree_node_set_previous_node(
+			 sub_node,
+			 previous_node,
+			 NULL );
+		}
+		internal_node->first_sub_node = backup_first_sub_node;
+		internal_node->last_sub_node  = backup_last_sub_node;
+
+		internal_node->number_of_sub_nodes -= 1;
+	}
+	return( -1 );
+#endif
 }
 
 /* Inserts a value in the node
  *
  * Creates a new sub tree node
  *
- * Uses the entry_compare_function to determine the order of the entries
- * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
  * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  *
- * Duplicate entries are allowed by default and inserted after the last duplicate entry.
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
  *
  * Returns 1 if successful, 0 if the node already exists or -1 on error
@@ -2307,10 +2951,9 @@ int libcdata_tree_node_insert_value(
      uint8_t insert_flags,
      libcerror_error_t **error )
 {
-	libcdata_internal_tree_node_t *internal_node = NULL;
-	libcdata_tree_node_t *sub_node               = NULL;
-	static char *function                        = "libcdata_tree_node_insert_value";
-	int result                                   = 0;
+	libcdata_tree_node_t *sub_node = NULL;
+	static char *function          = "libcdata_tree_node_insert_value";
+	int result                     = 0;
 
 	if( node == NULL )
 	{
@@ -2323,23 +2966,6 @@ int libcdata_tree_node_insert_value(
 
 		return( -1 );
 	}
-	internal_node = (libcdata_internal_tree_node_t *) node;
-
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_grab_for_write(
-	     internal_node->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to grab read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	if( libcdata_tree_node_initialize(
 	     &sub_node,
 	     error ) != 1 )
@@ -2367,8 +2993,8 @@ int libcdata_tree_node_insert_value(
 
 		goto on_error;
 	}
-	result = libcdata_internal_tree_node_insert_node(
-	          internal_node,
+	result = libcdata_tree_node_insert_node(
+	          node,
 	          sub_node,
 	          value_compare_function,
 	          insert_flags,
@@ -2402,29 +3028,9 @@ int libcdata_tree_node_insert_value(
 			goto on_error;
 		}
 	}
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	if( libcthreads_read_write_lock_release_for_write(
-	     internal_node->read_write_lock,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to release read/write lock for writing.",
-		 function );
-
-		return( -1 );
-	}
-#endif
 	return( result );
 
 on_error:
-#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcthreads_read_write_lock_release_for_write(
-	 internal_node->read_write_lock,
-	 NULL );
-#endif
 	if( sub_node != NULL )
 	{
 		libcdata_tree_node_free(
@@ -2443,16 +3049,19 @@ int libcdata_tree_node_replace_node(
      libcdata_tree_node_t *replacement_node,
      libcerror_error_t **error )
 {
-	libcdata_internal_tree_node_t *internal_node    = NULL;
-	libcdata_tree_node_t *next_node                 = NULL;
-	libcdata_tree_node_t *parent_first_sub_node     = NULL;
-	libcdata_tree_node_t *parent_last_sub_node      = NULL;
-	libcdata_tree_node_t *parent_node               = NULL;
-	libcdata_tree_node_t *previous_node             = NULL;
-	libcdata_tree_node_t *replacement_next_node     = NULL;
-	libcdata_tree_node_t *replacement_parent_node   = NULL;
-	libcdata_tree_node_t *replacement_previous_node = NULL;
-	static char *function                           = "libcdata_tree_node_replace_node";
+	libcdata_internal_tree_node_t *internal_node       = NULL;
+	libcdata_tree_node_t *backup_parent_first_sub_node = NULL;
+	libcdata_tree_node_t *backup_parent_last_sub_node  = NULL;
+	libcdata_tree_node_t *next_node                    = NULL;
+	libcdata_tree_node_t *parent_first_sub_node        = NULL;
+	libcdata_tree_node_t *parent_last_sub_node         = NULL;
+	libcdata_tree_node_t *parent_node                  = NULL;
+	libcdata_tree_node_t *previous_node                = NULL;
+	libcdata_tree_node_t *replacement_next_node        = NULL;
+	libcdata_tree_node_t *replacement_parent_node      = NULL;
+	libcdata_tree_node_t *replacement_previous_node    = NULL;
+	static char *function                              = "libcdata_tree_node_replace_node";
+	int result                                         = 1;
 
 	if( node == NULL )
 	{
@@ -2489,6 +3098,35 @@ int libcdata_tree_node_replace_node(
 
 		return( -1 );
 	}
+	if( libcdata_tree_node_get_nodes(
+	     replacement_node,
+	     &replacement_parent_node,
+	     &replacement_previous_node,
+	     &replacement_next_node,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve nodes of replacement node.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( replacement_parent_node != NULL )
+	 || ( replacement_previous_node != NULL )
+	 || ( replacement_next_node != NULL ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: invalid replacement node - already part of a tree.",
+		 function );
+
+		return( -1 );
+	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_node->read_write_lock,
@@ -2504,134 +3142,168 @@ int libcdata_tree_node_replace_node(
 		return( -1 );
 	}
 #endif
-	if( libcdata_tree_node_get_nodes(
-	     replacement_node,
-	     &replacement_parent_node,
-	     &replacement_previous_node,
-	     &replacement_next_node,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve nodes of replacement node.",
-		 function );
+	parent_node   = internal_node->parent_node;
+	previous_node = internal_node->previous_node;
+	next_node     = internal_node->next_node;
 
-		goto on_error;
+	if( parent_node != NULL )
+	{
+		if( libcdata_tree_node_get_sub_nodes(
+		     parent_node,
+		     &parent_first_sub_node,
+		     &parent_last_sub_node,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve sub nodes of parent node.",
+			 function );
+
+			result = -1;
+		}
 	}
-	if( ( replacement_parent_node != NULL )
-	 || ( replacement_previous_node != NULL )
-	 || ( replacement_next_node != NULL ) )
+	if( result == 1 )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-		 "%s: invalid replacement node - node is already part of a tree.",
-		 function );
-
-		goto on_error;
-	}
-	if( libcdata_tree_node_get_sub_nodes(
-	     internal_node->parent_node,
-	     &parent_first_sub_node,
-	     &parent_last_sub_node,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve sub nodes of parent node.",
-		 function );
-
-		goto on_error;
-	}
-	parent_node                = internal_node->parent_node;
-	internal_node->parent_node = replacement_parent_node;
-	replacement_parent_node    = parent_node;
-
-	previous_node                = internal_node->previous_node;
-	internal_node->previous_node = replacement_previous_node;
-	replacement_previous_node    = previous_node;
-
-	next_node                = internal_node->next_node;
-	internal_node->next_node = replacement_next_node;
-	replacement_next_node    = next_node;
-
-	if( parent_first_sub_node == node )
-	{
-		parent_first_sub_node = replacement_node;
-	}
-	if( parent_last_sub_node == node )
-	{
-		parent_last_sub_node = replacement_node;
-	}
-	if( libcdata_tree_node_set_nodes(
-	     replacement_node,
-	     replacement_parent_node,
-	     replacement_previous_node,
-	     replacement_next_node,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set nodes of replacement node.",
-		 function );
-
-		goto on_error;
-	}
-	if( libcdata_tree_node_set_sub_nodes(
-	     parent_node,
-	     parent_first_sub_node,
-	     parent_last_sub_node,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set sub nodes of parent node.",
-		 function );
-
-		goto on_error;
-	}
-	if( previous_node != NULL )
-	{
-		if( libcdata_tree_node_set_next_node(
+		if( libcdata_tree_node_set_nodes(
+		     replacement_node,
+		     parent_node,
 		     previous_node,
-		     replacement_node,
+		     next_node,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set next node of previous node.",
+			 "%s: unable to set nodes of replacement node.",
 			 function );
 
-			goto on_error;
+			result = -1;
 		}
 	}
-	if( next_node != NULL )
+	if( result == 1 )
 	{
-		if( libcdata_tree_node_set_previous_node(
-		     next_node,
-		     replacement_node,
-		     error ) != 1 )
+		if( parent_node != NULL )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set previous node of next node.",
-			 function );
+			backup_parent_first_sub_node = parent_first_sub_node;
+			backup_parent_last_sub_node  = parent_last_sub_node;
 
-			goto on_error;
+			if( parent_first_sub_node == node )
+			{
+				parent_first_sub_node = replacement_node;
+			}
+			if( parent_last_sub_node == node )
+			{
+				parent_last_sub_node = replacement_node;
+			}
+			if( libcdata_tree_node_set_sub_nodes(
+			     parent_node,
+			     parent_first_sub_node,
+			     parent_last_sub_node,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set sub nodes of parent node.",
+				 function );
+
+				libcdata_tree_node_set_nodes(
+				 replacement_node,
+				 NULL,
+				 NULL,
+				 NULL,
+				 NULL );
+
+				result = -1;
+			}
 		}
+	}
+	if( result == 1 )
+	{
+		if( previous_node != NULL )
+		{
+			if( libcdata_tree_node_set_next_node(
+			     previous_node,
+			     replacement_node,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set next node of previous node.",
+				 function );
+
+				libcdata_tree_node_set_nodes(
+				 replacement_node,
+				 NULL,
+				 NULL,
+				 NULL,
+				 NULL );
+
+				if( parent_node != NULL )
+				{
+					libcdata_tree_node_set_sub_nodes(
+					 parent_node,
+					 backup_parent_first_sub_node,
+					 backup_parent_last_sub_node,
+					 NULL );
+				}
+				result = -1;
+			}
+		}
+	}
+	if( result == 1 )
+	{
+		if( next_node != NULL )
+		{
+			if( libcdata_tree_node_set_previous_node(
+			     next_node,
+			     replacement_node,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set previous node of next node.",
+				 function );
+
+				libcdata_tree_node_set_nodes(
+				 replacement_node,
+				 NULL,
+				 NULL,
+				 NULL,
+				 NULL );
+
+				if( parent_node != NULL )
+				{
+					libcdata_tree_node_set_sub_nodes(
+					 parent_node,
+					 backup_parent_first_sub_node,
+					 backup_parent_last_sub_node,
+					 NULL );
+				}
+				if( previous_node != NULL )
+				{
+					libcdata_tree_node_set_next_node(
+					 previous_node,
+					 node,
+					 NULL );
+				}
+				result = -1;
+			}
+		}
+	}
+	if( result == 1 )
+	{
+		internal_node->parent_node   = NULL;
+		internal_node->previous_node = NULL;
+		internal_node->next_node     = NULL;
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -2645,18 +3317,50 @@ int libcdata_tree_node_replace_node(
 		 "%s: unable to release read/write lock for writing.",
 		 function );
 
-		return( -1 );
+		goto on_error;
 	}
 #endif
-	return( 1 );
+	return( result );
 
-on_error:
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcthreads_read_write_lock_release_for_write(
-	 internal_node->read_write_lock,
-	 NULL );
-#endif
+on_error:
+	if( result == 1 )
+	{
+		libcdata_tree_node_set_nodes(
+		 replacement_node,
+		 NULL,
+		 NULL,
+		 NULL,
+		 NULL );
+
+		if( parent_node != NULL )
+		{
+			libcdata_tree_node_set_sub_nodes(
+			 parent_node,
+			 backup_parent_first_sub_node,
+			 backup_parent_last_sub_node,
+			 NULL );
+		}
+		if( previous_node != NULL )
+		{
+			libcdata_tree_node_set_next_node(
+			 previous_node,
+			 node,
+			 NULL );
+		}
+		if( next_node != NULL )
+		{
+			libcdata_tree_node_set_previous_node(
+			 next_node,
+			 node,
+			 NULL );
+		}
+		internal_node->parent_node   = parent_node;
+		internal_node->previous_node = previous_node;
+		internal_node->next_node     = next_node;
+	}
 	return( -1 );
+#endif
 }
 
 /* Removes a sub tree node from the tree node
@@ -2830,7 +3534,7 @@ int libcdata_tree_node_remove_node(
 			goto on_error;
 		}
 	}
-	internal_node->number_of_sub_nodes--;
+	internal_node->number_of_sub_nodes -= 1;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(

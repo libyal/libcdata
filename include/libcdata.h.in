@@ -553,7 +553,7 @@ int libcdata_list_append_value(
 LIBCDATA_EXTERN \
 int libcdata_list_insert_element(
      libcdata_list_t *list,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_insert,
      int (*value_compare_function)(
             intptr_t *first,
             intptr_t *second,
@@ -1049,6 +1049,24 @@ int libcdata_tree_node_set_nodes(
      libcdata_tree_node_t *next_node,
      libcdata_error_t **error );
 
+/* Retrieves the first sub node from the tree node
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_first_sub_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **first_sub_node,
+     libcdata_error_t **error );
+
+/* Retrieves the last sub node from the tree node
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_last_sub_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **last_sub_node,
+     libcdata_error_t **error );
+
 /* Appends a sub tree node to the node
  * Returns 1 if successful or -1 on error
  */
@@ -1068,13 +1086,13 @@ int libcdata_tree_node_append_value(
      intptr_t *value,
      libcdata_error_t **error );
 
-/* Inserts a sub tree node in the node
+/* Inserts a sub node in the node
  *
- * Uses the entry_compare_function to determine the order of the entries
- * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
  * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  *
- * Duplicate entries are allowed by default and inserted after the last duplicate entry.
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
  *
  * Returns 1 if successful, 0 if the node already exists or -1 on error
@@ -1094,11 +1112,11 @@ int libcdata_tree_node_insert_node(
  *
  * Creates a new sub tree node
  *
- * Uses the entry_compare_function to determine the order of the entries
- * The entry_compare_function should return LIBCDATA_COMPARE_LESS,
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
  * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
  *
- * Duplicate entries are allowed by default and inserted after the last duplicate entry.
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
  *
  * Returns 1 if successful, 0 if the node already exists or -1 on error

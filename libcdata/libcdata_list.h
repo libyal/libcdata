@@ -159,25 +159,26 @@ int libcdata_list_append_value(
 
 int libcdata_internal_list_insert_element_find_element(
      libcdata_internal_list_t *internal_list,
-     intptr_t *element_value,
+     intptr_t *value_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,
             libcerror_error_t **error ),
      uint8_t insert_flags,
+     int *element_index,
      libcdata_list_element_t **element,
      libcerror_error_t **error );
 
 int libcdata_internal_list_insert_element_before_element(
      libcdata_internal_list_t *internal_list,
      libcdata_list_element_t *list_element,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_insert,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
 int libcdata_list_insert_element(
      libcdata_list_t *list,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_insert,
      int (*value_compare_function)(
             intptr_t *first,
             intptr_t *second,

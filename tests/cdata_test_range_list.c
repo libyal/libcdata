@@ -2814,6 +2814,9 @@ int cdata_test_internal_range_list_insert_range_find_element(
 
 	/* Test find element on an empty range list
 	 */
+	element_index = -1;
+	list_element  = NULL;
+
 	result = libcdata_internal_range_list_insert_range_find_element(
 	          (libcdata_internal_range_list_t *) range_list,
 	          16,
@@ -3525,12 +3528,12 @@ on_error:
 	if( value3 != NULL )
 	{
 		memory_free(
-		 value1 );
+		 value3 );
 	}
 	if( value2 != NULL )
 	{
 		memory_free(
-		 value1 );
+		 value2 );
 	}
 	if( value1 != NULL )
 	{

@@ -1,6 +1,9 @@
 TODO
+* add tests for new functions in list
+* add tests for new functions in range list
+* add tests for new functions in tree node
 * work on rwlock error recovery in libcdata_range_list_remove_range
-* work on rwlock error recovery in tree node
+* work on rwlock error recovery in tree node continue with libcdata_internal_tree_node_insert_node
 * work on rwlock error recovery in btree
 * compare function add support for less equal and greater equal?
 * expose functions in API ?

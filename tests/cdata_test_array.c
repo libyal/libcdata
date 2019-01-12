@@ -5182,8 +5182,6 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-	/* Test if insert of an entry on an empty array succeeds
-	 */
 	result = libcdata_array_get_number_of_entries(
 	          array,
 	          &number_of_entries,
@@ -5203,6 +5201,8 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
+	/* Test if insert of an entry on an empty array succeeds
+	 */
 	value3 = (int *) memory_allocate(
 	                  sizeof( int ) );
 

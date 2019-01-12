@@ -1590,7 +1590,7 @@ int libcdata_internal_range_list_check_range_overlap(
 }
 
 /* Inserts the range before the range list element
- * If range_list_element is NULL the element is inserted before the first element in the list
+ * If range_list_element is NULL the element is inserted before or as the first element in the list
  * Returns 1 if successful, or -1 on error
  */
 int libcdata_internal_range_list_insert_range_before_element(

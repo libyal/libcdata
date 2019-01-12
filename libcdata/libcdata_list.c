@@ -1685,16 +1685,17 @@ on_error:
  *
  * On return element will be set to NULL if the element should be inserted at the end of the list.
  *
- * Returns 1 if successful, 0 if a list element containing the element value already exists or -1 on error
+ * Returns 1 if successful, 0 if a list element containing the value already exists or -1 on error
  */
 int libcdata_internal_list_insert_element_find_element(
      libcdata_internal_list_t *internal_list,
-     intptr_t *element_value,
+     intptr_t *value_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,
             libcerror_error_t **error ),
      uint8_t insert_flags,
+     int *element_index,
      libcdata_list_element_t **element,
      libcerror_error_t **error )
 {
@@ -1702,8 +1703,8 @@ int libcdata_internal_list_insert_element_find_element(
 	intptr_t *list_element_value          = NULL;
 	static char *function                 = "libcdata_internal_list_insert_element_find_element";
 	int compare_result                    = 0;
-	int element_index                     = 0;
 	int result                            = 1;
+	int safe_element_index                = 0;
 
 	if( internal_list == NULL )
 	{
@@ -1739,6 +1740,17 @@ int libcdata_internal_list_insert_element_find_element(
 
 		return( -1 );
 	}
+	if( element_index == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid element index.",
+		 function );
+
+		return( -1 );
+	}
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -1753,9 +1765,9 @@ int libcdata_internal_list_insert_element_find_element(
 	list_element   = internal_list->first_element;
 	compare_result = LIBCDATA_COMPARE_GREATER;
 
-	for( element_index = 0;
-	     element_index < internal_list->number_of_elements;
-	     element_index++ )
+	for( safe_element_index = 0;
+	     safe_element_index < internal_list->number_of_elements;
+	     safe_element_index++ )
 	{
 		if( libcdata_list_element_get_value(
 		     list_element,
@@ -1768,12 +1780,12 @@ int libcdata_internal_list_insert_element_find_element(
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 			 "%s: unable to retrieve value from list element: %d.",
 			 function,
-			 element_index );
+			 safe_element_index );
 
 			return( -1 );
 		}
 		compare_result = value_compare_function(
-		                  element_value,
+		                  value_to_insert,
 		                  list_element_value,
 		                  error );
 
@@ -1785,7 +1797,7 @@ int libcdata_internal_list_insert_element_find_element(
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 			 "%s: unable to compare list element: %d.",
 			 function,
-			 element_index );
+			 safe_element_index );
 
 			return( -1 );
 		}
@@ -1800,8 +1812,6 @@ int libcdata_internal_list_insert_element_find_element(
 		}
 		else if( compare_result == LIBCDATA_COMPARE_LESS )
 		{
-			result = 1;
-
 			break;
 		}
 		else if( compare_result != LIBCDATA_COMPARE_GREATER )
@@ -1827,7 +1837,7 @@ int libcdata_internal_list_insert_element_find_element(
 			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
 			 "%s: unable to retrieve next element from list element: %d.",
 			 function,
-			 element_index );
+			 safe_element_index );
 
 			return( -1 );
 		}
@@ -1835,23 +1845,25 @@ int libcdata_internal_list_insert_element_find_element(
 	if( ( compare_result == LIBCDATA_COMPARE_EQUAL )
 	 || ( compare_result == LIBCDATA_COMPARE_LESS ) )
 	{
-		*element = list_element;
+		*element_index = safe_element_index;
+		*element       = list_element;
 	}
 	else
 	{
-		*element = NULL;
+		*element_index = internal_list->number_of_elements;
+		*element       = NULL;
 	}
 	return( result );
 }
 
-/* Inserts the element before thelist element
- * If list_element is NULL the element is inserted before the first element in the list
+/* Inserts the element before the list element
+ * If list_element is NULL the element is inserted before or as the first element in the list
  * Returns 1 if successful, or -1 on error
  */
 int libcdata_internal_list_insert_element_before_element(
      libcdata_internal_list_t *internal_list,
      libcdata_list_element_t *list_element,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_insert,
      libcerror_error_t **error )
 {
 	libcdata_list_element_t *backup_first_element = NULL;
@@ -1870,17 +1882,20 @@ int libcdata_internal_list_insert_element_before_element(
 
 		return( -1 );
 	}
-	if( element == NULL )
+	if( element_to_insert == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid element.",
+		 "%s: invalid element to insert.",
 		 function );
 
 		return( -1 );
 	}
+	backup_first_element = internal_list->first_element;
+	backup_last_element  = internal_list->last_element;
+
 	if( list_element != NULL )
 	{
 		if( libcdata_list_element_get_previous_element(
@@ -1900,21 +1915,21 @@ int libcdata_internal_list_insert_element_before_element(
 	}
 	if( internal_list->number_of_elements == 0 )
 	{
-		internal_list->first_element = element;
-		internal_list->last_element  = element;
+		internal_list->first_element = element_to_insert;
+		internal_list->last_element  = element_to_insert;
 	}
 	else if( list_element == NULL )
 	{
 		if( libcdata_internal_list_set_last_element(
 		     internal_list,
-		     element,
+		     element_to_insert,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set last element.",
+			 "%s: unable to set last list element.",
 			 function );
 
 			goto on_error;
@@ -1923,7 +1938,7 @@ int libcdata_internal_list_insert_element_before_element(
 	else
 	{
 		if( libcdata_list_element_set_elements(
-		     element,
+		     element_to_insert,
 		     previous_element,
 		     list_element,
 		     error ) != 1 )
@@ -1932,27 +1947,27 @@ int libcdata_internal_list_insert_element_before_element(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-			 "%s: unable to set previous and next element of element.",
+			 "%s: unable to set previous and next element of element to insert.",
 			 function );
 
 			goto on_error;
 		}
 		if( internal_list->first_element == list_element )
 		{
-			internal_list->first_element = element;
+			internal_list->first_element = element_to_insert;
 		}
 		else
 		{
 			if( libcdata_list_element_set_next_element(
 			     previous_element,
-			     element,
+			     element_to_insert,
 			     error ) != 1 )
 			{
 				libcerror_error_set(
 				 error,
 				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set next element of previous element.",
+				 "%s: unable to set next element of previous list element.",
 				 function );
 
 				goto on_error;
@@ -1960,7 +1975,7 @@ int libcdata_internal_list_insert_element_before_element(
 		}
 		if( libcdata_list_element_set_previous_element(
 		     list_element,
-		     element,
+		     element_to_insert,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -1978,10 +1993,10 @@ int libcdata_internal_list_insert_element_before_element(
 	return( 1 );
 
 on_error:
-	if( element != NULL )
+	if( element_to_insert != NULL )
 	{
 		libcdata_list_element_set_elements(
-		 element,
+		 element_to_insert,
 		 NULL,
 		 NULL,
 		 NULL );
@@ -2019,7 +2034,7 @@ on_error:
  */
 int libcdata_list_insert_element(
      libcdata_list_t *list,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,
@@ -2031,8 +2046,9 @@ int libcdata_list_insert_element(
 	libcdata_list_element_t *list_element         = NULL;
 	libcdata_list_element_t *next_element         = NULL;
 	libcdata_list_element_t *previous_element     = NULL;
-	intptr_t *element_value                       = NULL;
+	intptr_t *value_to_insert                     = NULL;
 	static char *function                         = "libcdata_list_insert_element";
+	int element_index                             = 0;
 	int result                                    = 1;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
@@ -2053,13 +2069,13 @@ int libcdata_list_insert_element(
 	}
 	internal_list = (libcdata_internal_list_t *) list;
 
-	if( element == NULL )
+	if( element_to_insert == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
 		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid list element.",
+		 "%s: invalid element to insert.",
 		 function );
 
 		return( -1 );
@@ -2088,7 +2104,7 @@ int libcdata_list_insert_element(
 		return( -1 );
 	}
 	if( libcdata_list_element_get_elements(
-	     element,
+	     element_to_insert,
 	     &previous_element,
 	     &next_element,
 	     error ) != 1 )
@@ -2097,7 +2113,7 @@ int libcdata_list_insert_element(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve previous and next element from list element.",
+		 "%s: unable to retrieve previous and next element from element to insert.",
 		 function );
 
 		return( -1 );
@@ -2109,21 +2125,21 @@ int libcdata_list_insert_element(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-		 "%s: list element already part of a list.",
+		 "%s: invalid element to insert - already part of a list.",
 		 function );
 
 		return( -1 );
 	}
 	if( libcdata_list_element_get_value(
-	     element,
-	     &element_value,
+	     element_to_insert,
+	     &value_to_insert,
 	     error ) != 1 )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve value from list element.",
+		 "%s: unable to retrieve value from element to insert.",
 		 function );
 
 		return( -1 );
@@ -2144,17 +2160,14 @@ int libcdata_list_insert_element(
 	}
 	backup_first_element = internal_list->first_element;
 	backup_last_element  = internal_list->last_element;
-
 #endif
-	previous_element = NULL;
-	next_element     = NULL;
-	result           = 1;
 
 	result = libcdata_internal_list_insert_element_find_element(
 	          internal_list,
-	          element_value,
+	          value_to_insert,
 	          value_compare_function,
 	          insert_flags,
+	          &element_index,
 	          &list_element,
 	          error );
 
@@ -2174,7 +2187,7 @@ int libcdata_list_insert_element(
 		if( libcdata_internal_list_insert_element_before_element(
 		     internal_list,
 		     list_element,
-		     element,
+		     element_to_insert,
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -2209,7 +2222,7 @@ on_error:
 	if( result == 1 )
 	{
 		libcdata_list_element_set_elements(
-		 element,
+		 element_to_insert,
 		 NULL,
 		 NULL,
 		 NULL );

@@ -171,6 +171,28 @@ int libcdata_tree_node_set_nodes(
      libcdata_tree_node_t *next_node,
      libcerror_error_t **error );
 
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_first_sub_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **first_sub_node,
+     libcerror_error_t **error );
+
+int libcdata_internal_tree_node_get_first_sub_node(
+     libcdata_internal_tree_node_t *internal_node,
+     libcdata_tree_node_t *first_sub_node,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_tree_node_get_last_sub_node(
+     libcdata_tree_node_t *node,
+     libcdata_tree_node_t **last_sub_node,
+     libcerror_error_t **error );
+
+int libcdata_internal_tree_node_get_last_sub_node(
+     libcdata_internal_tree_node_t *internal_node,
+     libcdata_tree_node_t *last_sub_node,
+     libcerror_error_t **error );
+
 int libcdata_tree_node_get_sub_nodes(
      libcdata_tree_node_t *node,
      libcdata_tree_node_t **first_sub_node,
@@ -200,14 +222,22 @@ int libcdata_tree_node_append_value(
      intptr_t *value,
      libcerror_error_t **error );
 
-int libcdata_internal_tree_node_insert_node(
+int libcdata_internal_tree_node_insert_node_find_sub_node(
      libcdata_internal_tree_node_t *internal_node,
-     libcdata_tree_node_t *node_to_insert,
+     intptr_t *value_to_insert,
      int (*value_compare_function)(
             intptr_t *first_value,
             intptr_t *second_value,
             libcerror_error_t **error ),
      uint8_t insert_flags,
+     int *sub_node_index,
+     libcdata_tree_node_t **sub_node,
+     libcerror_error_t **error );
+
+int libcdata_internal_tree_node_insert_node_before_sub_node(
+     libcdata_internal_tree_node_t *internal_node,
+     libcdata_tree_node_t *sub_node,
+     libcdata_tree_node_t *node_to_insert,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

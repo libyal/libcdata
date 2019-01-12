@@ -103,7 +103,7 @@ List functions
 .Ft int
 .Fn libcdata_list_append_value "libcdata_list_t *list, intptr_t *value, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_list_insert_element "libcdata_list_t *list, libcdata_list_element_t *element, int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
+.Fn libcdata_list_insert_element "libcdata_list_t *list, libcdata_list_element_t *element_to_insert, int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_insert_value "libcdata_list_t *list, intptr_t *value, int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
 .Ft int
@@ -190,6 +190,10 @@ Tree node functions
 .Fn libcdata_tree_node_get_nodes "libcdata_tree_node_t *node, libcdata_tree_node_t **parent_node, libcdata_tree_node_t **previous_node, libcdata_tree_node_t **next_node, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_set_nodes "libcdata_tree_node_t *node, libcdata_tree_node_t *parent_node, libcdata_tree_node_t *previous_node, libcdata_tree_node_t *next_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_first_sub_node "libcdata_tree_node_t *node, libcdata_tree_node_t **first_sub_node, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_tree_node_get_last_sub_node "libcdata_tree_node_t *node, libcdata_tree_node_t **last_sub_node, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_append_node "libcdata_tree_node_t *node, libcdata_tree_node_t *node_to_append, libcdata_error_t **error"
 .Ft int
