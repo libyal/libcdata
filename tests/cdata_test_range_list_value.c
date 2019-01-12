@@ -1010,6 +1010,129 @@ on_error:
 	return( 0 );
 }
 
+/* Tests the libcdata_range_list_value_check_range_overlap function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_range_list_value_check_range_overlap(
+     void )
+{
+	libcdata_range_list_value_t *range_list_value = NULL;
+	libcerror_error_t *error                      = NULL;
+	int result                                    = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_range_list_value_initialize(
+	          &range_list_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	range_list_value->start = 0;
+	range_list_value->size  = 0;
+	range_list_value->end   = 32;
+
+	/* Test regular cases
+	 */
+	result = libcdata_range_list_value_check_range_overlap(
+	          range_list_value,
+	          0,
+	          32,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_range_list_value_check_range_overlap(
+	          range_list_value,
+	          64,
+	          96,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libcdata_range_list_value_check_range_overlap(
+	          NULL,
+	          0,
+	          32,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_range_list_value_free(
+	          &range_list_value,
+	          &cdata_test_range_list_value_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "range_list_value",
+	 range_list_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( range_list_value != NULL )
+	{
+		libcdata_range_list_value_free(
+		 &range_list_value,
+		 &cdata_test_range_list_value_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 /* The main program
@@ -1045,7 +1168,9 @@ int main(
 	 "libcdata_range_list_value_merge",
 	 cdata_test_range_list_value_merge );
 
-	/* TODO add tests for libcdata_range_list_value_check_range_overlap */
+	CDATA_TEST_RUN(
+	 "libcdata_range_list_value_check_range_overlap",
+	 cdata_test_range_list_value_check_range_overlap );
 
 #endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 

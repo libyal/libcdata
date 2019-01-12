@@ -38,6 +38,10 @@ typedef struct libcdata_internal_list_element libcdata_internal_list_element_t;
 
 struct libcdata_internal_list_element
 {
+	/* The list the element is part of
+	 */
+	intptr_t *parent_list;
+
 	/* The previous list element
 	 */
 	libcdata_list_element_t *previous_element;
@@ -70,16 +74,14 @@ int libcdata_list_element_free(
             libcerror_error_t **error ),
      libcerror_error_t **error );
 
-LIBCDATA_EXTERN \
-int libcdata_list_element_get_value(
+int libcdata_list_element_get_parent_list(
      libcdata_list_element_t *element,
-     intptr_t **value,
+     intptr_t **parent_list,
      libcerror_error_t **error );
 
-LIBCDATA_EXTERN \
-int libcdata_list_element_set_value(
+int libcdata_list_element_set_parent_list(
      libcdata_list_element_t *element,
-     intptr_t *value,
+     intptr_t *parent_list,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
@@ -118,6 +120,18 @@ int libcdata_list_element_set_elements(
      libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_list_element_t *next_element,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_list_element_get_value(
+     libcdata_list_element_t *element,
+     intptr_t **value,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_list_element_set_value(
+     libcdata_list_element_t *element,
+     intptr_t *value,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

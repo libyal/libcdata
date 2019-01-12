@@ -73,5 +73,9 @@ enum LIBCDATA_INSERT_FLAGS
 
 #endif /* !defined( HAVE_LOCAL_LIBCDATA ) */
 
+/* Limiting the maximum size of the array entries to 128 MiB
+ */
+#define LIBCDATA_ARRAY_ENTRIES_MEMORY_LIMIT	128 * 1024 * 1024
+
 #endif /* !defined( LIBCDATA_INTERNAL_DEFINITIONS_H ) */
 

@@ -1,4 +1,4 @@
-.Dd January 10, 2019
+.Dd January 12, 2019
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -107,17 +107,13 @@ List functions
 .Ft int
 .Fn libcdata_list_insert_value "libcdata_list_t *list, intptr_t *value, int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error ), uint8_t insert_flags, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_list_remove_element "libcdata_list_t *list, libcdata_list_element_t *element, libcdata_error_t **error"
+.Fn libcdata_list_remove_element "libcdata_list_t *list, libcdata_list_element_t *element_to_remove, libcdata_error_t **error"
 .Pp
 List element functions
 .Ft int
 .Fn libcdata_list_element_initialize "libcdata_list_element_t **element, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_element_free "libcdata_list_element_t **element, int (*value_free_function)( intptr_t **value, libcdata_error_t **error ), libcdata_error_t **error"
-.Ft int
-.Fn libcdata_list_element_get_value "libcdata_list_element_t *element, intptr_t **value, libcdata_error_t **error"
-.Ft int
-.Fn libcdata_list_element_set_value "libcdata_list_element_t *element, intptr_t *value, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_element_get_previous_element "libcdata_list_element_t *element, libcdata_list_element_t **previous_element, libcdata_error_t **error"
 .Ft int
@@ -130,6 +126,10 @@ List element functions
 .Fn libcdata_list_element_get_elements "libcdata_list_element_t *element, libcdata_list_element_t **previous_element, libcdata_list_element_t **next_element, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_element_set_elements "libcdata_list_element_t *element, libcdata_list_element_t *previous_element, libcdata_list_element_t *next_element, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_get_value "libcdata_list_element_t *element, intptr_t **value, libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_element_set_value "libcdata_list_element_t *element, intptr_t *value, libcdata_error_t **error"
 .Pp
 Range list functions
 .Ft int
@@ -205,7 +205,7 @@ Tree node functions
 .Ft int
 .Fn libcdata_tree_node_replace_node "libcdata_tree_node_t *node, libcdata_tree_node_t *replacement_node, libcdata_error_t **error"
 .Ft int
-.Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *node, libcdata_tree_node_t *node_to_remove, libcdata_error_t **error"
+.Fn libcdata_tree_node_remove_node "libcdata_tree_node_t *node, libcdata_tree_node_t *sub_node_to_remove, libcdata_error_t **error"
 .Ft int
 .Fn libcdata_tree_node_get_number_of_sub_nodes "libcdata_tree_node_t *node, int *number_of_sub_nodes, libcdata_error_t **error"
 .Ft int

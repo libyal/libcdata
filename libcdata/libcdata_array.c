@@ -134,7 +134,7 @@ int libcdata_array_initialize(
 	}
 	entries_size = sizeof( intptr_t * ) * number_of_allocated_entries;
 
-	if( entries_size > (size_t) SSIZE_MAX )
+	if( entries_size > (size_t) LIBCDATA_ARRAY_ENTRIES_MEMORY_LIMIT )
 	{
 		libcerror_error_set(
 		 error,
@@ -310,17 +310,6 @@ int libcdata_array_empty(
 	}
 	internal_array = (libcdata_internal_array_t *) array;
 
-	if( internal_array->entries == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-		 "%s: invalid array - missing entries.",
-		 function );
-
-		return( -1 );
-	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_array->read_write_lock,
@@ -790,7 +779,7 @@ int libcdata_internal_array_resize(
 		}
 		entries_size = sizeof( intptr_t * ) * number_of_allocated_entries;
 
-		if( entries_size > (size_t) SSIZE_MAX )
+		if( entries_size > (size_t) LIBCDATA_ARRAY_ENTRIES_MEMORY_LIMIT )
 		{
 			libcerror_error_set(
 			 error,
@@ -818,19 +807,15 @@ int libcdata_internal_array_resize(
 		}
 		internal_array->entries = (intptr_t **) reallocation;
 
-		if( memory_set(
-		     &( internal_array->entries[ internal_array->number_of_allocated_entries ] ),
-		     0,
-		     sizeof( intptr_t * ) * ( number_of_allocated_entries - internal_array->number_of_allocated_entries ) ) == NULL )
+		/* Cannot use memset reliably here. The loop below will be removed
+		 * when memset is used and the code is optimized. Therefore the loop
+		 * is not executed when memset fails.
+		 */
+		for( entry_iterator = internal_array->number_of_allocated_entries;
+		     entry_iterator < number_of_allocated_entries;
+		     entry_iterator++ )
 		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_MEMORY,
-			 LIBCERROR_MEMORY_ERROR_SET_FAILED,
-			 "%s: unable to clear array entries.",
-			 function );
-
-			result = -1;
+			internal_array->entries[ entry_iterator ] = NULL;
 		}
 		internal_array->number_of_allocated_entries = number_of_allocated_entries;
 		internal_array->number_of_entries           = number_of_entries;

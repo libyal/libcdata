@@ -591,7 +591,7 @@ int libcdata_list_insert_value(
 LIBCDATA_EXTERN \
 int libcdata_list_remove_element(
      libcdata_list_t *list,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_remove,
      libcdata_error_t **error );
 
 /* -------------------------------------------------------------------------
@@ -617,24 +617,6 @@ int libcdata_list_element_free(
      int (*value_free_function)(
             intptr_t **value,
             libcdata_error_t **error ),
-     libcdata_error_t **error );
-
-/* Retrieves the value from the list element
- * Returns 1 if successful or -1 on error
- */
-LIBCDATA_EXTERN \
-int libcdata_list_element_get_value(
-     libcdata_list_element_t *element,
-     intptr_t **value,
-     libcdata_error_t **error );
-
-/* Sets the value in the list element
- * Returns 1 if successful or -1 on error
- */
-LIBCDATA_EXTERN \
-int libcdata_list_element_set_value(
-     libcdata_list_element_t *element,
-     intptr_t *value,
      libcdata_error_t **error );
 
 /* Retrieves the previous element from the list element
@@ -691,6 +673,24 @@ int libcdata_list_element_set_elements(
      libcdata_list_element_t *element,
      libcdata_list_element_t *previous_element,
      libcdata_list_element_t *next_element,
+     libcdata_error_t **error );
+
+/* Retrieves the value from the list element
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_list_element_get_value(
+     libcdata_list_element_t *element,
+     intptr_t **value,
+     libcdata_error_t **error );
+
+/* Sets the value in the list element
+ * Returns 1 if successful or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_list_element_set_value(
+     libcdata_list_element_t *element,
+     intptr_t *value,
      libcdata_error_t **error );
 
 /* -------------------------------------------------------------------------
@@ -1147,7 +1147,7 @@ int libcdata_tree_node_replace_node(
 LIBCDATA_EXTERN \
 int libcdata_tree_node_remove_node(
      libcdata_tree_node_t *node,
-     libcdata_tree_node_t *node_to_remove,
+     libcdata_tree_node_t *sub_node_to_remove,
      libcdata_error_t **error );
 
 /* Retrieves the number of sub nodes in the tree node

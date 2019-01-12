@@ -177,7 +177,7 @@ int libcdata_tree_node_get_first_sub_node(
      libcdata_tree_node_t **first_sub_node,
      libcerror_error_t **error );
 
-int libcdata_internal_tree_node_get_first_sub_node(
+int libcdata_internal_tree_node_set_first_sub_node(
      libcdata_internal_tree_node_t *internal_node,
      libcdata_tree_node_t *first_sub_node,
      libcerror_error_t **error );
@@ -188,7 +188,7 @@ int libcdata_tree_node_get_last_sub_node(
      libcdata_tree_node_t **last_sub_node,
      libcerror_error_t **error );
 
-int libcdata_internal_tree_node_get_last_sub_node(
+int libcdata_internal_tree_node_set_last_sub_node(
      libcdata_internal_tree_node_t *internal_node,
      libcdata_tree_node_t *last_sub_node,
      libcerror_error_t **error );
@@ -271,7 +271,7 @@ int libcdata_tree_node_replace_node(
 LIBCDATA_EXTERN \
 int libcdata_tree_node_remove_node(
      libcdata_tree_node_t *node,
-     libcdata_tree_node_t *node_to_remove,
+     libcdata_tree_node_t *sub_node_to_remove,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

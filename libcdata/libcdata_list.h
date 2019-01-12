@@ -200,7 +200,7 @@ int libcdata_list_insert_value(
 LIBCDATA_EXTERN \
 int libcdata_list_remove_element(
      libcdata_list_t *list,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *element_to_remove,
      libcerror_error_t **error );
 
 #if defined( __cplusplus )

@@ -1164,7 +1164,7 @@ on_error:
  */
 int libcdata_internal_range_list_remove_element(
      libcdata_internal_range_list_t *internal_range_list,
-     libcdata_list_element_t *element,
+     libcdata_list_element_t *range_list_element,
      libcerror_error_t **error )
 {
 	libcdata_list_element_t *next_element     = NULL;
@@ -1183,7 +1183,7 @@ int libcdata_internal_range_list_remove_element(
 		return( -1 );
 	}
 	if( libcdata_list_element_get_elements(
-	     element,
+	     range_list_element,
 	     &previous_element,
 	     &next_element,
 	     error ) != 1 )
@@ -1192,16 +1192,16 @@ int libcdata_internal_range_list_remove_element(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve previous and next element from list element.",
+		 "%s: unable to retrieve previous and next element from range list element.",
 		 function );
 
 		return( -1 );
 	}
-	if( element == internal_range_list->first_element )
+	if( range_list_element == internal_range_list->first_element )
 	{
 		internal_range_list->first_element = next_element;
 	}
-	if( element == internal_range_list->last_element )
+	if( range_list_element == internal_range_list->last_element )
 	{
 		internal_range_list->last_element = previous_element;
 	}
@@ -1240,7 +1240,7 @@ int libcdata_internal_range_list_remove_element(
 		}
 	}
 	if( libcdata_list_element_set_elements(
-	     element,
+	     range_list_element,
 	     NULL,
 	     NULL,
 	     error ) != 1 )
@@ -1249,7 +1249,7 @@ int libcdata_internal_range_list_remove_element(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set previous and next element of list element.",
+		 "%s: unable to set previous and next element of range list element.",
 		 function );
 
 		return( -1 );
@@ -1260,6 +1260,102 @@ int libcdata_internal_range_list_remove_element(
 	internal_range_list->number_of_elements -= 1;
 
 	return( 1 );
+}
+
+/* Removes an element from the range list and frees the element
+ * Returns 1 if successful, or -1 on error
+ */
+int libcdata_internal_range_list_remove_range_value(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t **range_list_element,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error )
+{
+	libcdata_range_list_value_t *range_list_value = NULL;
+	static char *function                         = "libcdata_internal_range_list_remove_range_value";
+	int result                                    = 1;
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_list_element == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_internal_range_list_remove_element(
+	     internal_range_list,
+	     *range_list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
+		 "%s: unable to remove range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_get_value(
+	     *range_list_element,
+	     (intptr_t **) &range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve range list value from range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_free(
+	     range_list_element,
+	     NULL,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free range list element.",
+		 function );
+
+		result = -1;
+	}
+	if( libcdata_range_list_value_free(
+	     &range_list_value,
+	     value_free_function,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+		 "%s: unable to free range list value.",
+		 function );
+
+		result = -1;
+	}
+	return( result );
 }
 
 /* Retrieves the element which the range should be inserted before or merged within
@@ -1832,6 +1928,291 @@ on_error:
 	return( -1 );
 }
 
+/* Inserts the element in the range list after the range list element
+ * If range_list_element is NULL the element is inserted as the first element in the list
+ * Returns 1 if successful, or -1 on error
+ */
+int libcdata_internal_range_list_insert_element_after_element(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_list_element_t *element,
+     libcerror_error_t **error )
+{
+	libcdata_list_element_t *next_element     = NULL;
+	libcdata_list_element_t *previous_element = NULL;
+	static char *function                     = "libcdata_internal_range_list_insert_element_after_element";
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_get_elements(
+	     element,
+	     &previous_element,
+	     &next_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+		 "%s: unable to retrieve previous and next element from list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( previous_element != NULL )
+	 || ( next_element != NULL ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
+		 "%s: list element already part of a list.",
+		 function );
+
+		return( -1 );
+	}
+	if( internal_range_list->number_of_elements == 0 )
+	{
+		if( internal_range_list->first_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: invalid range list - first element already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_range_list->last_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: invalid range list - last element already set.",
+			 function );
+
+			return( -1 );
+		}
+		internal_range_list->first_element = element;
+		internal_range_list->last_element  = element;
+	}
+	else
+	{
+		if( internal_range_list->first_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: invalid range list - missing first element.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_range_list->last_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: invalid range list - missing last element.",
+			 function );
+
+			return( -1 );
+		}
+		if( range_list_element == NULL )
+		{
+			if( libcdata_internal_range_list_set_first_element(
+			     internal_range_list,
+			     element,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set first element.",
+				 function );
+
+				return( -1 );
+			}
+		}
+		else
+		{
+			if( libcdata_list_element_get_next_element(
+			     range_list_element,
+			     &next_element,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+				 "%s: unable to retrieve next element from range list element.",
+				 function );
+
+				return( -1 );
+			}
+			if( libcdata_list_element_set_elements(
+			     element,
+			     range_list_element,
+			     next_element,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set previous and next element of list element.",
+				 function );
+
+				return( -1 );
+			}
+			if( range_list_element == internal_range_list->last_element )
+			{
+				internal_range_list->last_element = element;
+			}
+			else if( next_element == NULL )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+				 "%s: invalid range list element - missing next element.",
+				 function );
+
+				return( -1 );
+			}
+			else
+			{
+				if( libcdata_list_element_set_previous_element(
+				     next_element,
+				     element,
+				     error ) != 1 )
+				{
+					libcerror_error_set(
+					 error,
+					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+					 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+					 "%s: unable to set previous element of next element.",
+					 function );
+
+					return( -1 );
+				}
+			}
+			if( libcdata_list_element_set_next_element(
+			     range_list_element,
+			     element,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+				 "%s: unable to set next element of range list element.",
+				 function );
+
+				return( -1 );
+			}
+		}
+	}
+	internal_range_list->number_of_elements += 1;
+
+	return( 1 );
+}
+
+/* Inserts the range list value in the range list after the range list element
+ * If range_list_element is NULL the value is inserted before the first element in the list
+ * Returns 1 if successful, or -1 on error
+ */
+int libcdata_internal_range_list_insert_value_after_element(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_range_list_value_t *value,
+     libcerror_error_t **error )
+{
+	libcdata_list_element_t *list_element = NULL;
+	static char *function                 = "libcdata_internal_range_list_insert_value_after_element";
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( libcdata_list_element_initialize(
+	     &list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_list_element_set_value(
+	     list_element,
+	     (intptr_t *) value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to set value in list element.",
+		 function );
+
+		goto on_error;
+	}
+	if( libcdata_internal_range_list_insert_element_after_element(
+	     internal_range_list,
+	     range_list_element,
+	     list_element,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert element after range list element.",
+		 function );
+
+		goto on_error;
+	}
+	list_element = NULL;
+
+	return( 1 );
+
+on_error:
+	if( list_element != NULL )
+	{
+		libcdata_list_element_free(
+		 &list_element,
+		 NULL,
+		 NULL );
+	}
+	return( -1 );
+}
+
 /* Merges the range into the range list element
  * Returns 1 if successful, or -1 on error
  */
@@ -2235,88 +2616,6 @@ on_error:
 /* Reverts a previously merge of the range list element and successive overlapping ranges
  * Returns 1 if successful or -1 on error
  */
-int libcdata_internal_range_list_insert_range_revert(
-     libcdata_internal_range_list_t *internal_range_list,
-     libcdata_list_element_t *range_list_element,
-     libcerror_error_t **error )
-{
-	libcdata_range_list_value_t *range_list_value = NULL;
-	static char *function                         = "libcdata_internal_range_list_insert_range_revert";
-	int result                                    = 1;
-
-	if( internal_range_list == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid range list.",
-		 function );
-
-		return( -1 );
-	}
-	if( libcdata_list_element_get_value(
-	     range_list_element,
-	     (intptr_t **) &range_list_value,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve value from range list element.",
-		 function );
-
-		return( -1 );
-	}
-	if( libcdata_internal_range_list_remove_element(
-	     internal_range_list,
-	     range_list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
-		 "%s: unable to remove range list element.",
-		 function );
-
-		return( -1 );
-	}
-	if( libcdata_list_element_free(
-	     &range_list_element,
-	     NULL,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free range list element.",
-		 function );
-
-		result = -1;
-	}
-	if( libcdata_range_list_value_free(
-	     &range_list_value,
-	     NULL,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-		 "%s: unable to free range list value.",
-		 function );
-
-		result = -1;
-	}
-	return( result );
-}
-
-/* Reverts a previously merge of the range list element and successive overlapping ranges
- * Returns 1 if successful or -1 on error
- */
 int libcdata_internal_range_list_insert_range_revert_merge(
      libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *range_list_element,
@@ -2423,7 +2722,7 @@ int libcdata_internal_range_list_insert_range_revert_merge(
 
 			return( -1 );
 		}
-		if( libcdata_internal_range_list_insert_element(
+		if( libcdata_internal_range_list_insert_element_after_element(
 		     internal_range_list,
 		     range_list_element,
 		     backup_range_list_element,
@@ -2433,7 +2732,7 @@ int libcdata_internal_range_list_insert_range_revert_merge(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-			 "%s: unable to insert list element in range list.",
+			 "%s: unable to insert element after range list element.",
 			 function );
 
 			return( -1 );
@@ -2666,6 +2965,7 @@ int libcdata_range_list_insert_range(
 
 	return( result );
 
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 on_error:
 	if( result == 0 )
 	{
@@ -2677,9 +2977,10 @@ on_error:
 	}
 	else if( result == 1 )
 	{
-		libcdata_internal_range_list_insert_range_revert(
+		libcdata_internal_range_list_remove_range_value(
 		 internal_range_list,
-		 new_element,
+		 &new_element,
+		 NULL,
 		 NULL );
 	}
 	libcdata_range_list_free(
@@ -2688,6 +2989,7 @@ on_error:
 	 NULL );
 
 	return( -1 );
+#endif
 }
 
 /* Inserts a range list
@@ -2830,307 +3132,19 @@ int libcdata_range_list_insert_range_list(
 	return( 1 );
 }
 
-/* Inserts the element in the range list after the range list element
- * If range_list_element is NULL the element is inserted as the first element in the list
+/* Shrinks a range
+ *
+ * A range that either overlaps the start or the end of the range list element
+ * is removed by shrining the range of the range list element.
+ *
  * Returns 1 if successful, or -1 on error
  */
-int libcdata_internal_range_list_insert_element(
+int libcdata_internal_range_list_remove_shrink_range(
      libcdata_internal_range_list_t *internal_range_list,
      libcdata_list_element_t *range_list_element,
-     libcdata_list_element_t *element,
-     libcerror_error_t **error )
-{
-	libcdata_list_element_t *next_element     = NULL;
-	libcdata_list_element_t *previous_element = NULL;
-	static char *function                     = "libcdata_internal_range_list_insert_element";
-
-	if( internal_range_list == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid range list.",
-		 function );
-
-		return( -1 );
-	}
-	if( libcdata_list_element_get_elements(
-	     element,
-	     &previous_element,
-	     &next_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-		 "%s: unable to retrieve previous and next element from list element.",
-		 function );
-
-		return( -1 );
-	}
-	if( ( previous_element != NULL )
-	 || ( next_element != NULL ) )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_VALUE_ALREADY_SET,
-		 "%s: list element already part of a list.",
-		 function );
-
-		return( -1 );
-	}
-	if( internal_range_list->number_of_elements == 0 )
-	{
-		if( internal_range_list->first_element != NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: invalid range list - first element already set.",
-			 function );
-
-			return( -1 );
-		}
-		if( internal_range_list->last_element != NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: invalid range list - last element already set.",
-			 function );
-
-			return( -1 );
-		}
-		internal_range_list->first_element = element;
-		internal_range_list->last_element  = element;
-	}
-	else
-	{
-		if( internal_range_list->first_element == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: invalid range list - missing first element.",
-			 function );
-
-			return( -1 );
-		}
-		if( internal_range_list->last_element == NULL )
-		{
-			libcerror_error_set(
-			 error,
-			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-			 "%s: invalid range list - missing last element.",
-			 function );
-
-			return( -1 );
-		}
-		if( range_list_element == NULL )
-		{
-			if( libcdata_internal_range_list_set_first_element(
-			     internal_range_list,
-			     element,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set first element.",
-				 function );
-
-				return( -1 );
-			}
-		}
-		else
-		{
-			if( libcdata_list_element_get_next_element(
-			     range_list_element,
-			     &next_element,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve next element from range list element.",
-				 function );
-
-				return( -1 );
-			}
-			if( libcdata_list_element_set_elements(
-			     element,
-			     range_list_element,
-			     next_element,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set previous and next element of list element.",
-				 function );
-
-				return( -1 );
-			}
-			if( range_list_element == internal_range_list->last_element )
-			{
-				internal_range_list->last_element = element;
-			}
-			else if( next_element == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-				 "%s: invalid range list element - missing next element.",
-				 function );
-
-				return( -1 );
-			}
-			else
-			{
-				if( libcdata_list_element_set_previous_element(
-				     next_element,
-				     element,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-					 "%s: unable to set previous element of next element.",
-					 function );
-
-					return( -1 );
-				}
-			}
-			if( libcdata_list_element_set_next_element(
-			     range_list_element,
-			     element,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-				 "%s: unable to set next element of range list element.",
-				 function );
-
-				return( -1 );
-			}
-		}
-	}
-	internal_range_list->number_of_elements += 1;
-
-	return( 1 );
-}
-
-/* Inserts the range list value in the range list after the range list element
- * If range_list_element is NULL the value is inserted before the first element in the list
- * Returns 1 if successful, or -1 on error
- */
-int libcdata_internal_range_list_insert_value(
-     libcdata_internal_range_list_t *internal_range_list,
-     libcdata_list_element_t *range_list_element,
-     libcdata_range_list_value_t *value,
-     libcerror_error_t **error )
-{
-	libcdata_list_element_t *list_element = NULL;
-	static char *function                 = "libcdata_internal_range_list_insert_value";
-
-	if( internal_range_list == NULL )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-		 "%s: invalid range list.",
-		 function );
-
-		return( -1 );
-	}
-	if( libcdata_list_element_initialize(
-	     &list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-		 "%s: unable to create list element.",
-		 function );
-
-		goto on_error;
-	}
-	if( libcdata_list_element_set_value(
-	     list_element,
-	     (intptr_t *) value,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
-		 "%s: unable to set value in list element.",
-		 function );
-
-		goto on_error;
-	}
-	if( libcdata_internal_range_list_insert_element(
-	     internal_range_list,
-	     range_list_element,
-	     list_element,
-	     error ) != 1 )
-	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-		 "%s: unable to insert list element in range list.",
-		 function );
-
-		goto on_error;
-	}
-	list_element = NULL;
-
-	return( 1 );
-
-on_error:
-	if( list_element != NULL )
-	{
-		libcdata_list_element_free(
-		 &list_element,
-		 NULL,
-		 NULL );
-	}
-	return( -1 );
-}
-
-/* Removes a range
- *
- * The values are split using the value_merge_function.
- * If the source value is NULL the split function is not called.
- * On return destination_value of the value_merge_function
- * should contain data greater equal to the split_range_offset.
- *
- * After a split and on error the values are freed using
- * the value_free_function
- *
- * Returns 1 if successful, or -1 on error
- */
-int libcdata_internal_range_list_remove_range(
-     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_range_list_value_t *range_list_value,
      uint64_t range_start,
-     uint64_t range_size,
+     uint64_t range_end,
      int (*value_free_function)(
             intptr_t **value,
             libcerror_error_t **error ),
@@ -3141,14 +3155,9 @@ int libcdata_internal_range_list_remove_range(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	libcdata_list_element_t *list_element               = NULL;
-	libcdata_range_list_value_t *range_list_value       = NULL;
-	libcdata_range_list_value_t *split_range_list_value = NULL;
-	intptr_t *split_value                               = NULL;
-	static char *function                               = "libcdata_internal_range_list_remove_range";
-	uint64_t next_range_start                           = 0;
-	uint64_t range_end                                  = 0;
-	int result                                          = 0;
+	intptr_t *split_value = NULL;
+	static char *function = "libcdata_internal_range_list_remove_shrink_range";
+	uint64_t split_offset = 0;
 
 	if( internal_range_list == NULL )
 	{
@@ -3161,400 +3170,308 @@ int libcdata_internal_range_list_remove_range(
 
 		return( -1 );
 	}
-	if( range_start > (uint64_t) INT64_MAX )
+	if( range_list_element == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid range start value exceeds maximum.",
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list element.",
 		 function );
 
 		return( -1 );
 	}
-	if( range_size > (uint64_t) INT64_MAX )
+	if( range_list_value == NULL )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
-		 "%s: invalid range size value exceeds maximum.",
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list value.",
 		 function );
 
 		return( -1 );
 	}
-	range_end = range_start + range_size;
-
-	if( range_end < range_start )
+	if( ( range_start > range_list_value->start )
+	 && ( range_end < range_list_value->end ) )
 	{
 		libcerror_error_set(
 		 error,
 		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
-		 "%s: invalid range end value out of bounds.",
+		 "%s: invalid range value out of bounds.",
 		 function );
 
-		goto on_error;
+		return( -1 );
 	}
-	while( range_start < range_end )
+	if( range_list_value->value != NULL )
 	{
-		result = libcdata_internal_range_list_get_element_at_offset(
-			  internal_range_list,
-			  range_start,
-			  &list_element,
-			  error );
+		if( value_free_function == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid value free function.",
+			 function );
 
-		if( result == -1 )
+			return( -1 );
+		}
+		if( value_split_function == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid value split function.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	if( range_start <= range_list_value->start )
+	{
+		split_offset = range_end;
+	}
+	else
+	{
+		split_offset = range_start;
+	}
+	if( range_list_value->value != NULL )
+	{
+		if( value_split_function(
+		     &split_value,
+		     range_list_value->value,
+		     split_offset,
+		     error ) != 1 )
 		{
 			libcerror_error_set(
 			 error,
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-			 "%s: unable to retrieve list element for range offset: %" PRIu64 ".",
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to split value range offset: %" PRIu64 ".",
 			 function,
-			 range_start );
+			 split_offset );
 
 			goto on_error;
 		}
-		else if( result == 0 )
+		if( value_free_function(
+		     &( range_list_value->value ),
+		     error ) != 1 )
 		{
-			/* The specified range is not defined in the range list
-			 */
-			if( list_element == NULL )
-			{
-				break;
-			}
-			if( libcdata_list_element_get_value(
-			     list_element,
-			     (intptr_t **) &range_list_value,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve value from next list element.",
-				 function );
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to free value.",
+			 function );
 
-				goto on_error;
-			}
-			if( range_list_value == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-				 "%s: missing range list value.",
-				 function );
+			range_list_value->value = split_value;
 
-				goto on_error;
-			}
-			/* The specified range is not defined in the range list
-			 */
-			if( range_list_value->start >= range_end )
-			{
-				break;
-			}
-			range_start = range_list_value->start;
+			goto on_error;
 		}
-		else
+		range_list_value->value = split_value;
+	}
+	if( split_offset > range_list_value->start )
+	{
+		range_list_value->start = split_offset;
+		range_list_value->size  = range_list_value->end - split_offset;
+	}
+	else
+	{
+		range_list_value->end  = split_offset;
+		range_list_value->size = split_offset - range_list_value->start;
+	}
+	return( 1 );
+
+on_error:
+	return( -1 );
+}
+
+/* Splits a range
+ *
+ * A range that either overlaps a part of the range list element
+ * is removed by splitting the range of the range list element.
+ *
+ * Returns 1 if successful, or -1 on error
+ */
+int libcdata_internal_range_list_remove_split_range(
+     libcdata_internal_range_list_t *internal_range_list,
+     libcdata_list_element_t *range_list_element,
+     libcdata_range_list_value_t *range_list_value,
+     uint64_t range_start,
+     uint64_t range_end,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     int (*value_split_function)(
+            intptr_t **destination_value,
+            intptr_t *source_value,
+            uint64_t split_range_offset,
+            libcerror_error_t **error ),
+     libcerror_error_t **error )
+{
+	libcdata_range_list_value_t *split_range_list_value = NULL;
+	static char *function                               = "libcdata_internal_range_list_remove_split_range";
+	uint64_t split_offset                               = 0;
+
+	if( internal_range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_list_element == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list element.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_list_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list value.",
+		 function );
+
+		return( -1 );
+	}
+	if( ( range_start <= range_list_value->start )
+	 || ( range_end >= range_list_value->end ) )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid range value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_list_value->value != NULL )
+	{
+		if( value_free_function == NULL )
 		{
-			if( libcdata_list_element_get_value(
-			     list_element,
-			     (intptr_t **) &range_list_value,
-			     error ) != 1 )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
-				 "%s: unable to retrieve value from list element for range offset: %" PRIu64 ".",
-				 function,
-				 range_start );
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid value free function.",
+			 function );
 
-				goto on_error;
-			}
-			if( range_list_value == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-				 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-				 "%s: missing range list value element for range offset: %" PRIu64 ".",
-				 function,
-				 range_start );
-
-				goto on_error;
-			}
+			return( -1 );
 		}
-		next_range_start = range_list_value->end;
-
-		if( range_list_value->value != NULL )
+		if( value_split_function == NULL )
 		{
-			if( value_free_function == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-				 "%s: invalid value free function.",
-				 function );
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+			 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+			 "%s: invalid value split function.",
+			 function );
 
-				goto on_error;
-			}
-			if( value_split_function == NULL )
-			{
-				libcerror_error_set(
-				 error,
-				 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
-				 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
-				 "%s: invalid value split function.",
-				 function );
-
-				goto on_error;
-			}
+			return( -1 );
 		}
-		if( range_list_value->start == range_start )
+	}
+	split_offset = range_end;
+
+	if( libcdata_range_list_value_initialize(
+	     &split_range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to create range list value.",
+		 function );
+
+		goto on_error;
+	}
+	if( split_range_list_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+		 "%s: missing range list value.",
+		 function );
+
+		goto on_error;
+	}
+	if( range_list_value->value != NULL )
+	{
+		if( value_split_function(
+		     &( split_range_list_value->value ),
+		     range_list_value->value,
+		     split_offset,
+		     error ) != 1 )
 		{
-			if( range_list_value->end <= range_end )
-			{
-				/* If the range marked for removal overlaps with the current range,
-				 * remove the current range entirely.
-				 */
-				if( libcdata_internal_range_list_remove_element(
-				     internal_range_list,
-				     list_element,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
-					 "%s: unable to remove list element.",
-					 function );
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+			 "%s: unable to split value at range offset: %" PRIu64 ".",
+			 function,
+			 split_offset );
 
-					goto on_error;
-				}
-				if( libcdata_list_element_free(
-				     &list_element,
-				     NULL,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-					 "%s: unable to free list element.",
-					 function );
-
-					libcdata_range_list_value_free(
-					 &range_list_value,
-					 value_free_function,
-					 NULL );
-
-					goto on_error;
-				}
-				if( libcdata_range_list_value_free(
-				     &range_list_value,
-				     value_free_function,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
-					 "%s: unable to free range list value.",
-					 function );
-
-					goto on_error;
-				}
-			}
-			else
-			{
-				/* If the range marked for removal is smaller than the current range,
-				 * split off of the part that remains after removal and remove the rest.
-				 */
-				if( range_list_value->value != NULL )
-				{
-					if( value_split_function(
-					     &split_value,
-					     range_list_value->value,
-					     range_end,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to split value at range offset: %" PRIu64 ".",
-						 function,
-						 range_end );
-
-						goto on_error;
-					}
-					if( value_free_function(
-					     &( range_list_value->value ),
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to free value.",
-						 function );
-
-						range_list_value->value = split_value;
-
-						goto on_error;
-					}
-					range_list_value->value = split_value;
-				}
-				range_list_value->start = range_end;
-				range_list_value->size  = range_list_value->end - range_list_value->start;
-			}
+			goto on_error;
 		}
-		else
-		{
-			if( range_list_value->end <= range_end )
-			{
-				if( range_list_value->value != NULL )
-				{
-					if( value_split_function(
-					     &split_value,
-					     range_list_value->value,
-					     range_start,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to split value at range offset: %" PRIu64 ".",
-						 function,
-						 range_start );
+	}
+	split_range_list_value->start = split_offset;
+	split_range_list_value->size  = range_list_value->end - split_offset;
+	split_range_list_value->end   = range_list_value->end;
 
-						goto on_error;
-					}
-					if( value_free_function(
-					     &split_value,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to free value.",
-						 function );
+	range_list_value->size = split_offset - range_list_value->start;
+	range_list_value->end  = split_offset;
 
-						goto on_error;
-					}
-				}
-				range_list_value->end  = range_start;
-				range_list_value->size = range_list_value->end - range_list_value->start;
-			}
-			else
-			{
-				/* If the range marked for removal is smaller than the current range,
-				 * split off of the part that remains after removal and remove the rest.
-				 */
-				if( libcdata_range_list_value_initialize(
-				     &split_range_list_value,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-					 "%s: unable to create range list value.",
-					 function );
+	if( libcdata_internal_range_list_insert_value_after_element(
+	     internal_range_list,
+	     range_list_element,
+	     split_range_list_value,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert range list value after range list element.",
+		 function );
 
-					goto on_error;
-				}
-				if( split_range_list_value == NULL )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
-					 "%s: missing range list value.",
-					 function );
+		goto on_error;
+	}
+	split_range_list_value = NULL;
 
-					goto on_error;
-				}
-				split_range_list_value->start = range_end;
-				split_range_list_value->size  = range_list_value->end - range_end;
-				split_range_list_value->end   = range_list_value->end;
+	if( libcdata_internal_range_list_remove_shrink_range(
+	     internal_range_list,
+	     range_list_element,
+	     range_list_value,
+	     range_start,
+	     range_end,
+	     value_free_function,
+	     value_split_function,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+		 "%s: unable to shrink range.",
+		 function );
 
-				if( range_list_value->value != NULL )
-				{
-					if( value_split_function(
-					     &( split_range_list_value->value ),
-					     range_list_value->value,
-					     range_end,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to split value at range offset: %" PRIu64 ".",
-						 function,
-						 range_end );
-
-						goto on_error;
-					}
-					if( value_split_function(
-					     &split_value,
-					     range_list_value->value,
-					     range_start,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to split value at range offset: %" PRIu64 ".",
-						 function,
-						 range_start );
-
-						goto on_error;
-					}
-					if( value_free_function(
-					     &split_value,
-					     error ) != 1 )
-					{
-						libcerror_error_set(
-						 error,
-						 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-						 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
-						 "%s: unable to free value.",
-						 function );
-
-						goto on_error;
-					}
-				}
-				range_list_value->size = range_start - range_list_value->start;
-				range_list_value->end  = range_start;
-
-				if( libcdata_internal_range_list_insert_value(
-				     internal_range_list,
-				     list_element,
-				     split_range_list_value,
-				     error ) != 1 )
-				{
-					libcerror_error_set(
-					 error,
-					 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-					 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
-					 "%s: unable to insert range list value in range list.",
-					 function );
-
-					goto on_error;
-				}
-				split_range_list_value = NULL;
-			}
-		}
-		range_start = next_range_start;
+		goto on_error;
 	}
 	return( 1 );
 
@@ -3596,7 +3513,11 @@ int libcdata_range_list_remove_range(
      libcerror_error_t **error )
 {
 	libcdata_internal_range_list_t *internal_range_list = NULL;
+	libcdata_list_element_t *list_element               = NULL;
+	libcdata_range_list_value_t *range_list_value       = NULL;
 	static char *function                               = "libcdata_range_list_remove_range";
+	uint64_t next_range_start                           = 0;
+	uint64_t range_end                                  = 0;
 	int result                                          = 1;
 
 	if( range_list == NULL )
@@ -3612,6 +3533,41 @@ int libcdata_range_list_remove_range(
 	}
 	internal_range_list = (libcdata_internal_range_list_t *) range_list;
 
+	if( range_start > (uint64_t) INT64_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid range start value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_size > (uint64_t) INT64_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid range size value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+	range_end = range_start + range_size;
+
+	if( range_end < range_start )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid range end value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_grab_for_write(
 	     internal_range_list->read_write_lock,
@@ -3627,22 +3583,139 @@ int libcdata_range_list_remove_range(
 		return( -1 );
 	}
 #endif
-	if( libcdata_internal_range_list_remove_range(
-	     internal_range_list,
-	     range_start,
-	     range_size,
-	     value_free_function,
-	     value_split_function,
-	     error ) != 1 )
+	while( range_start < range_end )
 	{
-		libcerror_error_set(
-		 error,
-		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
-		 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
-		 "%s: unable to remove range.",
-		 function );
+		result = libcdata_internal_range_list_get_element_at_offset(
+			  internal_range_list,
+			  range_start,
+			  &list_element,
+			  error );
 
-		result = -1;
+		if( result == -1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve list element for range offset: %" PRIu64 ".",
+			 function,
+			 range_start );
+
+			goto on_error;
+		}
+		else if( result == 0 )
+		{
+			/* The specified range is not defined in the range list
+			 */
+			if( list_element == NULL )
+			{
+				break;
+			}
+		}
+		if( libcdata_list_element_get_value(
+		     list_element,
+		     (intptr_t **) &range_list_value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value from list element for range offset: %" PRIu64 ".",
+			 function,
+			 range_start );
+
+			goto on_error;
+		}
+		if( range_list_value == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: missing range list value element for range offset: %" PRIu64 ".",
+			 function,
+			 range_start );
+
+			goto on_error;
+		}
+		if( result == 0 )
+		{
+			/* The specified range is not defined in the range list
+			 */
+			if( range_list_value->start >= range_end )
+			{
+				break;
+			}
+			range_start = range_list_value->start;
+		}
+		next_range_start = range_list_value->end;
+
+		if( ( range_start <= range_list_value->start )
+		 && ( range_end >= range_list_value->end ) )
+		{
+			if( libcdata_internal_range_list_remove_range_value(
+			     internal_range_list,
+			     &list_element,
+			     value_free_function,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_REMOVE_FAILED,
+				 "%s: unable to remove range value.",
+				 function );
+
+				goto on_error;
+			}
+		}
+		else if( ( range_start > range_list_value->start )
+		      && ( range_end < range_list_value->end ) )
+		{
+			if( libcdata_internal_range_list_remove_split_range(
+			     internal_range_list,
+			     list_element,
+			     range_list_value,
+			     range_start,
+			     range_end,
+			     value_free_function,
+			     value_split_function,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to split range.",
+				 function );
+
+				goto on_error;
+			}
+		}
+		else
+		{
+			if( libcdata_internal_range_list_remove_shrink_range(
+			     internal_range_list,
+			     list_element,
+			     range_list_value,
+			     range_start,
+			     range_end,
+			     value_free_function,
+			     value_split_function,
+			     error ) != 1 )
+			{
+				libcerror_error_set(
+				 error,
+				 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+				 LIBCERROR_RUNTIME_ERROR_INITIALIZE_FAILED,
+				 "%s: unable to shrink range.",
+				 function );
+
+				goto on_error;
+			}
+		}
+		range_start = next_range_start;
 	}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 	if( libcthreads_read_write_lock_release_for_write(
@@ -3660,6 +3733,14 @@ int libcdata_range_list_remove_range(
 	}
 #endif
 	return( result );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_write(
+	 internal_range_list->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
 }
 
 /* Retrieves a specific element from the range list
