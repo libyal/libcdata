@@ -75,63 +75,7 @@ int libcdata_btree_free(
             libcerror_error_t **error ),
      libcerror_error_t **error );
 
-int libcdata_btree_free_values_list(
-     libcdata_list_t **values_list,
-     libcerror_error_t **error );
-
 /* TODO clone function */
-
-int libcdata_btree_node_get_sub_node_by_value(
-     libcdata_tree_node_t *node,
-     intptr_t *value,
-     int (*value_compare_function)(
-            intptr_t *first_value,
-            intptr_t *second_value,
-            libcerror_error_t **error ),
-     libcdata_tree_node_t **sub_node,
-     libcdata_list_element_t **values_list_element,
-     libcerror_error_t **error );
-
-int libcdata_btree_node_get_upper_node_by_value(
-     libcdata_tree_node_t *node,
-     intptr_t *value,
-     int (*value_compare_function)(
-            intptr_t *first_value,
-            intptr_t *second_value,
-            libcerror_error_t **error ),
-     libcdata_tree_node_t **upper_node,
-     libcdata_list_element_t **values_list_element,
-     libcerror_error_t **error );
-
-int libcdata_btree_node_append_value(
-     libcdata_tree_node_t *node,
-     intptr_t *value,
-     libcerror_error_t **error );
-
-int libcdata_btree_node_insert_value(
-     libcdata_tree_node_t *node,
-     intptr_t *value,
-     int (*value_compare_function)(
-            intptr_t *first_value,
-            intptr_t *second_value,
-            libcerror_error_t **error ),
-     libcerror_error_t **error );
-
-int libcdata_btree_node_replace_value(
-     libcdata_tree_node_t *node,
-     intptr_t *value,
-     intptr_t *replacement_value,
-     libcerror_error_t **error );
-
-int libcdata_btree_node_remove_value(
-     libcdata_tree_node_t *node,
-     intptr_t *value,
-     intptr_t *replacement_value,
-     libcerror_error_t **error );
-
-int libcdata_btree_node_split(
-     libcdata_tree_node_t *node,
-     libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
 int libcdata_btree_get_number_of_values(

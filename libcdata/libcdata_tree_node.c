@@ -2085,6 +2085,56 @@ int libcdata_tree_node_append_node(
 	}
 	internal_node = (libcdata_internal_tree_node_t *) node;
 
+	if( internal_node->number_of_sub_nodes == 0 )
+	{
+		if( internal_node->first_sub_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first sub node already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_node->last_sub_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last sub node already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_node->first_sub_node == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first sub node.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_node->last_sub_node == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last sub node.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( libcdata_tree_node_get_nodes(
 	     node_to_append,
 	     &to_append_parent_node,
@@ -2741,6 +2791,56 @@ int libcdata_tree_node_insert_node(
 	}
 	internal_node = (libcdata_internal_tree_node_t *) node;
 
+	if( internal_node->number_of_sub_nodes == 0 )
+	{
+		if( internal_node->first_sub_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first sub node already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_node->last_sub_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last sub node already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_node->first_sub_node == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first sub node.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_node->last_sub_node == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last sub node.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( node_to_insert == NULL )
 	{
 		libcerror_error_set(
@@ -3418,6 +3518,56 @@ int libcdata_tree_node_remove_node(
 	}
 	internal_node = (libcdata_internal_tree_node_t *) node;
 
+	if( internal_node->number_of_sub_nodes == 0 )
+	{
+		if( internal_node->first_sub_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first sub node already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_node->last_sub_node != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last sub node already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_node->first_sub_node == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first sub node.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_node->last_sub_node == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last sub node.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( sub_node_to_remove == NULL )
 	{
 		libcerror_error_set(

@@ -123,6 +123,8 @@ stamp-h[1-9]
 /tests/*.exe
 /tests/cdata_test_array
 /tests/cdata_test_btree
+/tests/cdata_test_btree_node
+/tests/cdata_test_btree_values_list
 /tests/cdata_test_error
 /tests/cdata_test_list
 /tests/cdata_test_list_element

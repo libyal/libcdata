@@ -6,7 +6,7 @@ $ExitSuccess = 0
 $ExitFailure = 1
 $ExitIgnore = 77
 
-$LibraryTests = "array btree error list list_element range_list range_list_value support tree_node"
+$LibraryTests = "array btree btree_node error list list_element range_list range_list_value support tree_node"
 $LibraryTestsWithInput = ""
 
 $InputGlob = "*"

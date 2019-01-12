@@ -12,6 +12,8 @@ libcdata_la_SOURCES = \
 	libcdata.c \
 	libcdata_array.c libcdata_array.h \
 	libcdata_btree.c libcdata_btree.h \
+	libcdata_btree_node.c libcdata_btree_node.h \
+	libcdata_btree_values_list.c libcdata_btree_values_list.h \
 	libcdata_definitions.h \
 	libcdata_error.c libcdata_error.h \
 	libcdata_extern.h \

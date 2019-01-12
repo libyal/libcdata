@@ -19,6 +19,8 @@ EXTRA_DIST = \
 check_PROGRAMS = \
 	cdata_test_array \
 	cdata_test_btree \
+	cdata_test_btree_node \
+	cdata_test_btree_values_list \
 	cdata_test_error \
 	cdata_test_list \
 	cdata_test_list_element \
@@ -50,6 +52,28 @@ cdata_test_btree_SOURCES = \
 	cdata_test_unused.h
 
 cdata_test_btree_LDADD = \
+	../libcdata/libcdata.la \
+	@LIBCERROR_LIBADD@
+
+cdata_test_btree_node_SOURCES = \
+	cdata_test_btree_node.c \
+	cdata_test_libcdata.h \
+	cdata_test_libcerror.h \
+	cdata_test_macros.h \
+	cdata_test_unused.h
+
+cdata_test_btree_node_LDADD = \
+	../libcdata/libcdata.la \
+	@LIBCERROR_LIBADD@
+
+cdata_test_btree_values_list_SOURCES = \
+	cdata_test_btree_values_list.c \
+	cdata_test_libcdata.h \
+	cdata_test_libcerror.h \
+	cdata_test_macros.h \
+	cdata_test_unused.h
+
+cdata_test_btree_values_list_LDADD = \
 	../libcdata/libcdata.la \
 	@LIBCERROR_LIBADD@
 

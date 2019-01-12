@@ -7,7 +7,7 @@ EXIT_SUCCESS=0;
 EXIT_FAILURE=1;
 EXIT_IGNORE=77;
 
-LIBRARY_TESTS="array btree error list list_element range_list range_list_value support tree_node";
+LIBRARY_TESTS="array btree btree_node error list list_element range_list range_list_value support tree_node";
 LIBRARY_TESTS_WITH_INPUT="";
 OPTION_SETS="";
 

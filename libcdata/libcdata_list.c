@@ -1187,6 +1187,56 @@ int libcdata_list_prepend_element(
 	}
 	internal_list = (libcdata_internal_list_t *) list;
 
+	if( internal_list->number_of_elements == 0 )
+	{
+		if( internal_list->first_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first element already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last element already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_list->first_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first element.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last element.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( element == NULL )
 	{
 		libcerror_error_set(
@@ -1434,6 +1484,56 @@ int libcdata_list_append_element(
 	}
 	internal_list = (libcdata_internal_list_t *) list;
 
+	if( internal_list->number_of_elements == 0 )
+	{
+		if( internal_list->first_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first element already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last element already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_list->first_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first element.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last element.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( libcdata_list_element_get_elements(
 	     element,
 	     &previous_element,
@@ -2033,6 +2133,56 @@ int libcdata_list_insert_element(
 	}
 	internal_list = (libcdata_internal_list_t *) list;
 
+	if( internal_list->number_of_elements == 0 )
+	{
+		if( internal_list->first_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first element already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last element already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_list->first_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first element.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last element.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( element_to_insert == NULL )
 	{
 		libcerror_error_set(
@@ -2371,6 +2521,56 @@ int libcdata_list_remove_element(
 	}
 	internal_list = (libcdata_internal_list_t *) list;
 
+	if( internal_list->number_of_elements == 0 )
+	{
+		if( internal_list->first_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - first element already set.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element != NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - last element already set.",
+			 function );
+
+			return( -1 );
+		}
+	}
+	else
+	{
+		if( internal_list->first_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing first element.",
+			 function );
+
+			return( -1 );
+		}
+		if( internal_list->last_element == NULL )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_VALUE_MISSING,
+			 "%s: corruption detected - missing last element.",
+			 function );
+
+			return( -1 );
+		}
+	}
 	if( element_to_remove == NULL )
 	{
 		libcerror_error_set(
