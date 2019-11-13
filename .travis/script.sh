@@ -25,7 +25,7 @@ then
 
 		make install DESTDIR=${PWD}/osx-pkg;
 		mkdir -p ${PWD}/osx-pkg/usr/share/doc/libcdata;
-		cp AUTHORS COPYING NEWS README ${PWD}/osx-pkg/usr/share/doc/libcdata;
+		cp AUTHORS COPYING COPYING.LESSER NEWS README ${PWD}/osx-pkg/usr/share/doc/libcdata;
 
 		pkgbuild --root osx-pkg --identifier com.github.libyal.libcdata --version ${VERSION} --ownership recommended ../libcdata-${VERSION}.pkg;
 	fi
