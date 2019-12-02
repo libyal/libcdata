@@ -242,9 +242,9 @@ int libcdata_btree_node_get_sub_node_by_value(
 		if( value_compare_function != NULL )
 		{
 			result = value_compare_function(
-				  value,
-				  values_list_value,
-				  error );
+			          value,
+			          values_list_value,
+			          error );
 		}
 		else if( value == values_list_value )
 		{
@@ -413,12 +413,12 @@ int libcdata_btree_node_get_upper_node_by_value(
 	*values_list_element = NULL;
 
 	result = libcdata_btree_node_get_sub_node_by_value(
-		  node,
-		  value,
-		  value_compare_function,
-		  &sub_node,
-		  &sub_values_list_element,
-		  error );
+	          node,
+	          value,
+	          value_compare_function,
+	          &sub_node,
+	          &sub_values_list_element,
+	          error );
 
 	if( result == -1 )
 	{
@@ -434,12 +434,12 @@ int libcdata_btree_node_get_upper_node_by_value(
 	else if( sub_node != NULL )
 	{
 		result = libcdata_btree_node_get_upper_node_by_value(
-			  sub_node,
-			  value,
-			  value_compare_function,
-			  upper_node,
-			  values_list_element,
-			  error );
+		          sub_node,
+		          value,
+		          value_compare_function,
+		          upper_node,
+		          values_list_element,
+		          error );
 
 		if( result == -1 )
 		{
@@ -698,12 +698,12 @@ int libcdata_btree_node_replace_value(
 		return( -1 );
 	}
 	result = libcdata_btree_node_get_sub_node_by_value(
-		  node,
-		  value,
-		  NULL,
-		  &sub_node,
-		  &values_list_element,
-		  error );
+	          node,
+	          value,
+	          NULL,
+	          &sub_node,
+	          &values_list_element,
+	          error );
 
 	if( result == -1 )
 	{
@@ -952,12 +952,12 @@ int libcdata_btree_node_remove_value(
 		return( -1 );
 	}
 	result = libcdata_btree_node_get_sub_node_by_value(
-		  node,
-		  value,
-		  NULL,
-		  &sub_node,
-		  &values_list_element,
-		  error );
+	          node,
+	          value,
+	          NULL,
+	          &sub_node,
+	          &values_list_element,
+	          error );
 
 	if( result == -1 )
 	{

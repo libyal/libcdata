@@ -3586,10 +3586,10 @@ int libcdata_range_list_remove_range(
 	while( range_start < range_end )
 	{
 		result = libcdata_internal_range_list_get_element_at_offset(
-			  internal_range_list,
-			  range_start,
-			  &list_element,
-			  error );
+		          internal_range_list,
+		          range_start,
+		          &list_element,
+		          error );
 
 		if( result == -1 )
 		{
@@ -4607,8 +4607,8 @@ int libcdata_range_list_get_spanning_range(
      uint64_t *range_size,
      libcerror_error_t **error )
 {
-	libcdata_range_list_value_t *range_list_value       = NULL;
 	libcdata_internal_range_list_t *internal_range_list = NULL;
+	libcdata_range_list_value_t *range_list_value       = NULL;
 	static char *function                               = "libcdata_range_list_get_spanning_range";
 	int element_index                                   = 0;
 	int result                                          = 0;

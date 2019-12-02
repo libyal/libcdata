@@ -380,12 +380,12 @@ int libcdata_btree_get_value_by_value(
 	internal_tree = (libcdata_internal_btree_t *) tree;
 
 	result = libcdata_btree_node_get_upper_node_by_value(
-		  internal_tree->root_node,
-		  value,
-		  value_compare_function,
-		  upper_node,
-		  &existing_list_element,
-		  error );
+	          internal_tree->root_node,
+	          value,
+	          value_compare_function,
+	          upper_node,
+	          &existing_list_element,
+	          error );
 
 	if( result == -1 )
 	{
@@ -609,12 +609,12 @@ int libcdata_btree_insert_value(
 		/* Make sure existing list element updated after the split
 		 */
 		result = libcdata_btree_node_get_sub_node_by_value(
-			  *upper_node,
-			  value,
-			  value_compare_function,
-			  upper_node,
-			  &existing_list_element,
-			  error );
+		          *upper_node,
+		          value,
+		          value_compare_function,
+		          upper_node,
+		          &existing_list_element,
+		          error );
 
 		if( result == -1 )
 		{
@@ -628,12 +628,12 @@ int libcdata_btree_insert_value(
 			return( -1 );
 		}
 		result = libcdata_btree_node_get_sub_node_by_value(
-			  *upper_node,
-			  value,
-			  value_compare_function,
-			  upper_node,
-			  &existing_list_element,
-			  error );
+		          *upper_node,
+		          value,
+		          value_compare_function,
+		          upper_node,
+		          &existing_list_element,
+		          error );
 
 		if( result != 1 )
 		{

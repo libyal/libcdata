@@ -3950,7 +3950,7 @@ int libcdata_tree_node_get_sub_node_by_index(
 				result = 1;
 
 				break;
-			}	
+			}
 			if( libcdata_tree_node_get_next_node(
 			     safe_sub_node,
 			     &safe_sub_node,
@@ -3981,7 +3981,7 @@ int libcdata_tree_node_get_sub_node_by_index(
 				result = 1;
 
 				break;
-			}	
+			}
 			if( libcdata_tree_node_get_previous_node(
 			     safe_sub_node,
 			     &safe_sub_node,

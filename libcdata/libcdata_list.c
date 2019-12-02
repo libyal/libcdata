@@ -1314,9 +1314,9 @@ int libcdata_list_prepend_element(
 		if( internal_list->first_element != NULL )
 		{
 			result = libcdata_list_element_set_previous_element(
-				  internal_list->first_element,
-				  element,
-				  error );
+			          internal_list->first_element,
+			          element,
+			          error );
 
 			if( result != 1 )
 			{

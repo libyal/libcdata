@@ -146,7 +146,7 @@ int libcdata_array_initialize(
 		goto on_error;
 	}
 	internal_array->entries = (intptr_t **) memory_allocate(
-						 entries_size );
+	                                         entries_size );
 
 	if( internal_array->entries == NULL )
 	{
@@ -415,8 +415,8 @@ int libcdata_internal_array_clear(
 			else
 			{
 				entry_free_result = entry_free_function(
-						     &( internal_array->entries[ entry_iterator ] ),
-						     error );
+				                     &( internal_array->entries[ entry_iterator ] ),
+				                     error );
 			}
 			if( entry_free_result != 1 )
 			{
@@ -710,8 +710,8 @@ int libcdata_internal_array_resize(
             libcerror_error_t **error ),
      libcerror_error_t **error )
 {
-	void *reallocation              = NULL;
 	static char *function           = "libcdata_internal_array_resize";
+	void *reallocation              = NULL;
 	size_t entries_size             = 0;
 	int entry_iterator              = 0;
 	int number_of_allocated_entries = 0;
