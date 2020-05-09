@@ -1,6 +1,6 @@
 # Tests library functions and types.
 #
-# Version: 20200413
+# Version: 20200427
 
 $ExitSuccess = 0
 $ExitFailure = 1
@@ -8,7 +8,7 @@ $ExitIgnore = 77
 
 $LibraryTests = "array btree btree_node error list list_element range_list range_list_value support tree_node"
 $LibraryTestsWithInput = ""
-$OptionSets = "";
+$OptionSets = ""
 
 $InputGlob = "*"
 
