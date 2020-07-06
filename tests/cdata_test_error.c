@@ -28,7 +28,6 @@
 #endif
 
 #include "cdata_test_libcdata.h"
-#include "cdata_test_libcerror.h"
 #include "cdata_test_macros.h"
 #include "cdata_test_unused.h"
 
