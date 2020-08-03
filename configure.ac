@@ -2,7 +2,7 @@ AC_PREREQ( 2.59 )
 
 AC_INIT(
  [libcdata],
- [20200706],
+ [20200803],
  [joachim.metz@gmail.com])
 
 AC_CONFIG_SRCDIR(
@@ -63,32 +63,11 @@ AX_LIBCTHREADS_CHECK_ENABLE
 dnl Check if libcdata required headers and functions are available
 AX_LIBCDATA_CHECK_LOCAL
 
+dnl Check if DLL support is needed
+AX_LIBCDATA_CHECK_DLL_SUPPORT
+
 dnl Check if tests required headers and functions are available
 AX_TESTS_CHECK_LOCAL
-
-dnl Check if DLL support is needed
-AS_IF(
- [test "x$enable_shared" = xyes],
- [AS_CASE(
-  [$host],
-  [*cygwin* | *mingw* | *msys*],
-  [AC_DEFINE(
-   [HAVE_DLLMAIN],
-   [1],
-   [Define to 1 to enable the DllMain function.])
-  AC_SUBST(
-   [HAVE_DLLMAIN],
-   [1])
-
-  AC_SUBST(
-   [LIBCDATA_DLL_EXPORT],
-   ["-DLIBCDATA_DLL_EXPORT"])
-
-  AC_SUBST(
-   [LIBCDATA_DLL_IMPORT],
-   ["-DLIBCDATA_DLL_IMPORT"])
-  ])
- ])
 
 dnl Set additional compiler flags
 CFLAGS="$CFLAGS -Wall";
