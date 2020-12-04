@@ -1679,7 +1679,7 @@ int libcdata_array_insert_entry(
      libcerror_error_t **error )
 {
 	libcdata_internal_array_t *internal_array = NULL;
-	static char *function                     = "libcdata_tree_node_insert_node";
+	static char *function                     = "libcdata_array_insert_entry";
 	int compare_result                        = 0;
 	int entry_iterator                        = 0;
 	int result                                = 0;
