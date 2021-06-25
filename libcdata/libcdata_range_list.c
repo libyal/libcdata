@@ -4443,8 +4443,9 @@ on_error:
 	return( -1 );
 }
 
-/* Determines if a certain range is present
- * Returns 1 if present, 0 if not present or -1 on error
+/* Determines if a certain range is present in the list
+ * This function does not check for partial overlapping ranges
+ * Returns 1 if a range is present, 0 if not or -1 on error
  */
 int libcdata_range_list_range_is_present(
      libcdata_range_list_t *range_list,
@@ -4484,7 +4485,7 @@ int libcdata_range_list_range_is_present(
 
 		return( -1 );
 	}
-	if( range_size > (size_t) SSIZE_MAX )
+	if( range_size > (uint64_t) INT64_MAX )
 	{
 		libcerror_error_set(
 		 error,
@@ -4550,6 +4551,169 @@ int libcdata_range_list_range_is_present(
 			break;
 		}
 		if( ( range_start >= range_list_value->start )
+		 && ( range_end <= range_list_value->end ) )
+		{
+			result = 1;
+
+			break;
+		}
+		if( libcdata_list_element_get_next_element(
+		     list_element,
+		     &list_element,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve next element from list element: %d.",
+			 function,
+			 element_index );
+
+			goto on_error;
+		}
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_release_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to release read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+	return( result );
+
+on_error:
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	libcthreads_read_write_lock_release_for_read(
+	 internal_range_list->read_write_lock,
+	 NULL );
+#endif
+	return( -1 );
+}
+
+/* Determines if a certain range is present in the list
+ * This function does not check for partial overlapping ranges
+ * Returns 1 if a range is present, 0 if not or -1 on error
+ */
+int libcdata_range_list_range_has_overlapping_range(
+     libcdata_range_list_t *range_list,
+     uint64_t range_start,
+     uint64_t range_size,
+     libcerror_error_t **error )
+{
+	libcdata_internal_range_list_t *internal_range_list = NULL;
+	libcdata_list_element_t *list_element               = NULL;
+	libcdata_range_list_value_t *range_list_value       = NULL;
+	static char *function                               = "libcdata_range_list_range_has_overlapping_range";
+	uint64_t range_end                                  = 0;
+	int element_index                                   = 0;
+	int result                                          = 0;
+
+	if( range_list == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid range list.",
+		 function );
+
+		return( -1 );
+	}
+	internal_range_list = (libcdata_internal_range_list_t *) range_list;
+
+	if( range_start > (uint64_t) INT64_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid range start value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+	if( range_size > (uint64_t) INT64_MAX )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_VALUE_EXCEEDS_MAXIMUM,
+		 "%s: invalid size value exceeds maximum.",
+		 function );
+
+		return( -1 );
+	}
+	range_end = range_start + range_size;
+
+	if( range_end < range_start )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_VALUE_OUT_OF_BOUNDS,
+		 "%s: invalid range end value out of bounds.",
+		 function );
+
+		return( -1 );
+	}
+#if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+	if( libcthreads_read_write_lock_grab_for_read(
+	     internal_range_list->read_write_lock,
+	     error ) != 1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_SET_FAILED,
+		 "%s: unable to grab read/write lock for reading.",
+		 function );
+
+		return( -1 );
+	}
+#endif
+/* TODO add optimization using current element */
+	list_element = internal_range_list->first_element;
+
+	for( element_index = 0;
+	     element_index < internal_range_list->number_of_elements;
+	     element_index++ )
+	{
+		if( libcdata_list_element_get_value(
+		     list_element,
+		     (intptr_t **) &range_list_value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value from list element: %d.",
+			 function,
+			 element_index );
+
+			goto on_error;
+		}
+		if( range_end < range_list_value->start )
+		{
+			break;
+		}
+		if( ( range_start >= range_list_value->start )
+		 && ( range_start < range_list_value->end ) )
+		{
+			result = 1;
+
+			break;
+		}
+		if( ( range_end > range_list_value->start )
 		 && ( range_end <= range_list_value->end ) )
 		{
 			result = 1;

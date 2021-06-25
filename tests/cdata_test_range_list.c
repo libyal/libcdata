@@ -7395,10 +7395,63 @@ int cdata_test_range_list_range_is_present(
 	 "error",
 	 error );
 
+	/* Test range within a range in the list
+	 */
+	result = libcdata_range_list_range_is_present(
+	          range_list,
+	          72,
+	          16,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range that partial overlaps with range in the list
+	 */
 	result = libcdata_range_list_range_is_present(
 	          range_list,
 	          48,
 	          32,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range that does not overlap with range in the list
+	 */
+	result = libcdata_range_list_range_is_present(
+	          range_list,
+	          48,
+	          16,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range that does not overlap with range in the list
+	 */
+	result = libcdata_range_list_range_is_present(
+	          range_list,
+	          96,
+	          16,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
@@ -7465,6 +7518,343 @@ int cdata_test_range_list_range_is_present(
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 1;
 
 	result = libcdata_range_list_range_is_present(
+	          range_list,
+	          64,
+	          32,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+
+	/* Clean up
+	 */
+	result = libcdata_range_list_free(
+	          &range_list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "range_list",
+	 range_list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( value3 != NULL )
+	{
+		memory_free(
+		 value3 );
+	}
+	if( value2 != NULL )
+	{
+		memory_free(
+		 value2 );
+	}
+	if( value1 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( range_list != NULL )
+	{
+		libcdata_range_list_free(
+		 &range_list,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_range_list_range_has_overlapping_range function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_range_list_range_has_overlapping_range(
+     void )
+{
+	libcdata_range_list_t *range_list = NULL;
+	libcerror_error_t *error          = NULL;
+	int *value1                       = NULL;
+	int *value2                       = NULL;
+	int *value3                       = NULL;
+	int result                        = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_range_list_initialize(
+	          &range_list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "range_list",
+	 range_list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value1",
+	 value1 );
+
+	*value1 = 1;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          0,
+	          32,
+	          (intptr_t *) value1,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = NULL;
+
+	value2 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value2",
+	 value2 );
+
+	*value2 = 2;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          64,
+	          32,
+	          (intptr_t *) value2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value2 = NULL;
+
+	value3 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value3",
+	 value3 );
+
+	*value3 = 3;
+
+	result = libcdata_range_list_insert_range(
+	          range_list,
+	          128,
+	          32,
+	          (intptr_t *) value3,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_range_list_value_free_function,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_range_list_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value3 = NULL;
+
+	/* Test regular cases
+	 */
+	result = libcdata_range_list_range_has_overlapping_range(
+	          range_list,
+	          64,
+	          32,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range within a range in the list
+	 */
+	result = libcdata_range_list_range_has_overlapping_range(
+	          range_list,
+	          72,
+	          16,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range that partial overlaps with range in the list
+	 */
+	result = libcdata_range_list_range_has_overlapping_range(
+	          range_list,
+	          48,
+	          32,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range that does not overlap with range in the list
+	 */
+	result = libcdata_range_list_range_has_overlapping_range(
+	          range_list,
+	          48,
+	          16,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test range that does not overlap with range in the list
+	 */
+	result = libcdata_range_list_range_has_overlapping_range(
+	          range_list,
+	          96,
+	          16,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test error cases
+	 */
+	result = libcdata_range_list_range_has_overlapping_range(
+	          NULL,
+	          64,
+	          32,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_CDATA_TEST_RWLOCK )
+
+	/* Test libcdata_range_list_range_has_overlapping_range with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
+	 */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 0;
+
+	result = libcdata_range_list_range_has_overlapping_range(
+	          range_list,
+	          64,
+	          32,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_range_list_range_has_overlapping_range with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 1;
+
+	result = libcdata_range_list_range_has_overlapping_range(
 	          range_list,
 	          64,
 	          32,
@@ -7976,6 +8366,10 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_range_is_present",
 	 cdata_test_range_list_range_is_present );
+
+	CDATA_TEST_RUN(
+	 "libcdata_range_list_range_has_overlapping_range",
+	 cdata_test_range_list_range_has_overlapping_range );
 
 	CDATA_TEST_RUN(
 	 "libcdata_range_list_get_spanning_range",

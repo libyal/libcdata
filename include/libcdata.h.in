@@ -878,11 +878,22 @@ int libcdata_range_list_get_range_at_offset(
      intptr_t **value,
      libcdata_error_t **error );
 
-/* Determines if a certain range is present
- * Returns 1 if present, 0 if not present or -1 on error
+/* Determines if a certain range is present in the list
+ * This function does not check for partial overlapping ranges
+ * Returns 1 if a range is present, 0 if not or -1 on error
  */
 LIBCDATA_EXTERN \
 int libcdata_range_list_range_is_present(
+     libcdata_range_list_t *range_list,
+     uint64_t range_start,
+     uint64_t range_size,
+     libcdata_error_t **error );
+
+/* Determines if a certain range overlaps with a range in the list
+ * Returns 1 if an overlapping range is present, 0 if not or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_range_list_range_has_overlapping_range(
      libcdata_range_list_t *range_list,
      uint64_t range_start,
      uint64_t range_size,
