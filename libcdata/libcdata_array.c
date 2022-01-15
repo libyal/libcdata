@@ -1663,7 +1663,9 @@ on_error:
  * Duplicate entries are allowed by default and inserted after the last duplicate entry.
  * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
  *
- * entry_index is set when the entry was successfully inserted
+ * entry_index is set to the index of the entry when the entry was successfully inserted
+ * or to the index of the existing entry when the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ * is set and an existing entry was found.
  *
  * Returns 1 if successful, 0 if the entry already exists or -1 on error
  */
@@ -1862,7 +1864,7 @@ int libcdata_array_insert_entry(
 		goto on_error;
 	}
 #endif
-	if( result == 1 )
+	if( result != -1 )
 	{
 		*entry_index = safe_entry_index;
 	}
