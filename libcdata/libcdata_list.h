@@ -187,6 +187,18 @@ int libcdata_list_insert_element(
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \
+int libcdata_list_insert_element_with_existing(
+     libcdata_list_t *list,
+     libcdata_list_element_t *element_to_insert,
+     int (*value_compare_function)(
+            intptr_t *first,
+            intptr_t *second,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     libcdata_list_element_t **existing_element,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
 int libcdata_list_insert_value(
      libcdata_list_t *list,
      intptr_t *value,
@@ -195,6 +207,18 @@ int libcdata_list_insert_value(
             intptr_t *second,
             libcerror_error_t **error ),
      uint8_t insert_flags,
+     libcerror_error_t **error );
+
+LIBCDATA_EXTERN \
+int libcdata_list_insert_value_with_existing(
+     libcdata_list_t *list,
+     intptr_t *value,
+     int (*value_compare_function)(
+            intptr_t *first,
+            intptr_t *second,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     intptr_t **existing_value,
      libcerror_error_t **error );
 
 LIBCDATA_EXTERN \

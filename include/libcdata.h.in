@@ -561,6 +561,29 @@ int libcdata_list_insert_element(
      uint8_t insert_flags,
      libcdata_error_t **error );
 
+/* Inserts a list element into the list
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * Returns 1 if successful, 0 if the list element already exists or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_list_insert_element_with_existing(
+     libcdata_list_t *list,
+     libcdata_list_element_t *element_to_insert,
+     int (*value_compare_function)(
+            intptr_t *first,
+            intptr_t *second,
+            libcdata_error_t **error ),
+     uint8_t insert_flags,
+     libcdata_list_element_t **existing_element,
+     libcdata_error_t **error );
+
 /* Inserts a value to the list
  *
  * Creates a new list element
@@ -583,6 +606,31 @@ int libcdata_list_insert_value(
             intptr_t *second,
             libcdata_error_t **error ),
      uint8_t insert_flags,
+     libcdata_error_t **error );
+
+/* Inserts a value to the list
+ *
+ * Creates a new list element
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * Returns 1 if successful, 0 if the list element already exists or -1 on error
+ */
+LIBCDATA_EXTERN \
+int libcdata_list_insert_value_with_existing(
+     libcdata_list_t *list,
+     intptr_t *value,
+     int (*value_compare_function)(
+            intptr_t *first,
+            intptr_t *second,
+            libcdata_error_t **error ),
+     uint8_t insert_flags,
+     intptr_t **existing_value,
      libcdata_error_t **error );
 
 /* Removes a list element from the list

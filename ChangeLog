@@ -10,6 +10,7 @@ TODO
 Types:
 * array
   - allocate in larger blocks
+  - add insert with existing
 * list element
   - track parent list
 * list
@@ -17,6 +18,7 @@ Types:
 * range list
   - add get/set range list value functions ?
 * tree node
+  - add insert with existing
 * btree
   - add thread lock
   - rebalance the tree on insert and remove (add tests first)

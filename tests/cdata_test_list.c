@@ -6008,6 +6008,189 @@ on_error:
 int cdata_test_list_insert_element(
      void )
 {
+	libcdata_list_t *list             = NULL;
+	libcdata_list_element_t *element1 = NULL;
+	libcerror_error_t *error          = NULL;
+	int *value1                       = NULL;
+	int result                        = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list",
+	 list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element1",
+	 element1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value1",
+	 value1 );
+
+	*value1 = 1;
+
+	result = libcdata_list_element_set_value(
+	          element1,
+	          (intptr_t *) value1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = NULL;
+
+	result = libcdata_list_insert_element(
+	          list,
+	          element1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	element1 = NULL;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_insert_element(
+	          NULL,
+	          element1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_list_insert_element(
+	          list,
+	          NULL,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list",
+	 list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( value1 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( element1 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element1,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_insert_element_with_existing function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_insert_element_with_existing(
+     void )
+{
 	libcdata_list_t *list                       = NULL;
 	libcdata_list_element_t *duplicate_element2 = NULL;
 	libcdata_list_element_t *element1           = NULL;
@@ -6015,6 +6198,7 @@ int cdata_test_list_insert_element(
 	libcdata_list_element_t *element3           = NULL;
 	libcdata_list_element_t *element4           = NULL;
 	libcdata_list_element_t *element5           = NULL;
+	libcdata_list_element_t *existing_element   = NULL;
 	libcerror_error_t *error                    = NULL;
 	int *duplicate_value2                       = NULL;
 	int *value1                                 = NULL;
@@ -6107,17 +6291,22 @@ int cdata_test_list_insert_element(
 
 	value3 = NULL;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element3,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6188,17 +6377,22 @@ int cdata_test_list_insert_element(
 
 	value1 = NULL;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element1,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6269,17 +6463,22 @@ int cdata_test_list_insert_element(
 
 	value2 = NULL;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element2,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6350,17 +6549,22 @@ int cdata_test_list_insert_element(
 
 	duplicate_value2 = NULL;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          duplicate_element2,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 0 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6429,17 +6633,22 @@ int cdata_test_list_insert_element(
 
 	value4 = NULL;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element4,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6468,17 +6677,22 @@ int cdata_test_list_insert_element(
 
 	/* Test if insert of a duplicate element succeeds
 	 */
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          duplicate_element2,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6551,17 +6765,22 @@ int cdata_test_list_insert_element(
 
 	/* Test error cases
 	 */
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          NULL,
 	          element5,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -6589,17 +6808,65 @@ int cdata_test_list_insert_element(
 	 "error",
 	 error );
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          NULL,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -6629,15 +6896,16 @@ int cdata_test_list_insert_element(
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
-	/* Test libcdata_list_insert_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
 	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element5,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
@@ -6657,6 +6925,10 @@ int cdata_test_list_insert_element(
 			 1 );
 
 			CDATA_TEST_ASSERT_IS_NULL(
+			 "existing_element",
+			 existing_element );
+
+			CDATA_TEST_ASSERT_IS_NULL(
 			 "error",
 			 error );
 		}
@@ -6667,6 +6939,10 @@ int cdata_test_list_insert_element(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -6694,15 +6970,16 @@ int cdata_test_list_insert_element(
 	 "error",
 	 error );
 
-	/* Test libcdata_list_insert_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
 	 */
 	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 10;
 
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element5,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_element,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
@@ -6722,6 +6999,10 @@ int cdata_test_list_insert_element(
 			 1 );
 
 			CDATA_TEST_ASSERT_IS_NULL(
+			 "existing_element",
+			 existing_element );
+
+			CDATA_TEST_ASSERT_IS_NULL(
 			 "error",
 			 error );
 		}
@@ -6732,6 +7013,10 @@ int cdata_test_list_insert_element(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -6895,9 +7180,133 @@ on_error:
 int cdata_test_list_insert_value(
      void )
 {
+	libcdata_list_t *list    = NULL;
+	libcerror_error_t *error = NULL;
+	int *value1              = NULL;
+	int result               = 0;
+
+	/* Initialize test
+	 */
+	result = libcdata_list_initialize(
+	          &list,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list",
+	 list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test regular cases
+	 */
+	value1 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value1",
+	 value1 );
+
+	*value1 = 1;
+
+	result = libcdata_list_insert_value(
+	          list,
+	          (intptr_t *) value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = NULL;
+
+	/* Test error cases
+	 */
+	result = libcdata_list_insert_value(
+	          NULL,
+	          (intptr_t *) value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Clean up
+	 */
+	result = libcdata_list_free(
+	          &list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list",
+	 list );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	return( 1 );
+
+on_error:
+	if( error != NULL )
+	{
+		libcerror_error_free(
+		 &error );
+	}
+	if( value1 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( list != NULL )
+	{
+		libcdata_list_free(
+		 &list,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	return( 0 );
+}
+
+/* Tests the libcdata_list_insert_value_with_existing function
+ * Returns 1 if successful or 0 if not
+ */
+int cdata_test_list_insert_value_with_existing(
+     void )
+{
 	libcdata_list_t *list                 = NULL;
 	libcdata_list_element_t *list_element = NULL;
 	libcerror_error_t *error              = NULL;
+	intptr_t *existing_value              = NULL;
 	int *duplicate_value2                 = NULL;
 	int *value1                           = NULL;
 	int *value2                           = NULL;
@@ -6936,17 +7345,22 @@ int cdata_test_list_insert_value(
 
 	*value3 = 3;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) value3,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6965,17 +7379,22 @@ int cdata_test_list_insert_value(
 
 	*value1 = 1;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) value1,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -6994,17 +7413,22 @@ int cdata_test_list_insert_value(
 
 	*value2 = 2;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) value2,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -7023,17 +7447,22 @@ int cdata_test_list_insert_value(
 
 	*duplicate_value2 = 2;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) duplicate_value2,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 0 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -7050,17 +7479,22 @@ int cdata_test_list_insert_value(
 
 	*value4 = 4;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) value4,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -7070,17 +7504,22 @@ int cdata_test_list_insert_value(
 
 	/* Test if insert of a duplicate element succeeds
 	 */
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) duplicate_value2,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -7101,17 +7540,22 @@ int cdata_test_list_insert_value(
 
 	/* Test error cases
 	 */
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          NULL,
 	          (intptr_t *) value5,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -7122,15 +7566,16 @@ int cdata_test_list_insert_value(
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
-	/* Test libcdata_list_insert_value with malloc failing in libcdata_list_element_initialize
+	/* Test libcdata_list_insert_value_with_existing with malloc failing in libcdata_list_element_initialize
 	 */
 	cdata_test_malloc_attempts_before_fail = 0;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) value5,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	if( cdata_test_malloc_attempts_before_fail != -1 )
@@ -7186,6 +7631,10 @@ int cdata_test_list_insert_value(
 			 list_element );
 
 			CDATA_TEST_ASSERT_IS_NULL(
+			 "existing_value",
+			 existing_value );
+
+			CDATA_TEST_ASSERT_IS_NULL(
 			 "error",
 			 error );
 		}
@@ -7196,6 +7645,10 @@ int cdata_test_list_insert_value(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_value",
+		 existing_value );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -7208,15 +7661,16 @@ int cdata_test_list_insert_value(
 
 #if defined( HAVE_CDATA_TEST_RWLOCK )
 
-	/* Test libcdata_list_insert_value with pthread_rwlock_wrlock failing in libcdata_list_insert_element
+	/* Test libcdata_list_insert_value_with_existing with pthread_rwlock_wrlock failing in libcdata_list_insert_value_with_existing
 	 */
 	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
 
-	result = libcdata_list_insert_value(
+	result = libcdata_list_insert_value_with_existing(
 	          list,
 	          (intptr_t *) value5,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
 	          0,
+	          &existing_value,
 	          &error );
 
 	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
@@ -7272,6 +7726,10 @@ int cdata_test_list_insert_value(
 			 list_element );
 
 			CDATA_TEST_ASSERT_IS_NULL(
+			 "existing_value",
+			 existing_value );
+
+			CDATA_TEST_ASSERT_IS_NULL(
 			 "error",
 			 error );
 		}
@@ -7282,6 +7740,10 @@ int cdata_test_list_insert_value(
 		 "result",
 		 result,
 		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_value",
+		 existing_value );
 
 		CDATA_TEST_ASSERT_IS_NOT_NULL(
 		 "error",
@@ -8087,8 +8549,16 @@ int main(
 	 cdata_test_list_insert_element );
 
 	CDATA_TEST_RUN(
+	 "libcdata_list_insert_element_with_existing",
+	 cdata_test_list_insert_element_with_existing );
+
+	CDATA_TEST_RUN(
 	 "libcdata_list_insert_value",
 	 cdata_test_list_insert_value );
+
+	CDATA_TEST_RUN(
+	 "libcdata_list_insert_value_with_existing",
+	 cdata_test_list_insert_value_with_existing );
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_remove_element",

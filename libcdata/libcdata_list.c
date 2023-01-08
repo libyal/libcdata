@@ -2106,18 +2106,66 @@ int libcdata_list_insert_element(
      uint8_t insert_flags,
      libcerror_error_t **error )
 {
-	libcdata_internal_list_t *internal_list       = NULL;
-	libcdata_list_element_t *list_element         = NULL;
-	libcdata_list_element_t *next_element         = NULL;
-	libcdata_list_element_t *previous_element     = NULL;
-	intptr_t *value_to_insert                     = NULL;
-	static char *function                         = "libcdata_list_insert_element";
-	int element_index                             = 0;
-	int result                                    = 1;
+	libcdata_list_element_t *existing_element = NULL;
+	static char *function                     = "libcdata_list_insert_element";
+	int result                                = 0;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element_to_insert,
+	          value_compare_function,
+	          insert_flags,
+	          &existing_element,
+	          error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert element into list.",
+		 function );
+
+		return( -1 );
+	}
+	return( result );
+}
+
+/* Inserts a list element into the list
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * Returns 1 if successful, 0 if the list element already exists or -1 on error
+ */
+int libcdata_list_insert_element_with_existing(
+     libcdata_list_t *list,
+     libcdata_list_element_t *element_to_insert,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     libcdata_list_element_t **existing_element,
+     libcerror_error_t **error )
+{
+	libcdata_internal_list_t *internal_list        = NULL;
+	libcdata_list_element_t *next_element          = NULL;
+	libcdata_list_element_t *previous_element      = NULL;
+	libcdata_list_element_t *safe_existing_element = NULL;
+	intptr_t *value_to_insert                      = NULL;
+	static char *function                          = "libcdata_list_insert_element_with_existing";
+	int element_index                              = 0;
+	int result                                     = 1;
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
-	libcdata_list_element_t *backup_first_element = NULL;
-	libcdata_list_element_t *backup_last_element  = NULL;
+	libcdata_list_element_t *backup_first_element  = NULL;
+	libcdata_list_element_t *backup_last_element   = NULL;
 #endif
 
 	if( list == NULL )
@@ -2217,6 +2265,19 @@ int libcdata_list_insert_element(
 
 		return( -1 );
 	}
+	if( existing_element == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid existing element.",
+		 function );
+
+		return( -1 );
+	}
+	*existing_element = NULL;
+
 	if( libcdata_list_element_get_elements(
 	     element_to_insert,
 	     &previous_element,
@@ -2274,7 +2335,8 @@ int libcdata_list_insert_element(
 	}
 	backup_first_element = internal_list->first_element;
 	backup_last_element  = internal_list->last_element;
-#endif
+
+#endif /* defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA ) */
 
 	result = libcdata_internal_list_insert_element_find_element(
 	          internal_list,
@@ -2282,7 +2344,7 @@ int libcdata_list_insert_element(
 	          value_compare_function,
 	          insert_flags,
 	          &element_index,
-	          &list_element,
+	          &safe_existing_element,
 	          error );
 
 	if( result == -1 )
@@ -2296,12 +2358,16 @@ int libcdata_list_insert_element(
 
 		result = -1;
 	}
-	else if( result == 1 )
+	else if( result == 0 )
 	{
-		if( list_element != NULL )
+		*existing_element = safe_existing_element;
+	}
+	else
+	{
+		if( safe_existing_element != NULL )
 		{
 			if( libcdata_list_element_get_elements(
-			     list_element,
+			     safe_existing_element,
 			     &previous_element,
 			     &next_element,
 			     error ) != 1 )
@@ -2321,7 +2387,7 @@ int libcdata_list_insert_element(
 		{
 			if( libcdata_internal_list_insert_element_before_element(
 			     internal_list,
-			     list_element,
+			     safe_existing_element,
 			     element_to_insert,
 			     error ) != 1 )
 			{
@@ -2354,6 +2420,7 @@ int libcdata_list_insert_element(
 	return( result );
 
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
+
 on_error:
 	if( result == 1 )
 	{
@@ -2363,10 +2430,10 @@ on_error:
 		 NULL,
 		 NULL );
 
-		if( list_element != NULL )
+		if( safe_existing_element != NULL )
 		{
 			libcdata_list_element_set_elements(
-			 list_element,
+			 safe_existing_element,
 			 previous_element,
 			 next_element,
 			 NULL );
@@ -2384,7 +2451,8 @@ on_error:
 		internal_list->number_of_elements -= 1;
 	}
 	return( -1 );
-#endif
+
+#endif /* defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA ) */
 }
 
 /* Inserts a value to the list
@@ -2410,9 +2478,73 @@ int libcdata_list_insert_value(
      uint8_t insert_flags,
      libcerror_error_t **error )
 {
-	libcdata_list_element_t *element = NULL;
-	static char *function            = "libcdata_list_insert_value";
-	int result                       = 1;
+	intptr_t *existing_value = NULL;
+	static char *function    = "libcdata_list_insert_value";
+	int result               = 0;
+
+	result = libcdata_list_insert_value_with_existing(
+	          list,
+	          value,
+	          value_compare_function,
+	          insert_flags,
+	          &existing_value,
+	          error );
+
+	if( result == -1 )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+		 LIBCERROR_RUNTIME_ERROR_APPEND_FAILED,
+		 "%s: unable to insert value into list.",
+		 function );
+
+		return( -1 );
+	}
+	return( result );
+}
+
+/* Inserts a value to the list
+ *
+ * Creates a new list element
+ *
+ * Uses the value_compare_function to determine the order of the entries
+ * The value_compare_function should return LIBCDATA_COMPARE_LESS,
+ * LIBCDATA_COMPARE_EQUAL, LIBCDATA_COMPARE_GREATER if successful or -1 on error
+ *
+ * Duplicate entries are allowed by default and inserted after the last duplicate value.
+ * Only allowing unique entries can be enforced by setting the flag LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES
+ *
+ * Returns 1 if successful, 0 if the list element already exists or -1 on error
+ */
+int libcdata_list_insert_value_with_existing(
+     libcdata_list_t *list,
+     intptr_t *value,
+     int (*value_compare_function)(
+            intptr_t *first_value,
+            intptr_t *second_value,
+            libcerror_error_t **error ),
+     uint8_t insert_flags,
+     intptr_t **existing_value,
+     libcerror_error_t **error )
+{
+	libcdata_list_element_t *element          = NULL;
+	libcdata_list_element_t *existing_element = NULL;
+	static char *function                     = "libcdata_list_insert_value_with_existing";
+	int result                                = 1;
+
+	if( existing_value == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid existing value.",
+		 function );
+
+		return( -1 );
+	}
+	*existing_value = NULL;
 
 	if( libcdata_list_element_initialize(
 	     &element,
@@ -2441,11 +2573,12 @@ int libcdata_list_insert_value(
 
 		goto on_error;
 	}
-	result = libcdata_list_insert_element(
+	result = libcdata_list_insert_element_with_existing(
 	          list,
 	          element,
 	          value_compare_function,
 	          insert_flags,
+	          &existing_element,
 	          error );
 
 	if( result == -1 )
@@ -2471,6 +2604,20 @@ int libcdata_list_insert_value(
 			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
 			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
 			 "%s: unable to free list element.",
+			 function );
+
+			goto on_error;
+		}
+		if( libcdata_list_element_get_value(
+		     existing_element,
+		     existing_value,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_GET_FAILED,
+			 "%s: unable to retrieve value from existing list element.",
 			 function );
 
 			goto on_error;

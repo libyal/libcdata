@@ -1,4 +1,4 @@
-.Dd June 25, 2021
+.Dd January  8, 2023
 .Dt libcdata 3
 .Os libcdata
 .Sh NAME
@@ -103,7 +103,11 @@ List functions
 .Ft int
 .Fn libcdata_list_insert_element "libcdata_list_t *list" "libcdata_list_element_t *element_to_insert" "int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error )" "uint8_t insert_flags" "libcdata_error_t **error"
 .Ft int
+.Fn libcdata_list_insert_element_with_existing "libcdata_list_t *list" "libcdata_list_element_t *element_to_insert" "int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error )" "uint8_t insert_flags" "libcdata_list_element_t **existing_element" "libcdata_error_t **error"
+.Ft int
 .Fn libcdata_list_insert_value "libcdata_list_t *list" "intptr_t *value" "int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error )" "uint8_t insert_flags" "libcdata_error_t **error"
+.Ft int
+.Fn libcdata_list_insert_value_with_existing "libcdata_list_t *list" "intptr_t *value" "int (*value_compare_function)( intptr_t *first, intptr_t *second, libcdata_error_t **error )" "uint8_t insert_flags" "intptr_t **existing_value" "libcdata_error_t **error"
 .Ft int
 .Fn libcdata_list_remove_element "libcdata_list_t *list" "libcdata_list_element_t *element_to_remove" "libcdata_error_t **error"
 .Pp
