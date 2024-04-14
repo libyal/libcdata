@@ -14,13 +14,11 @@ EXTRA_DIST = \
 	libcdata/features.h.in \
 	libcdata/types.h.in
 
-MAINTAINERCLEANFILES = \
+DISTCLEANFILES = \
+	libcdata.h \
+	libcdata/definitions.h \
+	libcdata/features.h \
+	libcdata/types.h \
+	Makefile \
 	Makefile.in
-
-distclean: clean
-	-rm -f libcdata.h
-	-rm -f libcdata/definitions.h
-	-rm -f libcdata/features.h
-	-rm -f libcdata/types.h
-	-rm -f Makefile
 
