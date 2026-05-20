@@ -30,12 +30,6 @@
 
 #include <libcdata/extern.h>
 
-#if defined( __CYGWIN__ ) || defined( __MINGW32__ )
-#define LIBCDATA_EXTERN_VARIABLE	extern
-#else
-#define LIBCDATA_EXTERN_VARIABLE	LIBCDATA_EXTERN
-#endif
-
 #else
 #define LIBCDATA_EXTERN		/* extern */
 #define LIBCDATA_EXTERN_VARIABLE	extern
