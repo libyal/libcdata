@@ -167,8 +167,54 @@ int libcdata_tree_node_free(
 		}
 		*node = NULL;
 
+		if( libcdata_internal_tree_node_free(
+		     &internal_node,
+		     value_free_function,
+		     error ) != 1 )
+		{
+			libcerror_error_set(
+			 error,
+			 LIBCERROR_ERROR_DOMAIN_RUNTIME,
+			 LIBCERROR_RUNTIME_ERROR_FINALIZE_FAILED,
+			 "%s: unable to free node.",
+			 function );
+
+			result = -1;
+		}
+	}
+	return( result );
+}
+
+/* Frees a tree node, its sub nodes
+ * Note that this function assumes the node is no longer connected to other nodes
+ * Uses the value_free_function to free the value
+ * Returns 1 if successful or -1 on error
+ */
+int libcdata_internal_tree_node_free(
+     libcdata_internal_tree_node_t **internal_node,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error )
+{
+	static char *function = "libcdata_internal_tree_node_free";
+	int result            = 1;
+
+	if( internal_node == NULL )
+	{
+		libcerror_error_set(
+		 error,
+		 LIBCERROR_ERROR_DOMAIN_ARGUMENTS,
+		 LIBCERROR_ARGUMENT_ERROR_INVALID_VALUE,
+		 "%s: invalid node.",
+		 function );
+
+		return( -1 );
+	}
+	if( *internal_node != NULL )
+	{
 		if( libcdata_tree_node_empty(
-		     (libcdata_tree_node_t *) internal_node,
+		     (libcdata_tree_node_t *) *internal_node,
 		     value_free_function,
 		     error ) != 1 )
 		{
@@ -183,7 +229,7 @@ int libcdata_tree_node_free(
 		}
 #if defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA )
 		if( libcthreads_read_write_lock_free(
-		     &( internal_node->read_write_lock ),
+		     &( ( *internal_node )->read_write_lock ),
 		     error ) != 1 )
 		{
 			libcerror_error_set(
@@ -196,12 +242,12 @@ int libcdata_tree_node_free(
 			result = -1;
 		}
 #endif
-		if( internal_node->value != NULL )
+		if( ( *internal_node )->value != NULL )
 		{
 			if( value_free_function != NULL )
 			{
 				if( value_free_function(
-				     &( internal_node->value ),
+				     &( ( *internal_node )->value ),
 				     error ) != 1 )
 				{
 					libcerror_error_set(
@@ -213,11 +259,13 @@ int libcdata_tree_node_free(
 
 					result = -1;
 				}
-				internal_node->value = NULL;
+				( *internal_node )->value = NULL;
 			}
 		}
 		memory_free(
-		 internal_node );
+		 *internal_node );
+
+		*internal_node = NULL;
 	}
 	return( result );
 }
@@ -351,8 +399,8 @@ int libcdata_tree_node_empty(
 
 			goto on_error;
 		}
-		if( libcdata_tree_node_free(
-		     &sub_node,
+		if( libcdata_internal_tree_node_free(
+		     (libcdata_internal_tree_node_t **) &sub_node,
 		     value_free_function,
 		     error ) != 1 )
 		{
@@ -607,8 +655,8 @@ int libcdata_tree_node_clone(
 		 "%s: unable to release read/write lock for reading.",
 		 function );
 
-		libcdata_tree_node_free(
-		 &destination_sub_node,
+		libcdata_internal_tree_node_free(
+		 (libcdata_internal_tree_node_t **) &destination_sub_node,
 		 value_free_function,
 		 NULL );
 
@@ -627,15 +675,15 @@ on_error:
 #endif
 	if( destination_sub_node != NULL )
 	{
-		libcdata_tree_node_free(
-		 &destination_sub_node,
+		libcdata_internal_tree_node_free(
+		 (libcdata_internal_tree_node_t **) &destination_sub_node,
 		 value_free_function,
 		 NULL );
 	}
 	if( internal_destination_node != NULL )
 	{
-		libcdata_tree_node_free(
-		 (libcdata_tree_node_t **) &internal_destination_node,
+		libcdata_internal_tree_node_free(
+		 &internal_destination_node,
 		 value_free_function,
 		 NULL );
 	}
@@ -2371,8 +2419,8 @@ int libcdata_tree_node_append_value(
 on_error:
 	if( sub_node != NULL )
 	{
-		libcdata_tree_node_free(
-		 &sub_node,
+		libcdata_internal_tree_node_free(
+		 (libcdata_internal_tree_node_t **) &sub_node,
 		 NULL,
 		 NULL );
 	}
@@ -3047,7 +3095,8 @@ on_error:
 		internal_node->number_of_sub_nodes -= 1;
 	}
 	return( -1 );
-#endif
+
+#endif /* defined( HAVE_MULTI_THREAD_SUPPORT ) && !defined( HAVE_LOCAL_LIBCDATA ) */
 }
 
 /* Inserts a value in the node
@@ -3135,8 +3184,8 @@ int libcdata_tree_node_insert_value(
 	}
 	else if( result == 0 )
 	{
-		if( libcdata_tree_node_free(
-		     &sub_node,
+		if( libcdata_internal_tree_node_free(
+		     (libcdata_internal_tree_node_t **) &sub_node,
 		     NULL,
 		     error ) != 1 )
 		{
@@ -3150,13 +3199,19 @@ int libcdata_tree_node_insert_value(
 			goto on_error;
 		}
 	}
+#if defined( __clang_analyzer__ )
+	else
+	{
+		__builtin_assume( ( (libcdata_internal_tree_node_t *) node )->first_sub_node == sub_node );
+	}
+#endif
 	return( result );
 
 on_error:
 	if( sub_node != NULL )
 	{
-		libcdata_tree_node_free(
-		 &sub_node,
+		libcdata_internal_tree_node_free(
+		 (libcdata_internal_tree_node_t **) &sub_node,
 		 NULL,
 		 NULL );
 	}

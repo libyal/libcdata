@@ -3761,13 +3761,16 @@ int cdata_test_list_prepend_value(
      void )
 {
 	libcdata_list_t *list                 = NULL;
-	libcdata_list_element_t *list_element = NULL;
 	libcerror_error_t *error              = NULL;
 	int *value1                           = NULL;
 	int *value2                           = NULL;
 	int *value3                           = NULL;
 	int number_of_elements                = 0;
 	int result                            = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+	libcdata_list_element_t *list_element = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -4768,13 +4771,16 @@ int cdata_test_list_append_value(
      void )
 {
 	libcdata_list_t *list                 = NULL;
-	libcdata_list_element_t *list_element = NULL;
 	libcerror_error_t *error              = NULL;
 	int *value1                           = NULL;
 	int *value2                           = NULL;
 	int *value3                           = NULL;
 	int number_of_elements                = 0;
 	int result                            = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+	libcdata_list_element_t *list_element = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -7304,7 +7310,6 @@ int cdata_test_list_insert_value_with_existing(
      void )
 {
 	libcdata_list_t *list                 = NULL;
-	libcdata_list_element_t *list_element = NULL;
 	libcerror_error_t *error              = NULL;
 	intptr_t *existing_value              = NULL;
 	int *duplicate_value2                 = NULL;
@@ -7314,6 +7319,10 @@ int cdata_test_list_insert_value_with_existing(
 	int *value4                           = NULL;
 	int *value5                           = NULL;
 	int result                            = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+	libcdata_list_element_t *list_element = NULL;
+#endif
 
 	/* Initialize test
 	 */

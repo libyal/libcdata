@@ -4133,12 +4133,15 @@ int cdata_test_array_prepend_entry(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	intptr_t **entries       = NULL;
-	int *entry_value         = NULL;
 	int *value1              = NULL;
 	int *value2              = NULL;
 	int *value3              = NULL;
 	int number_of_entries    = 0;
 	int result               = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+	int *entry_value         = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -4658,13 +4661,16 @@ int cdata_test_array_append_entry(
 	libcdata_array_t *array  = NULL;
 	libcerror_error_t *error = NULL;
 	intptr_t **entries       = NULL;
-	int *entry_value         = NULL;
 	int *value1              = NULL;
 	int *value2              = NULL;
 	int *value3              = NULL;
 	int entry_index          = 0;
 	int number_of_entries    = 0;
 	int result               = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+	int *entry_value         = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -5239,7 +5245,6 @@ int cdata_test_array_insert_entry(
 	libcerror_error_t *error = NULL;
 	intptr_t **entries       = NULL;
 	int *duplicate_value2    = NULL;
-	int *entry_value         = NULL;
 	int *value1              = NULL;
 	int *value2              = NULL;
 	int *value3              = NULL;
@@ -5248,6 +5253,10 @@ int cdata_test_array_insert_entry(
 	int entry_index          = 0;
 	int number_of_entries    = 0;
 	int result               = 0;
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+	int *entry_value         = NULL;
+#endif
 
 	/* Initialize test
 	 */

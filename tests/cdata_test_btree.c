@@ -492,10 +492,14 @@ on_error:
 int cdata_test_btree_get_value_by_index(
      void )
 {
-	libcdata_btree_t *btree  = NULL;
-	libcerror_error_t *error = NULL;
-	intptr_t *value          = NULL;
-	int result               = 0;
+	libcdata_btree_t *btree          = NULL;
+	libcdata_tree_node_t *upper_node = NULL;
+	libcerror_error_t *error         = NULL;
+	intptr_t *existing_value         = NULL;
+	intptr_t *test_value             = NULL;
+	int result                       = 0;
+	int value1                       = 1;
+	int value_index                  = 0;
 
 	/* Initialize test
 	 */
@@ -517,21 +521,63 @@ int cdata_test_btree_get_value_by_index(
 	 "error",
 	 error );
 
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	/* Test regular cases
 	 */
+	result = libcdata_btree_get_value_by_index(
+	          btree,
+	          0,
+	          &test_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "test_value",
+	 test_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
+	test_value = NULL;
+
 	result = libcdata_btree_get_value_by_index(
 	          NULL,
 	          0,
-	          &value,
+	          &test_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "test_value",
+	 test_value );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -543,13 +589,17 @@ int cdata_test_btree_get_value_by_index(
 	result = libcdata_btree_get_value_by_index(
 	          btree,
 	          -1,
-	          &value,
+	          &test_value,
 	          &error );
 
 	CDATA_TEST_ASSERT_EQUAL_INT(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "test_value",
+	 test_value );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -568,6 +618,10 @@ int cdata_test_btree_get_value_by_index(
 	 "result",
 	 result,
 	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "test_value",
+	 test_value );
 
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "error",
@@ -624,8 +678,11 @@ int cdata_test_btree_get_value_by_value(
 	libcdata_tree_node_t *upper_node = NULL;
 	libcerror_error_t *error         = NULL;
 	intptr_t *existing_value         = NULL;
+	intptr_t *test_value             = NULL;
 	int result                       = 0;
 	int value1                       = 1;
+	int value2                       = 2;
+	int value_index                  = 0;
 
 	/* Initialize test
 	 */
@@ -647,14 +704,87 @@ int cdata_test_btree_get_value_by_value(
 	 "error",
 	 error );
 
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 	/* Test regular cases
 	 */
+	upper_node     = NULL;
+	existing_value = NULL;
+
+	result = libcdata_btree_get_value_by_value(
+	          btree,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "upper_node",
+	 upper_node );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "existing_value",
+	 existing_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	upper_node     = NULL;
+	existing_value = NULL;
+
+	result = libcdata_btree_get_value_by_value(
+	          btree,
+	          (intptr_t *) &value2,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "upper_node",
+	 upper_node );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
 	result = libcdata_btree_get_value_by_value(
 	          NULL,
-	          (intptr_t *) &value1,
+	          (intptr_t *) &test_value,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          &existing_value,
@@ -694,7 +824,7 @@ int cdata_test_btree_get_value_by_value(
 
 	result = libcdata_btree_get_value_by_value(
 	          btree,
-	          (intptr_t *) &value1,
+	          (intptr_t *) &test_value,
 	          NULL,
 	          &upper_node,
 	          &existing_value,
@@ -714,7 +844,7 @@ int cdata_test_btree_get_value_by_value(
 
 	result = libcdata_btree_get_value_by_value(
 	          btree,
-	          (intptr_t *) &value1,
+	          (intptr_t *) &test_value,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          NULL,
 	          &existing_value,
@@ -734,7 +864,7 @@ int cdata_test_btree_get_value_by_value(
 
 	result = libcdata_btree_get_value_by_value(
 	          btree,
-	          (intptr_t *) &value1,
+	          (intptr_t *) &test_value,
 	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
 	          &upper_node,
 	          NULL,
@@ -802,6 +932,7 @@ int cdata_test_btree_insert_value(
 	intptr_t *existing_value         = NULL;
 	int result                       = 0;
 	int value1                       = 1;
+	int value2                       = 2;
 	int value_index                  = 0;
 
 	/* Initialize test
@@ -826,6 +957,59 @@ int cdata_test_btree_insert_value(
 
 	/* Test regular cases
 	 */
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 0 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value2,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 	/* Test error cases
 	 */
@@ -1002,6 +1186,7 @@ int cdata_test_btree_replace_value(
 	libcdata_btree_t *btree          = NULL;
 	libcdata_tree_node_t *upper_node = NULL;
 	libcerror_error_t *error         = NULL;
+	intptr_t *existing_value         = NULL;
 	int replacement_value            = 2;
 	int replacement_value_index      = 0;
 	int result                       = 0;
@@ -1023,6 +1208,24 @@ int cdata_test_btree_replace_value(
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "btree",
 	 btree );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",
@@ -1206,6 +1409,7 @@ int cdata_test_btree_remove_value(
 	libcdata_btree_t *btree          = NULL;
 	libcdata_tree_node_t *upper_node = NULL;
 	libcerror_error_t *error         = NULL;
+	intptr_t *existing_value         = NULL;
 	int result                       = 0;
 	int value_index                  = 0;
 	int value1                       = 1;
@@ -1225,6 +1429,24 @@ int cdata_test_btree_remove_value(
 	CDATA_TEST_ASSERT_IS_NOT_NULL(
 	 "btree",
 	 btree );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_btree_insert_value(
+	          btree,
+	          &value_index,
+	          (intptr_t *) &value1,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_btree_value_compare_function,
+	          &upper_node,
+	          &existing_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",

@@ -86,6 +86,13 @@ int libcdata_tree_node_free(
             libcerror_error_t **error ),
      libcerror_error_t **error );
 
+int libcdata_internal_tree_node_free(
+     libcdata_internal_tree_node_t **internal_node,
+     int (*value_free_function)(
+            intptr_t **value,
+            libcerror_error_t **error ),
+     libcerror_error_t **error );
+
 LIBCDATA_EXTERN \
 int libcdata_tree_node_empty(
      libcdata_tree_node_t *node,
