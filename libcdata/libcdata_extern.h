@@ -24,6 +24,19 @@
 
 #include <common.h>
 
+#if !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute )
+#if __has_attribute( visibility )
+#define LIBCDATA_INTERNAL	__attribute__((visibility("hidden"))) extern
+
+#else
+#define LIBCDATA_INTERNAL	extern
+
+#endif /* __has_attribute( visibility ) */
+#else
+#define LIBCDATA_INTERNAL	extern
+
+#endif /* !defined( __CYGWIN__ ) && !defined( _WIN32 ) && defined( __has_attribute ) */
+
 /* Define HAVE_LOCAL_LIBCDATA for local use of libcdata
  */
 #if !defined( HAVE_LOCAL_LIBCDATA )
@@ -32,7 +45,7 @@
 
 #else
 #define LIBCDATA_EXTERN		/* extern */
-#define LIBCDATA_EXTERN_VARIABLE	extern
+#define LIBCDATA_EXTERN_VARIABLE	LIBCDATA_INTERNAL
 
 #endif /* !defined( HAVE_LOCAL_LIBCDATA ) */
 
