@@ -2,8 +2,8 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libcdata],
-  [20260601],
-  [joachim.metz@gmail.com])
+  [20260609],
+  [https://github.com/libyal/libcdata/issues])
 
 AC_CONFIG_SRCDIR(
   [include/libcdata.h.in])
@@ -12,6 +12,8 @@ AM_INIT_AUTOMAKE([gnu 1.6 tar-ustar])
 AM_EXTRA_RECURSIVE_TARGETS([sources splint])
 
 AC_CONFIG_MACRO_DIR([m4])
+
+AC_CONFIG_TESTDIR([tests])
 
 dnl Check for host type
 AC_CANONICAL_HOST
@@ -122,6 +124,8 @@ AC_CONFIG_FILES([dpkg/changelog])
 AC_CONFIG_FILES([libcdata/libcdata.rc])
 AC_CONFIG_FILES([libcdata.pc])
 AC_CONFIG_FILES([libcdata.spec])
+dnl Generate test configuration files
+AC_CONFIG_FILES([tests/atlocal])
 dnl Generate a source configuration file
 AC_CONFIG_HEADERS([common/config.h])
 

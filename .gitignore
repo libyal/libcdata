@@ -1,6 +1,6 @@
 # Files to ignore by git
 #
-# Version: 20251129
+# Version: 20260604
 
 # Generic auto-generated build files
 *~
@@ -127,7 +127,12 @@ stamp-h[1-9]
 /libcdata.spec
 /libcdata/libcdata.rc
 /libcdata/libcdata_definitions.h
+/tests/*.dir
 /tests/*.exe
+/tests/*.log
+/tests/*.tmp
+/tests/atconfig
+/tests/atlocal
 /tests/cdata_test_array
 /tests/cdata_test_btree
 /tests/cdata_test_btree_node
@@ -139,6 +144,9 @@ stamp-h[1-9]
 /tests/cdata_test_range_list_value
 /tests/cdata_test_support
 /tests/cdata_test_tree_node
+/tests/package.m4
+/tests/test_library
+/tests/test_manpages
 /tests/tmp*
 
 # Local library dependencies specific files
