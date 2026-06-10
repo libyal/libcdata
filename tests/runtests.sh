@@ -3,9 +3,9 @@
 #
 # Version: 20260609
 
-if test -f ${PWD}/libcerror/.libs/libcerror.1.dylib && test -f ./pycerror/.libs/pycerror.so
+if test -f ${PWD}/libcdata/.libs/libcdata.1.dylib && test -f ./pycdata/.libs/pycdata.so
 then
-	install_name_tool -change /usr/local/lib/libcerror.1.dylib ${PWD}/libcerror/.libs/libcerror.1.dylib ./pycerror/.libs/pycerror.so
+	install_name_tool -change /usr/local/lib/libcdata.1.dylib ${PWD}/libcdata/.libs/libcdata.1.dylib ./pycdata/.libs/pycdata.so
 fi
 
 make check-build > /dev/null

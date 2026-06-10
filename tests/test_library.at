@@ -27,16 +27,8 @@ m4_define([AT_SETUP],
     ])
   )
 
+SETUP_HELPER_FUNCTIONS
+
 RUN_TEST_BINARIES(
   [SKIP_LIBRARY_TESTS],
-  [array
-  btree
-  btree_node
-  btree_values_list
-  error
-  list
-  list_element
-  range_list
-  range_list_value
-  support
-  tree_node])
+  [array btree btree_node btree_values_list error list list_element range_list range_list_value support tree_node])
