@@ -2,7 +2,7 @@ AC_PREREQ([2.71])
 
 AC_INIT(
   [libcdata],
-  [20260610],
+  [20260612],
   [https://github.com/libyal/libcdata/issues])
 
 AC_CONFIG_SRCDIR(
