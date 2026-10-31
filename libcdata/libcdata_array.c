@@ -752,15 +752,20 @@ int libcdata_internal_array_resize(
 	}
 	if( number_of_entries > internal_array->number_of_allocated_entries )
 	{
-		/* Pre-allocate in blocks of 16 entries
+		/* Grow the capacity by a factor of 2 to keep repeated appends of entries, constant
+		 * time on average.
 		 */
-		if( number_of_entries >= (int) ( INT_MAX - 16 ) )
+		if( number_of_entries >= ( INT_MAX / 2 ) )
 		{
 			number_of_allocated_entries = INT_MAX;
 		}
 		else
 		{
-			number_of_allocated_entries = ( number_of_entries & ~( 15 ) ) + 16;
+			number_of_allocated_entries = number_of_entries * 2;
+		}
+		if( number_of_allocated_entries < 16 )
+		{
+			number_of_allocated_entries = 16;
 		}
 #if SIZEOF_INT <= SIZEOF_SIZE_T
 		if( (size_t) number_of_allocated_entries > (size_t) ( SSIZE_MAX / sizeof( intptr_t * ) ) )
