@@ -357,7 +357,7 @@ int cdata_test_list_element_free(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Initialize test
 	 */
@@ -429,7 +429,7 @@ int cdata_test_list_element_free(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	return( 1 );
 
@@ -533,7 +533,7 @@ int cdata_test_list_element_get_parent_list(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_get_parent_list with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -589,7 +589,7 @@ int cdata_test_list_element_get_parent_list(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -694,7 +694,7 @@ int cdata_test_list_element_set_parent_list(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_set_parent_list with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -750,7 +750,7 @@ int cdata_test_list_element_set_parent_list(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -874,7 +874,7 @@ int cdata_test_list_element_get_previous_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_get_previous_element with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -930,7 +930,7 @@ int cdata_test_list_element_get_previous_element(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1035,7 +1035,7 @@ int cdata_test_list_element_set_previous_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_set_previous_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -1091,7 +1091,7 @@ int cdata_test_list_element_set_previous_element(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1213,7 +1213,7 @@ int cdata_test_list_element_get_next_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_get_next_element with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1269,7 +1269,7 @@ int cdata_test_list_element_get_next_element(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1374,7 +1374,7 @@ int cdata_test_list_element_set_next_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_set_next_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -1430,7 +1430,7 @@ int cdata_test_list_element_set_next_element(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1574,7 +1574,7 @@ int cdata_test_list_element_get_elements(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_get_elements with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1632,7 +1632,7 @@ int cdata_test_list_element_get_elements(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1740,7 +1740,7 @@ int cdata_test_list_element_set_elements(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_set_elements with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -1798,7 +1798,7 @@ int cdata_test_list_element_set_elements(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1920,7 +1920,7 @@ int cdata_test_list_element_get_value(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_get_value with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1976,7 +1976,7 @@ int cdata_test_list_element_get_value(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -2081,7 +2081,7 @@ int cdata_test_list_element_set_value(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_element_set_value with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -2137,7 +2137,7 @@ int cdata_test_list_element_set_value(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */

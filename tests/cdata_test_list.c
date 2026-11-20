@@ -396,11 +396,13 @@ on_error:
 int cdata_test_list_free(
      void )
 {
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 	libcdata_list_t *list    = NULL;
 #endif
+	libcdata_list_t *list2  = NULL;
 
 	libcerror_error_t *error = NULL;
+	int *value1              = NULL;
 	int result               = 0;
 
 	/* Test error cases
@@ -422,7 +424,79 @@ int cdata_test_list_free(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+	result = libcdata_list_initialize(
+	          &list2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value1",
+	 value1 );
+
+	*value1 = 1;
+
+	result = libcdata_list_append_value(
+	          list2,
+	          (intptr_t *) value1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_free with the value_free_function failing in libcdata_list_element_free
+	 */
+	cdata_test_list_value_free_function_return_value = -1;
+
+	result = libcdata_list_free(
+	          &list2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	cdata_test_list_value_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	memory_free(
+	 value1 );
+
+	value1 = NULL;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Initialize test
 	 */
@@ -494,7 +568,7 @@ int cdata_test_list_free(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	return( 1 );
 
@@ -504,7 +578,19 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+	if( value1 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+	if( list2 != NULL )
+	{
+		libcdata_list_free(
+		 &list2,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 	if( list != NULL )
 	{
 		libcdata_list_free(
@@ -526,6 +612,10 @@ int cdata_test_list_empty(
 	libcdata_list_element_t *element1 = NULL;
 	libcerror_error_t *error          = NULL;
 	int result                        = 0;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	int *value1                       = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -649,7 +739,7 @@ int cdata_test_list_empty(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_empty with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -779,7 +869,365 @@ int cdata_test_list_empty(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Test libcdata_list_empty with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element
+	 */
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element1",
+	 element1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* The handle to the element is retained, if the failure is injected
+	 * in libcdata_list_element_set_previous_element the element is orphaned
+	 * with a dangling previous element and needs to be retrieved here
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_list_empty(
+	          list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		/* The element was already removed and freed by a successful
+		 * libcdata_list_empty or is still owned by the list
+		 */
+		element1 = NULL;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_empty(
+			          list,
+			          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+
+		/* The failure was injected in libcdata_list_element_set_previous_element,
+		 * the first element of the list was already removed and freed by
+		 * libcdata_list_empty, while element1 is left with a (now dangling)
+		 * previous element, clear it otherwise libcdata_list_element_free
+		 * refuses to free the element
+		 */
+		result = libcdata_list_element_set_previous_element(
+	                element1,
+	                NULL,
+	                &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		result = libcdata_list_element_free(
+	                &element1,
+	                (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	                &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		element1 = NULL;
+	}
+	/* Test libcdata_list_empty with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element
+	 */
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element1",
+	 element1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	element1 = NULL;
+
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_list_empty(
+	          list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_empty(
+			          list,
+			          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	/* Test libcdata_list_empty with the value_free_function failing in libcdata_list_element_free
+	 */
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element1",
+	 element1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value1 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value1",
+	 value1 );
+
+	*value1 = 4;
+
+	result = libcdata_list_element_set_value(
+	          element1,
+	          (intptr_t *) value1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	element1 = NULL;
+
+	cdata_test_list_value_free_function_return_value = -1;
+
+	result = libcdata_list_empty(
+	          list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	cdata_test_list_value_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	memory_free(
+	 value1 );
+
+	value1 = NULL;
+
+	/* Test libcdata_list_empty with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 */
+	result = libcdata_list_element_initialize(
+	          &element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element1",
+	 element1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	element1 = NULL;
+
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 2;
+
+	result = libcdata_list_empty(
+	          list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_empty(
+			          list,
+			          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -809,6 +1257,13 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	if( value1 != NULL )
+	{
+		memory_free(
+		 value1 );
+	}
+#endif
 	if( element1 != NULL )
 	{
 		libcdata_list_element_free(
@@ -1118,7 +1573,7 @@ int cdata_test_list_clone(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_clone with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1202,7 +1657,81 @@ int cdata_test_list_clone(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Test libcdata_list_clone with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_read after copying the element values
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 4;
+
+	result = libcdata_list_clone(
+	          &destination_list,
+	          source_list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          (int (*)(intptr_t **, intptr_t *, libcerror_error_t **)) &cdata_test_list_value_clone_function,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( destination_list != NULL )
+		{
+			libcdata_list_free(
+			 &destination_list,
+			 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+			 &error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "destination_list",
+		 destination_list );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Test libcdata_list_clone with a corrupted source list
+	 */
+	( (libcdata_internal_list_t *) source_list )->number_of_elements = 2;
+
+	result = libcdata_list_clone(
+	          &destination_list,
+	          source_list,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          (int (*)(intptr_t **, intptr_t *, libcerror_error_t **)) &cdata_test_list_value_clone_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "destination_list",
+	 destination_list );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) source_list )->number_of_elements = 1;
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	/* Clean up
 	 */
@@ -1383,7 +1912,7 @@ int cdata_test_list_get_number_of_elements(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_get_number_of_elements with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1439,7 +1968,7 @@ int cdata_test_list_get_number_of_elements(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1618,7 +2147,7 @@ int cdata_test_list_get_first_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_get_first_element with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1674,7 +2203,7 @@ int cdata_test_list_get_first_element(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1967,6 +2496,102 @@ int cdata_test_internal_list_set_first_element(
 	libcerror_error_free(
 	 &error );
 
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+
+	/* Test libcdata_internal_list_set_first_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_internal_list_set_first_element(
+	          (libcdata_internal_list_t *) list,
+	          element1,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_element_set_elements(
+			          element1,
+			          NULL,
+			          NULL,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_internal_list_set_first_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_internal_list_set_first_element(
+	          (libcdata_internal_list_t *) list,
+	          element1,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_element_set_elements(
+			          element1,
+			          NULL,
+			          NULL,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
 	/* Clean up
 	 */
 	result = libcdata_list_element_free(
@@ -2183,7 +2808,7 @@ int cdata_test_list_get_last_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_get_last_element with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -2239,7 +2864,7 @@ int cdata_test_list_get_last_element(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -2532,6 +3157,102 @@ int cdata_test_internal_list_set_last_element(
 	libcerror_error_free(
 	 &error );
 
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+
+	/* Test libcdata_internal_list_set_last_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_internal_list_set_last_element(
+	          (libcdata_internal_list_t *) list,
+	          element1,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_element_set_elements(
+			          element1,
+			          NULL,
+			          NULL,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_internal_list_set_last_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_internal_list_set_last_element(
+	          (libcdata_internal_list_t *) list,
+	          element1,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_element_set_elements(
+			          element1,
+			          NULL,
+			          NULL,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
 	/* Clean up
 	 */
 	result = libcdata_list_element_free(
@@ -2628,6 +3349,13 @@ int cdata_test_list_get_element_by_index(
 	int *value2                           = NULL;
 	int *value3                           = NULL;
 	int result                            = 0;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	libcdata_list_t *list2                = NULL;
+	libcdata_list_element_t *element2     = NULL;
+#endif
+#endif
 
 	/* Initialize test
 	 */
@@ -2823,7 +3551,7 @@ int cdata_test_list_get_element_by_index(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_get_element_by_index with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -2881,7 +3609,197 @@ int cdata_test_list_get_element_by_index(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Test libcdata_list_get_element_by_index on corrupted lists
+	 */
+	result = libcdata_list_element_initialize(
+	          &element2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element2",
+	 element2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_initialize(
+	          &list2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list2,
+	          element2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 6;
+
+	list_element = NULL;
+
+	result = libcdata_list_get_element_by_index(
+	          list2,
+	          2,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test libcdata_list_get_element_by_index with pthread_rwlock_rdlock failing in libcdata_list_element_get_next_element
+	 */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 1;
+
+	list_element = NULL;
+
+	result = libcdata_list_get_element_by_index(
+	          list2,
+	          2,
+	          &list_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 4;
+
+	list_element = NULL;
+
+	result = libcdata_list_get_element_by_index(
+	          list2,
+	          1,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->last_element  = NULL;
+
+	list_element = NULL;
+
+	result = libcdata_list_get_element_by_index(
+	          list2,
+	          2,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 0;
+	( (libcdata_internal_list_t *) list2 )->first_element       = NULL;
+
+	result = libcdata_list_element_free(
+	          &element2,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element2",
+	 element2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_free(
+	          &list2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -2933,6 +3851,29 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
 		 NULL );
 	}
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	if( list2 != NULL )
+	{
+		( (libcdata_internal_list_t *) list2 )->first_element = NULL;
+		( (libcdata_internal_list_t *) list2 )->last_element  = NULL;
+	}
+	if( element2 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element2,
+		 NULL,
+		 NULL );
+	}
+	if( list2 != NULL )
+	{
+		libcdata_list_free(
+		 &list2,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+#endif
 	return( 0 );
 }
 
@@ -3090,7 +4031,7 @@ int cdata_test_list_get_value_by_index(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test cdata_test_list_get_value_by_index with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -3148,7 +4089,38 @@ int cdata_test_list_get_value_by_index(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+
+	/* Test cdata_test_list_get_value_by_index with pthread_rwlock_rdlock failing in libcdata_list_element_get_value
+	 */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 1;
+
+	element_value = NULL;
+
+	result = libcdata_list_get_value_by_index(
+	          list,
+	          0,
+	          (intptr_t **) &element_value,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -3219,6 +4191,11 @@ int cdata_test_list_prepend_element(
 	int *value3                       = NULL;
 	int number_of_elements            = 0;
 	int result                        = 0;
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	libcdata_list_t *list2            = NULL;
+	libcdata_list_element_t *element4 = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -3532,7 +4509,7 @@ int cdata_test_list_prepend_element(
 	 "error",
 	 error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_prepend_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -3660,7 +4637,398 @@ int cdata_test_list_prepend_element(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Test libcdata_list_prepend_element with pthread_rwlock_rdlock failing in libcdata_list_element_get_elements */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 0;
+
+	result = libcdata_list_prepend_element(
+	          list,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_remove_element(
+			          list,
+			          element3,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_prepend_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_list_prepend_element(
+	          list,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_remove_element(
+			          list,
+			          element3,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_prepend_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 2;
+
+	result = libcdata_list_prepend_element(
+	          list,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_remove_element(
+			          list,
+			          element3,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Test libcdata_list_prepend_element on corrupted lists
+	 */
+	result = libcdata_list_element_initialize(
+	          &element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element4",
+	 element4 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_initialize(
+	          &list2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element4;
+
+	result = libcdata_list_prepend_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element  = element4;
+
+	result = libcdata_list_prepend_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->last_element       = NULL;
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 1;
+
+	result = libcdata_list_prepend_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element4;
+
+	result = libcdata_list_prepend_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 0;
+	( (libcdata_internal_list_t *) list2 )->first_element      = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element       = NULL;
+
+	/* Test libcdata_list_prepend_element on a list element already part of a list
+	 */
+	result = libcdata_list_element_set_next_element(
+	          element3,
+	          element3,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_prepend_element(
+	          list,
+	          element3,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_list_element_set_next_element(
+	          element3,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_free(
+	          &element4,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element4",
+	 element4 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_free(
+	          &list2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	/* Clean up
 	 */
@@ -3751,6 +5119,23 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
 		 NULL );
 	}
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	if( element4 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element4,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	if( list2 != NULL )
+	{
+		libcdata_list_free(
+		 &list2,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 	return( 0 );
 }
 
@@ -3768,7 +5153,7 @@ int cdata_test_list_prepend_value(
 	int number_of_elements                = 0;
 	int result                            = 0;
 
-#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 	libcdata_list_element_t *list_element = NULL;
 #endif
 
@@ -4052,7 +5437,7 @@ int cdata_test_list_prepend_value(
 
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_prepend_value with pthread_rwlock_wrlock failing in libcdata_list_prepend_element
 	 */
@@ -4153,7 +5538,158 @@ int cdata_test_list_prepend_value(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Test libcdata_list_prepend_value with pthread_rwlock_wrlock failing in libcdata_list_element_set_value
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 3;
+
+	result = libcdata_list_prepend_value(
+	          list,
+	          (intptr_t *) value3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_get_first_element(
+			          list,
+			          &list_element,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "list_element",
+			 list_element );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			result = libcdata_list_remove_element(
+			          list,
+			          list_element,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			result = libcdata_list_element_free(
+			          &list_element,
+			          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "list_element",
+			 list_element );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			value3 = NULL;
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+
+		result = libcdata_list_get_first_element(
+		          list,
+		          &list_element,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "list_element",
+		 list_element );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		result = libcdata_list_remove_element(
+		          list,
+		          list_element,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		result = libcdata_list_element_free(
+		          &list_element,
+		          NULL,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "list_element",
+		 list_element );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -4229,6 +5765,11 @@ int cdata_test_list_append_element(
 	int *value3                       = NULL;
 	int number_of_elements            = 0;
 	int result                        = 0;
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	libcdata_list_t *list2            = NULL;
+	libcdata_list_element_t *element4 = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -4542,7 +6083,7 @@ int cdata_test_list_append_element(
 	 "error",
 	 error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_append_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -4670,7 +6211,336 @@ int cdata_test_list_append_element(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Test libcdata_list_append_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_list_append_element(
+	          list,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_remove_element(
+			          list,
+			          element3,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_append_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 2;
+
+	result = libcdata_list_append_element(
+	          list,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_remove_element(
+			          list,
+			          element3,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Test libcdata_list_append_element on corrupted lists
+	 */
+	result = libcdata_list_element_initialize(
+	          &element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element4",
+	 element4 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_initialize(
+	          &list2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element4;
+
+	result = libcdata_list_append_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element  = element4;
+
+	result = libcdata_list_append_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->last_element         = NULL;
+	( (libcdata_internal_list_t *) list2 )->number_of_elements   = 1;
+
+	result = libcdata_list_append_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element4;
+
+	result = libcdata_list_append_element(
+	          list2,
+	          element4,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 0;
+	( (libcdata_internal_list_t *) list2 )->first_element       = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element        = NULL;
+
+	/* Test libcdata_list_append_element on a list element already part of a list
+	 */
+	result = libcdata_list_element_set_next_element(
+	          element3,
+	          element3,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element3,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_list_element_set_next_element(
+	          element3,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_free(
+	          &element4,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element4",
+	 element4 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_free(
+	          &list2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	/* Clean up
 	 */
@@ -4761,6 +6631,23 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
 		 NULL );
 	}
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	if( element4 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element4,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	if( list2 != NULL )
+	{
+		libcdata_list_free(
+		 &list2,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 	return( 0 );
 }
 
@@ -4778,7 +6665,7 @@ int cdata_test_list_append_value(
 	int number_of_elements                = 0;
 	int result                            = 0;
 
-#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 	libcdata_list_element_t *list_element = NULL;
 #endif
 
@@ -5062,7 +6949,7 @@ int cdata_test_list_append_value(
 
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_append_value with pthread_rwlock_wrlock failing in libcdata_list_append_element
 	 */
@@ -5163,7 +7050,7 @@ int cdata_test_list_append_value(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -5914,6 +7801,150 @@ int cdata_test_internal_list_insert_element_before_element(
 	libcerror_error_free(
 	 &error );
 
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+
+	/* Test libcdata_internal_list_insert_element_before_element with pthread_rwlock_rdlock failing in libcdata_list_element_get_previous_element */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 0;
+
+	result = libcdata_internal_list_insert_element_before_element(
+	          (libcdata_internal_list_t *) list,
+	          test_element2,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_internal_list_insert_element_before_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_internal_list_insert_element_before_element(
+	          (libcdata_internal_list_t *) list,
+	          NULL,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_internal_list_insert_element_before_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_elements */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 0;
+
+	result = libcdata_internal_list_insert_element_before_element(
+	          (libcdata_internal_list_t *) list,
+	          test_element2,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_internal_list_insert_element_before_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_internal_list_insert_element_before_element(
+	          (libcdata_internal_list_t *) list,
+	          test_element2,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_internal_list_insert_element_before_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 2;
+
+	result = libcdata_internal_list_insert_element_before_element(
+	          (libcdata_internal_list_t *) list,
+	          test_element2,
+	          element3,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
 	/* Clean up
 	 */
 	result = libcdata_list_element_free(
@@ -6006,7 +8037,7 @@ on_error:
 	return( 0 );
 }
 
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 /* Tests the libcdata_list_insert_element function
  * Returns 1 if successful or 0 if not
@@ -6204,6 +8235,7 @@ int cdata_test_list_insert_element_with_existing(
 	libcdata_list_element_t *element3           = NULL;
 	libcdata_list_element_t *element4           = NULL;
 	libcdata_list_element_t *element5           = NULL;
+	libcdata_list_element_t *element8           = NULL;
 	libcdata_list_element_t *existing_element   = NULL;
 	libcerror_error_t *error                    = NULL;
 	int *duplicate_value2                       = NULL;
@@ -6212,8 +8244,19 @@ int cdata_test_list_insert_element_with_existing(
 	int *value3                                 = NULL;
 	int *value4                                 = NULL;
 	int *value5                                 = NULL;
+	int *value8                                 = NULL;
 	int number_of_elements                      = 0;
 	int result                                  = 0;
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	libcdata_list_t *list2                     = NULL;
+	libcdata_list_element_t *element6          = NULL;
+	libcdata_list_element_t *element7          = NULL;
+	libcdata_list_element_t *list_element      = NULL;
+	intptr_t *value_ptr                        = NULL;
+	int *value7                                = NULL;
+	int element_index                          = 0;
+#endif
 
 	/* Initialize test
 	 */
@@ -6900,7 +8943,59 @@ int cdata_test_list_insert_element_with_existing(
 	 "error",
 	 error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+	/* Test libcdata_list_insert_element_with_existing with invalid value compare function
+	 */
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          NULL,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test libcdata_list_insert_element_with_existing with unsupported insert flags
+	 */
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0x02,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_element",
+	 existing_element );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -7050,7 +9145,881 @@ int cdata_test_list_insert_element_with_existing(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_rdlock failing in libcdata_list_element_get_elements */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 0;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_rdlock failing in libcdata_list_element_get_value */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 1;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Create an insert element with the value of the second list element
+	 */
+	result = libcdata_list_element_initialize(
+	          &element7,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element7",
+	 element7 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value7 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value7",
+	 value7 );
+
+	*value7 = 2;
+
+	result = libcdata_list_element_set_value(
+	          element7,
+	          (intptr_t *) value7,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value7 = NULL;
+
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_rdlock
+	 * failing in libcdata_list_element_get_elements of the existing element
+	 */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 5;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element7,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write (insert before existing element) */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 9;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element7,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_free(
+	          &element7,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element7",
+	 element7 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_unlock
+	 * failing in libcthreads_read_write_lock_release_for_write (append)
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 14;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Create an insert element with a value smaller than the value of the first list element
+	 */
+	result = libcdata_list_element_initialize(
+	          &element8,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element8",
+	 element8 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value8 = (int *) memory_allocate(
+	                  sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value8",
+	 value8 );
+
+	*value8 = 0;
+
+	result = libcdata_list_element_set_value(
+	          element8,
+	          (intptr_t *) value8,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	value8 = NULL;
+
+	/* Test libcdata_list_insert_element_with_existing with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write (insert before the first element)
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 7;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list,
+	          element8,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+		if( result == 1 )
+		{
+			result = libcdata_list_remove_element(
+			          list,
+			          element8,
+			          &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "existing_element",
+			 existing_element );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_element",
+		 existing_element );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_free(
+	          &element8,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element8",
+	 element8 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
+
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Test libcdata_list_insert_element_with_existing on corrupted lists
+	 */
+	result = libcdata_list_element_initialize(
+	          &element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element6",
+	 element6 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_initialize(
+	          &list2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element6;;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list2,
+	          element6,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = NULL;;
+	( (libcdata_internal_list_t *) list2 )->last_element  = element6;;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list2,
+	          element6,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = NULL;;
+	( (libcdata_internal_list_t *) list2 )->last_element  = element6;;
+	( (libcdata_internal_list_t *) list2 )->number_of_elements   = 1;;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list2,
+	          element6,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element6;;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list2,
+	          element6,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->last_element  = NULL;
+
+	result = libcdata_list_insert_element_with_existing(
+	          list2,
+	          element6,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 0;
+	( (libcdata_internal_list_t *) list2 )->first_element       = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element        = NULL;
+
+	/* Test libcdata_list_insert_element_with_existing on a list element already part of a list
+	 */
+	result = libcdata_list_element_set_next_element(
+	          element6,
+	          element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_insert_element_with_existing(
+	          list2,
+	          element6,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_list_element_set_next_element(
+	          element6,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_internal_list_insert_element_find_element with an invalid value compare function
+	 */
+	result = libcdata_internal_list_insert_element_find_element(
+	          (libcdata_internal_list_t *) list,
+	          NULL,
+	          NULL,
+	          0,
+	          &element_index,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test libcdata_internal_list_insert_element_find_element with unsupported insert flags
+	 */
+	result = libcdata_internal_list_insert_element_find_element(
+	          (libcdata_internal_list_t *) list,
+	          NULL,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0x02,
+	          &element_index,
+	          &existing_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* Test libcdata_internal_list_insert_element_find_element with an unsupported compare function return value
+	 */
+	list_element = NULL;
+	value_ptr    = NULL;
+
+	result = libcdata_list_get_element_by_index(
+	          list,
+	          0,
+	          &list_element,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_element",
+	 list_element );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_get_value(
+	          list_element,
+	          &value_ptr,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "value_ptr",
+	 value_ptr );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	cdata_test_list_value_compare_function_return_value = 9;
+
+	result = libcdata_internal_list_insert_element_find_element(
+	          (libcdata_internal_list_t *) list,
+	          (intptr_t *) value_ptr,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          &element_index,
+	          &existing_element,
+	          &error );
+
+	cdata_test_list_value_compare_function_return_value = LIBCDATA_COMPARE_EQUAL;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_list_element_free(
+	          &element6,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element6",
+	 element6 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_free(
+	          &list2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
 
 	/* Clean up
 	 */
@@ -7170,6 +10139,18 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
 		 NULL );
 	}
+	if( value8 != NULL )
+	{
+		memory_free(
+		 value8 );
+	}
+	if( element8 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element8,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
 	if( list != NULL )
 	{
 		libcdata_list_free(
@@ -7177,6 +10158,35 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
 		 NULL );
 	}
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	if( value7 != NULL )
+	{
+		memory_free(
+		 value7 );
+	}
+	if( element7 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element7,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	if( element6 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element6,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	if( list2 != NULL )
+	{
+		libcdata_list_free(
+		 &list2,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 	return( 0 );
 }
 
@@ -7313,6 +10323,10 @@ int cdata_test_list_insert_value_with_existing(
 	libcerror_error_t *error              = NULL;
 	intptr_t *existing_value              = NULL;
 	int *duplicate_value2                 = NULL;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	int *duplicate_value3                 = NULL;
+#endif
 	int *value1                           = NULL;
 	int *value2                           = NULL;
 	int *value3                           = NULL;
@@ -7320,7 +10334,7 @@ int cdata_test_list_insert_value_with_existing(
 	int *value5                           = NULL;
 	int result                            = 0;
 
-#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 	libcdata_list_element_t *list_element = NULL;
 #endif
 
@@ -7573,6 +10587,32 @@ int cdata_test_list_insert_value_with_existing(
 	libcerror_error_free(
 	 &error );
 
+	/* Test libcdata_list_insert_value_with_existing with an invalid existing value
+	 */
+	result = libcdata_list_insert_value_with_existing(
+	          list,
+	          (intptr_t *) value5,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          0,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "existing_value",
+	 existing_value );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
 	/* Test libcdata_list_insert_value_with_existing with malloc failing in libcdata_list_element_initialize
@@ -7668,7 +10708,110 @@ int cdata_test_list_insert_value_with_existing(
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+
+	/* Allocate a new value for an existing list element value
+	 */
+	duplicate_value3 = (int *) memory_allocate(
+	                         sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "duplicate_value3",
+	 duplicate_value3 );
+
+	*duplicate_value3 = 2;
+
+	/* Test libcdata_list_insert_value_with_existing with pthread_rwlock_destroy failing in libcdata_list_element_free
+	 */
+	cdata_test_pthread_rwlock_destroy_attempts_before_fail = 0;
+
+	result = libcdata_list_insert_value_with_existing(
+	          list,
+	          (intptr_t *) duplicate_value3,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &existing_value,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_destroy_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_destroy_attempts_before_fail = -1;
+
+		if( result == 0 )
+		{
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "existing_value",
+			 existing_value );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_value",
+		 existing_value );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+
+	/* Test libcdata_list_insert_value_with_existing with pthread_rwlock_rdlock failing in libcdata_list_element_get_value of the existing list element
+	 */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 5;
+
+	result = libcdata_list_insert_value_with_existing(
+	          list,
+	          (intptr_t *) duplicate_value3,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_list_element_compare_function,
+	          LIBCDATA_INSERT_FLAG_UNIQUE_ENTRIES,
+	          &existing_value,
+	          &error );
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+
+		if( result == 0 )
+		{
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "existing_value",
+			 existing_value );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+		}
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "existing_value",
+		 existing_value );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
 
 	/* Test libcdata_list_insert_value_with_existing with pthread_rwlock_wrlock failing in libcdata_list_insert_value_with_existing
 	 */
@@ -7761,7 +10904,7 @@ int cdata_test_list_insert_value_with_existing(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -7769,6 +10912,16 @@ int cdata_test_list_insert_value_with_existing(
 	 value5 );
 
 	value5 = NULL;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	if( duplicate_value3 != NULL )
+	{
+		memory_free(
+		 duplicate_value3 );
+
+		duplicate_value3 = NULL;
+	}
+#endif
 
 	result = libcdata_list_free(
 	          &list,
@@ -7833,6 +10986,13 @@ on_error:
 		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
 		 NULL );
 	}
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	if( duplicate_value3 != NULL )
+	{
+		memory_free(
+		 duplicate_value3 );
+	}
+#endif
 	return( 0 );
 }
 
@@ -7847,6 +11007,9 @@ int cdata_test_list_remove_element(
 	libcdata_list_element_t *element2      = NULL;
 	libcdata_list_element_t *element3      = NULL;
 	libcdata_list_element_t *element4      = NULL;
+	libcdata_list_t *list2                 = NULL;
+	libcdata_list_element_t *element5      = NULL;
+	libcdata_list_element_t *element6      = NULL;
 	libcdata_list_element_t *test_element1 = NULL;
 	libcdata_list_element_t *test_element2 = NULL;
 	libcerror_error_t *error               = NULL;
@@ -7856,6 +11019,10 @@ int cdata_test_list_remove_element(
 	int *value4                            = NULL;
 	int number_of_elements                 = 0;
 	int result                             = 0;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	libcdata_list_element_t *list_middle   = NULL;
+#endif
 
 	/* Initialize test
 	 */
@@ -8160,7 +11327,7 @@ int cdata_test_list_remove_element(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_list_remove_element with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -8288,7 +11455,316 @@ int cdata_test_list_remove_element(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+	/* Allocate a new list element
+	 */
+	result = libcdata_list_element_initialize(
+	          &element5,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element5",
+	 element5 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_append_element(
+	          list,
+	          element5,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	element5 = NULL;
+
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_get_element_by_index(
+	          list,
+	          1,
+	          &list_middle,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list_middle",
+	 list_middle );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_remove_element with pthread_rwlock_rdlock failing in libcdata_list_element_get_elements
+	 */
+	cdata_test_pthread_rwlock_rdlock_attempts_before_fail = 0;
+
+	result = libcdata_list_remove_element(
+	          list,
+	          list_middle,
+	          &error );
+
+
+	if( cdata_test_pthread_rwlock_rdlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_rdlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_remove_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_elements
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 1;
+
+	result = libcdata_list_remove_element(
+	          list,
+	          list_middle,
+	          &error );
+
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_remove_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_previous_element
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 2;
+
+	result = libcdata_list_remove_element(
+	          list,
+	          list_middle,
+	          &error );
+
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_remove_element with pthread_rwlock_wrlock failing in libcdata_list_element_set_next_element
+	 */
+	cdata_test_pthread_rwlock_wrlock_attempts_before_fail = 3;
+
+	result = libcdata_list_remove_element(
+	          list,
+	          list_middle,
+	          &error );
+
+
+	if( cdata_test_pthread_rwlock_wrlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_wrlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_list_remove_element with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write (middle list element)
+	 */
+	cdata_test_pthread_rwlock_unlock_attempts_before_fail = 4;
+
+	result = libcdata_list_remove_element(
+	          list,
+	          list_middle,
+	          &error );
+
+
+	if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+	{
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+	}
+	result = libcdata_list_get_number_of_elements(
+	          list,
+	          &number_of_elements,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "number_of_elements",
+	 number_of_elements,
+	 3 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Test remove of element not part of the list
 	 */
@@ -8372,6 +11848,166 @@ int cdata_test_list_remove_element(
 	 "error",
 	 error );
 
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+
+	/* Test libcdata_list_remove_element on corrupted lists
+	 */
+	result = libcdata_list_initialize(
+	          &list2,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_element_initialize(
+	          &element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "element6",
+	 element6 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element6;
+
+	result = libcdata_list_remove_element(
+	          list2,
+	          element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element  = element6;
+
+	result = libcdata_list_remove_element(
+	          list2,
+	          element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element  = element6;
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 1;
+
+	result = libcdata_list_remove_element(
+	          list2,
+	          element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->first_element = element6;
+	( (libcdata_internal_list_t *) list2 )->last_element  = NULL;
+
+	result = libcdata_list_remove_element(
+	          list2,
+	          element6,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	( (libcdata_internal_list_t *) list2 )->number_of_elements = 0;
+	( (libcdata_internal_list_t *) list2 )->first_element       = NULL;
+	( (libcdata_internal_list_t *) list2 )->last_element        = NULL;
+
+	result = libcdata_list_element_free(
+	          &element6,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "element6",
+	 element6 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_list_free(
+	          &list2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "list2",
+	 list2 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 	/* Clean up
 	 */
 	result = libcdata_list_free(
@@ -8400,6 +12036,30 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
+	if( element5 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element5,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
+	if( element6 != NULL )
+	{
+		libcdata_list_element_free(
+		 &element6,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+	if( list2 != NULL )
+	{
+		libcdata_list_free(
+		 &list2,
+		 (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_list_value_free_function,
+		 NULL );
+	}
+#endif /* defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+
 	if( value4 != NULL )
 	{
 		memory_free(
@@ -8498,24 +12158,20 @@ int main(
 	 cdata_test_list_get_first_element );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
 	CDATA_TEST_RUN(
 	 "libcdata_internal_list_set_first_element",
 	 cdata_test_internal_list_set_first_element );
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+#endif
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_last_element",
 	 cdata_test_list_get_last_element );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
 	CDATA_TEST_RUN(
 	 "libcdata_internal_list_set_last_element",
 	 cdata_test_internal_list_set_last_element );
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+#endif
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_get_element_by_index",
@@ -8542,7 +12198,6 @@ int main(
 	 cdata_test_list_append_value );
 
 #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT )
-
 	CDATA_TEST_RUN(
 	 "libcdata_internal_list_insert_element_find_element",
 	 cdata_test_internal_list_insert_element_find_element );
@@ -8550,8 +12205,7 @@ int main(
 	CDATA_TEST_RUN(
 	 "libcdata_internal_list_insert_element_before_element",
 	 cdata_test_internal_list_insert_element_before_element );
-
-#endif /* #if defined( __GNUC__ ) && !defined( LIBCDATA_DLL_IMPORT ) */
+#endif
 
 	CDATA_TEST_RUN(
 	 "libcdata_list_insert_element",

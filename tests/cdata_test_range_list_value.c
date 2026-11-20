@@ -64,6 +64,12 @@ int cdata_test_range_list_value_value_clone_function(
 	CDATA_TEST_UNREFERENCED_PARAMETER( source_value )
 	CDATA_TEST_UNREFERENCED_PARAMETER( error )
 
+	/* Provide a value so a failed clone exercises the value free function cleanup
+	 */
+	if( cdata_test_range_list_value_value_clone_function_return_value != 1 )
+	{
+		*destination_value = (intptr_t *) 1;
+	}
 	return( cdata_test_range_list_value_value_clone_function_return_value );
 }
 
@@ -859,6 +865,41 @@ int cdata_test_range_list_value_merge(
 	 "result",
 	 result,
 	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test merging a successive range
+	 */
+	destination_range_list_value->start = 0;
+	destination_range_list_value->end   = 16;
+	destination_range_list_value->value = (intptr_t *) 0x87654321;
+
+	source_range_list_value->start      = 16;
+	source_range_list_value->end        = 32;
+	source_range_list_value->value      = (intptr_t *) 0x12345678;
+
+	result = libcdata_range_list_value_merge(
+	          destination_range_list_value,
+	          source_range_list_value,
+	          &cdata_test_range_list_value_value_merge_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_EQUAL_UINT64(
+	 "start",
+	 destination_range_list_value->start,
+	 (uint64_t) 0 );
+
+	CDATA_TEST_ASSERT_EQUAL_UINT64(
+	 "end",
+	 destination_range_list_value->end,
+	 (uint64_t) 32 );
 
 	CDATA_TEST_ASSERT_IS_NULL(
 	 "error",

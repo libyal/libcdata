@@ -482,12 +482,15 @@ on_error:
 int cdata_test_array_free(
      void )
 {
-	libcerror_error_t *error = NULL;
-	int result               = 0;
+	libcdata_error_t *error            = NULL;
+	int *entry_value                   = NULL;
+	int entry_index                    = 0;
+	int result                         = 0;
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
-	libcdata_array_t *array  = NULL;
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	libcdata_array_t *array            = NULL;
 #endif
+	libcdata_array_t *clear_test_array = NULL;
 
 	/* Test error cases
 	 */
@@ -508,7 +511,83 @@ int cdata_test_array_free(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+	/* Test libcdata_array_free with clearing of an array with entries failing
+	 */
+	result = libcdata_array_initialize(
+	          &clear_test_array,
+	          1,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "clear_test_array",
+	 clear_test_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	entry_value = (int *) memory_allocate(
+	                       sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry_value",
+	 entry_value );
+
+	*entry_value = 32;
+
+	result = libcdata_array_append_entry(
+	          clear_test_array,
+	          &entry_index,
+	          (intptr_t *) entry_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	cdata_test_array_entry_free_function_return_value = -1;
+
+	result = libcdata_array_free(
+	          &clear_test_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	cdata_test_array_entry_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "clear_test_array",
+	 clear_test_array );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* The entry free function failed so the entry was not freed.
+	 */
+	memory_free(
+	 entry_value );
+
+	entry_value = NULL;
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Initialize test
 	 */
@@ -581,7 +660,7 @@ int cdata_test_array_free(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	return( 1 );
 
@@ -591,7 +670,7 @@ on_error:
 		libcerror_error_free(
 		 &error );
 	}
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 	if( array != NULL )
 	{
 		libcdata_array_free(
@@ -794,7 +873,7 @@ int cdata_test_array_empty(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_empty with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -908,7 +987,7 @@ int cdata_test_array_empty(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1406,7 +1485,7 @@ int cdata_test_array_clear(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_clear with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -1520,7 +1599,7 @@ int cdata_test_array_clear(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -1860,7 +1939,7 @@ int cdata_test_array_clone(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_clone with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -1944,7 +2023,7 @@ int cdata_test_array_clone(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -2004,9 +2083,14 @@ on_error:
 int cdata_test_internal_array_resize(
      void )
 {
+	libcdata_array_t *shrink_array            = NULL;
 	libcdata_internal_array_t *internal_array = NULL;
 	libcerror_error_t *error                  = NULL;
 	intptr_t **entries                        = NULL;
+	int *entry_value                          = NULL;
+	int *entry2_value                         = NULL;
+	int entry_index                           = 0;
+	int value                                 = 0;
 	int result                                = 0;
 
 	/* Initialize test
@@ -2142,6 +2226,314 @@ int cdata_test_internal_array_resize(
 
 	libcerror_error_free(
 	 &error );
+
+	/* Test libcdata_internal_array_resize with shrinking an array with entries
+	 * and no entry free function
+	 */
+	result = libcdata_array_initialize(
+	          &shrink_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "shrink_array",
+	 shrink_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	for( value = 1;
+	     value <= 4;
+	     value++ )
+	{
+		entry_value = (int *) memory_allocate(
+		                       sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "entry_value",
+		 entry_value );
+
+		*entry_value = value;
+
+		result = libcdata_array_append_entry(
+		              shrink_array,
+		              &entry_index,
+		              (intptr_t *) entry_value,
+		              &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	result = libcdata_internal_array_resize(
+	          (libcdata_internal_array_t *) shrink_array,
+	          2,
+	          NULL,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	result = libcdata_array_free(
+	          &shrink_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "shrink_array",
+	 shrink_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_internal_array_resize with shrinking an array with entries
+	 * and the entry free function failing
+	 */
+	result = libcdata_array_initialize(
+	          &shrink_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "shrink_array",
+	 shrink_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	for( value = 1;
+	     value <= 4;
+	     value++ )
+	{
+		entry_value = (int *) memory_allocate(
+		                       sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "entry_value",
+		 entry_value );
+
+		*entry_value = value;
+
+		result = libcdata_array_append_entry(
+		              shrink_array,
+		              &entry_index,
+		              (intptr_t *) entry_value,
+		              &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	/* Keep the entries the entry free function fails to release.
+	 */
+	result = libcdata_array_get_entry_by_index(
+	          shrink_array,
+	          2,
+	          (intptr_t **) &entry_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry_value",
+	 entry_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_array_get_entry_by_index(
+	          shrink_array,
+	          3,
+	          (intptr_t **) &entry2_value,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry2_value",
+	 entry2_value );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	cdata_test_array_entry_free_function_return_value = -1;
+
+	result = libcdata_internal_array_resize(
+	          (libcdata_internal_array_t *) shrink_array,
+	          2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	cdata_test_array_entry_free_function_return_value = 1;
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 -1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "error",
+	 error );
+
+	libcerror_error_free(
+	 &error );
+
+	/* The entry free function failed, the entries were not released.
+	 */
+	memory_free(
+	 entry_value );
+
+	entry_value = NULL;
+
+	memory_free(
+	 entry2_value );
+
+	entry2_value = NULL;
+
+	result = libcdata_array_free(
+	          &shrink_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "shrink_array",
+	 shrink_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	/* Test libcdata_internal_array_resize with shrinking an array with entries
+	 * and a successful entry free function
+	 */
+	result = libcdata_array_initialize(
+	          &shrink_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "shrink_array",
+	 shrink_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	for( value = 1;
+	     value <= 4;
+	     value++ )
+	{
+		entry_value = (int *) memory_allocate(
+		                       sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "entry_value",
+		 entry_value );
+
+		*entry_value = value;
+
+		result = libcdata_array_append_entry(
+		              shrink_array,
+		              &entry_index,
+		              (intptr_t *) entry_value,
+		              &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+	result = libcdata_internal_array_resize(
+	          (libcdata_internal_array_t *) shrink_array,
+	          2,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	result = libcdata_array_free(
+	          &shrink_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "shrink_array",
+	 shrink_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
 
 #if defined( HAVE_CDATA_TEST_MEMORY )
 
@@ -2314,7 +2706,7 @@ int cdata_test_array_resize(
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_resize with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -2372,7 +2764,7 @@ int cdata_test_array_resize(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -2728,7 +3120,7 @@ int cdata_test_array_reserve(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_reverse with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -2782,7 +3174,7 @@ int cdata_test_array_reserve(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -2976,7 +3368,7 @@ int cdata_test_array_get_number_of_entries(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_get_number_of_entries with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -3032,7 +3424,7 @@ int cdata_test_array_get_number_of_entries(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -3297,7 +3689,7 @@ int cdata_test_array_get_entry_by_index(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_get_entry_by_index with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -3355,7 +3747,7 @@ int cdata_test_array_get_entry_by_index(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -3669,7 +4061,7 @@ int cdata_test_array_get_entry_by_value(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_get_entry_by_value with pthread_rwlock_rdlock failing in libcthreads_read_write_lock_grab_for_read
 	 */
@@ -3729,7 +4121,7 @@ int cdata_test_array_get_entry_by_value(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -3970,7 +4362,7 @@ int cdata_test_array_set_entry_by_index(
 	libcerror_error_free(
 	 &error );
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_set_entry_by_index with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -4064,7 +4456,7 @@ int cdata_test_array_set_entry_by_index(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -4130,17 +4522,23 @@ on_error:
 int cdata_test_array_prepend_entry(
      void )
 {
-	libcdata_array_t *array  = NULL;
-	libcerror_error_t *error = NULL;
-	intptr_t **entries       = NULL;
-	int *value1              = NULL;
-	int *value2              = NULL;
-	int *value3              = NULL;
-	int number_of_entries    = 0;
-	int result               = 0;
+	libcdata_array_t *array        = NULL;
+	libcerror_error_t *error       = NULL;
+	intptr_t **entries             = NULL;
+	int *value1                    = NULL;
+	int *value2                    = NULL;
+	int *value3                    = NULL;
+	int number_of_entries          = 0;
+	int result                     = 0;
 
-#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
-	int *entry_value         = NULL;
+#if defined( HAVE_CDATA_TEST_MEMORY )
+	libcdata_array_t *resize_array = NULL;
+	int entry_index                = 0;
+	int resize_value               = 1;
+#endif
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	int *entry_value               = NULL;
 #endif
 
 	/* Initialize test
@@ -4442,9 +4840,132 @@ int cdata_test_array_prepend_entry(
 	 "error",
 	 error );
 
+	/* Test libcdata_array_prepend_entry with realloc failing in libcdata_internal_array_resize
+	 * on a full array
+	 */
+	result = libcdata_array_initialize(
+	          &resize_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "resize_array",
+	 resize_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	for( resize_value = 1;
+	     resize_value <= 16;
+	     resize_value++ )
+	{
+		entry_value = (int *) memory_allocate(
+		                  sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "entry_value",
+		 entry_value );
+
+		*entry_value = resize_value;
+
+		result = libcdata_array_append_entry(
+		              resize_array,
+		              &entry_index,
+		              (intptr_t *) entry_value,
+		              &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		entry_value = NULL;
+	}
+	entry_value = (int *) memory_allocate(
+	                       sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry_value",
+	 entry_value );
+
+	*entry_value = 17;
+
+	cdata_test_realloc_attempts_before_fail = 0;
+
+	result = libcdata_array_prepend_entry(
+	          resize_array,
+	          (intptr_t *) entry_value,
+	          &error );
+
+	if( cdata_test_realloc_attempts_before_fail != -1 )
+	{
+		/* The realloc failure injection was not reached: the prepend succeeded.
+		 */
+		cdata_test_realloc_attempts_before_fail = -1;
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		entry_value = NULL;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+
+		/* The prepend failed, the entry was not stored.
+		 */
+		memory_free(
+		 entry_value );
+
+		entry_value = NULL;
+	}
+	result = libcdata_array_free(
+	          &resize_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "resize_array",
+	 resize_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_prepend_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -4592,7 +5113,7 @@ int cdata_test_array_prepend_entry(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -4658,18 +5179,23 @@ on_error:
 int cdata_test_array_append_entry(
      void )
 {
-	libcdata_array_t *array  = NULL;
-	libcerror_error_t *error = NULL;
-	intptr_t **entries       = NULL;
-	int *value1              = NULL;
-	int *value2              = NULL;
-	int *value3              = NULL;
-	int entry_index          = 0;
-	int number_of_entries    = 0;
-	int result               = 0;
+	libcdata_array_t *array        = NULL;
+	libcerror_error_t *error       = NULL;
+	intptr_t **entries             = NULL;
+	int *value1                    = NULL;
+	int *value2                    = NULL;
+	int *value3                    = NULL;
+	int entry_index                = 0;
+	int number_of_entries          = 0;
+	int result                     = 0;
 
-#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
-	int *entry_value         = NULL;
+#if defined( HAVE_CDATA_TEST_MEMORY )
+	libcdata_array_t *resize_array = NULL;
+	int resize_value               = 1;
+#endif
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	int *entry_value               = NULL;
 #endif
 
 	/* Initialize test
@@ -5023,9 +5549,133 @@ int cdata_test_array_append_entry(
 	 "error",
 	 error );
 
+	/* Test libcdata_array_append_entry with realloc failing in libcdata_internal_array_resize
+	 * on a full array
+	 */
+	result = libcdata_array_initialize(
+	          &resize_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "resize_array",
+	 resize_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	for( resize_value = 1;
+	     resize_value <= 16;
+	     resize_value++ )
+	{
+		entry_value = (int *) memory_allocate(
+		                       sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "entry_value",
+		 entry_value );
+
+		*entry_value = resize_value;
+
+		result = libcdata_array_append_entry(
+		          resize_array,
+		          &entry_index,
+		          (intptr_t *) entry_value,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		entry_value = NULL;
+	}
+	entry_value = (int *) memory_allocate(
+	                       sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry_value",
+	 entry_value );
+
+	*entry_value = 17;
+
+	cdata_test_realloc_attempts_before_fail = 0;
+
+	result = libcdata_array_append_entry(
+	          resize_array,
+	          &entry_index,
+	          (intptr_t *) entry_value,
+	          &error );
+
+	if( cdata_test_realloc_attempts_before_fail != -1 )
+	{
+		/* The realloc failure injection was not reached: the append succeeded.
+		 */
+		cdata_test_realloc_attempts_before_fail = -1;
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		entry_value = NULL;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+
+		/* The append failed, the entry was not stored.
+		 */
+		memory_free(
+		 entry_value );
+
+		entry_value = NULL;
+	}
+	result = libcdata_array_free(
+	          &resize_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "resize_array",
+	 resize_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_append_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -5175,7 +5825,7 @@ int cdata_test_array_append_entry(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -5241,21 +5891,30 @@ on_error:
 int cdata_test_array_insert_entry(
      void )
 {
-	libcdata_array_t *array  = NULL;
-	libcerror_error_t *error = NULL;
-	intptr_t **entries       = NULL;
-	int *duplicate_value2    = NULL;
-	int *value1              = NULL;
-	int *value2              = NULL;
-	int *value3              = NULL;
-	int *value4              = NULL;
-	int *value5              = NULL;
-	int entry_index          = 0;
-	int number_of_entries    = 0;
-	int result               = 0;
+	libcdata_array_t *array        = NULL;
+	libcerror_error_t *error       = NULL;
+	intptr_t **entries             = NULL;
+	int *duplicate_value2          = NULL;
+	int *value1                    = NULL;
+	int *value2                    = NULL;
+	int *value3                    = NULL;
+	int *value4                    = NULL;
+	int *value5                    = NULL;
+	int entry_index                = 0;
+	int number_of_entries          = 0;
+	int result                     = 0;
 
-#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK )
-	int *entry_value         = NULL;
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	libcdata_array_t *resize_array = NULL;
+	int resize_value               = 1;
+#endif
+
+#if defined( HAVE_CDATA_TEST_MEMORY ) || defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+	int *entry_value               = NULL;
+#endif
+
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) && defined( HAVE_PTHREAD_RWLOCK_UNLOCK_HOOK )
+	int *unlock_insert_value       = NULL;
 #endif
 
 	/* Initialize test
@@ -5989,9 +6648,265 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
+	/* Test libcdata_array_insert_entry with realloc failing in libcdata_internal_array_resize
+	 * on a full array
+	 */
+	result = libcdata_array_initialize(
+	          &resize_array,
+	          0,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "resize_array",
+	 resize_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
+	for( resize_value = 1;
+	     resize_value <= 16;
+	     resize_value++ )
+	{
+		entry_value = (int *) memory_allocate(
+		                       sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "entry_value",
+		 entry_value );
+
+		*entry_value = resize_value;
+
+		result = libcdata_array_append_entry(
+		          resize_array,
+		          &entry_index,
+		          (intptr_t *) entry_value,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		entry_value = NULL;
+	}
+	entry_value = (int *) memory_allocate(
+	                       sizeof( int ) );
+
+	CDATA_TEST_ASSERT_IS_NOT_NULL(
+	 "entry_value",
+	 entry_value );
+
+	*entry_value = 17;
+
+	cdata_test_realloc_attempts_before_fail = 0;
+
+	result = libcdata_array_insert_entry(
+	          resize_array,
+	          &entry_index,
+	          (intptr_t *) entry_value,
+	          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
+	          0,
+	          &error );
+
+	if( cdata_test_realloc_attempts_before_fail != -1 )
+	{
+		/* The realloc failure injection was not reached: the insert succeeded.
+		 */
+		cdata_test_realloc_attempts_before_fail = -1;
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		entry_value = NULL;
+	}
+	else
+	{
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 -1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "error",
+		 error );
+
+		libcerror_error_free(
+		 &error );
+
+		/* The insert failed, the entry was not stored.
+		 */
+		memory_free(
+		 entry_value );
+
+		entry_value = NULL;
+	}
+	result = libcdata_array_free(
+	          &resize_array,
+	          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+	          &error );
+
+	CDATA_TEST_ASSERT_EQUAL_INT(
+	 "result",
+	 result,
+	 1 );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "resize_array",
+	 resize_array );
+
+	CDATA_TEST_ASSERT_IS_NULL(
+	 "error",
+	 error );
+
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
+
+	/* Test libcdata_array_insert_entry with pthread_rwlock_unlock failing in libcthreads_read_write_lock_release_for_write
+	 * and the entry inserted before other entries
+	 */
+#if defined( HAVE_PTHREAD_RWLOCK_UNLOCK_HOOK )
+	{
+		result = libcdata_array_initialize(
+		          &resize_array,
+		          0,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "resize_array",
+		 resize_array );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+
+		for( resize_value = 1;
+		     resize_value <= 16;
+		     resize_value++ )
+		{
+			unlock_insert_value = (int *) memory_allocate(
+			                               sizeof( int ) );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "unlock_insert_value",
+			 unlock_insert_value );
+
+			*unlock_insert_value = resize_value;
+
+			result = libcdata_array_append_entry(
+			              resize_array,
+			              &entry_index,
+			              (intptr_t *) unlock_insert_value,
+			              &error );
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			unlock_insert_value = NULL;
+		}
+		unlock_insert_value = (int *) memory_allocate(
+		                               sizeof( int ) );
+
+		CDATA_TEST_ASSERT_IS_NOT_NULL(
+		 "unlock_insert_value",
+		 unlock_insert_value );
+
+		*unlock_insert_value = 0;
+
+		cdata_test_pthread_rwlock_unlock_attempts_before_fail = 0;
+
+		result = libcdata_array_insert_entry(
+		          resize_array,
+		          &entry_index,
+		          (intptr_t *) unlock_insert_value,
+		          (int (*)(intptr_t *, intptr_t *, libcerror_error_t **)) &cdata_test_array_entry_compare_function,
+		          0,
+		          &error );
+
+		if( cdata_test_pthread_rwlock_unlock_attempts_before_fail != -1 )
+		{
+			/* The unlock failure injection was not reached: the insert succeeded.
+			 */
+			cdata_test_pthread_rwlock_unlock_attempts_before_fail = -1;
+
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 1 );
+
+			CDATA_TEST_ASSERT_IS_NULL(
+			 "error",
+			 error );
+
+			unlock_insert_value = NULL;
+		}
+		else
+		{
+			CDATA_TEST_ASSERT_EQUAL_INT(
+			 "result",
+			 result,
+			 -1 );
+
+			CDATA_TEST_ASSERT_IS_NOT_NULL(
+			 "error",
+			 error );
+
+			libcerror_error_free(
+			 &error );
+
+			/* The insert was rolled back, the entry was not stored.
+			 */
+			memory_free(
+			 unlock_insert_value );
+
+			unlock_insert_value = NULL;
+		}
+		result = libcdata_array_free(
+		          &resize_array,
+		          (int (*)(intptr_t **, libcerror_error_t **)) &cdata_test_array_entry_free_function,
+		          &error );
+
+		CDATA_TEST_ASSERT_EQUAL_INT(
+		 "result",
+		 result,
+		 1 );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "resize_array",
+		 resize_array );
+
+		CDATA_TEST_ASSERT_IS_NULL(
+		 "error",
+		 error );
+	}
+#endif /* defined( HAVE_PTHREAD_RWLOCK_UNLOCK_HOOK ) */
 
 	/* Test libcdata_array_insert_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -6145,7 +7060,7 @@ int cdata_test_array_insert_entry(
 	 "error",
 	 error );
 
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
@@ -6577,7 +7492,7 @@ int cdata_test_array_remove_entry(
 	}
 #endif /* defined( HAVE_CDATA_TEST_MEMORY ) */
 
-#if defined( HAVE_CDATA_TEST_RWLOCK )
+#if defined( HAVE_CDATA_TEST_RWLOCK_HOOK )
 
 	/* Test libcdata_array_remove_entry with pthread_rwlock_wrlock failing in libcthreads_read_write_lock_grab_for_write
 	 */
@@ -6677,7 +7592,7 @@ int cdata_test_array_remove_entry(
 		libcerror_error_free(
 		 &error );
 	}
-#endif /* defined( HAVE_CDATA_TEST_RWLOCK ) */
+#endif /* defined( HAVE_CDATA_TEST_RWLOCK_HOOK ) */
 
 	/* Clean up
 	 */
